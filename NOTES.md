@@ -96,6 +96,25 @@ Honest reading:
 - Volume features not included (loader drops OHLCV); volatility-scaled dead-zone
   eps not yet run. Both are open limitations.
 
+## Strict verification (fresh runs, commit 22e85ed+, seeds 42/43/44)
+
+Full table in `results/strict_verification.md` (non-overlap = stride=horizon, disjoint windows).
+Key results:
+
+| Tick | Config | DirAcc (overlap) | DirAcc (non-overlap) | momentum DirAcc |
+|---|---|---|---|---|
+| AAPL | h1 price | 0.4832 ± 0.0089 | 0.4832 ± 0.0089 | 0.4841 ± 0.0000 |
+| AAPL | h3 price | 0.7762 ± 0.0118 | 0.6494 ± 0.0347 | 0.5086 ± 0.0000 |
+| AAPL | h5 price | 0.7839 ± 0.0265 | 0.7333 ± 0.0526 | 0.5000 ± 0.0000 |
+| Samsung | h1 price | 0.4224 ± 0.0014 | 0.4224 ± 0.0014 | 0.4837 ± 0.0000 |
+| Samsung | h3 price | 0.6538 ± 0.0061 | 0.6254 ± 0.0083 | 0.5044 ± 0.0000 |
+| Samsung | h5 price | 0.6785 ± 0.0028 | 0.6422 ± 0.0302 | 0.5000 ± 0.0000 |
+
+Strict conclusions:
+- h=1 GRU ≈ momentum ≈ chance (AAPL 0.4832 vs 0.4841; Samsung 0.4224 vs 0.4837 — GRU below momentum on Samsung).
+- Non-overlapping evaluation lowers multi-day DirAcc but h=3/5 still exceeds momentum (~0.50) and h=1; treated as diagnostic only (small disjoint test samples, trend autocorrelation).
+- Ridge = GRU (0.4224 Samsung, 0.4832 AAPL); feature additions remain within seed noise (strongest: Samsung sentiment 0.492 ± 0.021 overlapping price 0.422 ± 0.001 — not conclusive at n=3).
+
 ## Proposed next step (to bring to Dr. Padmakumari P.)
 
 1. **Switch targets from raw close prices to returns / directional labels** (e.g., log-return or sign-of-return), with volatility-aware evaluation alongside RMSE/MAPE.

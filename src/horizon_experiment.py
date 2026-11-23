@@ -69,6 +69,7 @@ class HConfig:
     deadzone_eps: float = 0.005
     baseline: str = "none"  # none | ridge | gbr
     features: str = "price"  # price | price+tech | price+tech+sentiment
+    stride: str = "overlap"  # overlap (sliding) | nonoverlap (stride = horizon)
     seed: int = DEFAULT_SEED
     out_dir: Path = Path("results")
 
@@ -108,27 +109,34 @@ def build_feature_frame(df: pd.DataFrame, data_cfg: DataConfig,
 # ---------------------------------------------------------------------------
 
 def build_h_windows(feat: np.ndarray, close: np.ndarray, lookback: int,
-                    horizon: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Sliding windows where target t uses rows [t-lb, t) and P_{t-h}.
+                    horizon: int, stride: str = "overlap"
+                    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Windows where target t uses rows [t-lb, t) and P_{t-h}.
 
     All inputs here are already restricted to a single split segment, so targets
-    that would reference rows before the segment (t-h < segment start) are
-    excluded.
+    that would reference rows before the segment are excluded. With
+    ``stride="nonoverlap"`` target rows are spaced ``horizon`` apart, so
+    evaluation windows never overlap (disjoint predictions).
+
+    Returns (X, y, prev=P_{t-h}, prev2=P_{t-2h} (NaN where unavailable)).
     """
     n = len(feat)
-    idx = np.arange(n)
-    # target rows t with t >= lookback and t - horizon >= 0 within segment
-    keep = (idx >= lookback) & ((idx - horizon) >= 0)
-    t_idx = np.flatnonzero(keep)
+    if stride == "nonoverlap":
+        t_idx = np.arange(lookback, n, horizon)
+    else:
+        t_idx = np.arange(lookback, n)
+    t_idx = t_idx[(t_idx - horizon) >= 0]
     if len(t_idx) == 0:
         raise ValueError("No valid window rows for this segment size/horizon.")
-    # X windows: for each t, [t-lb, t)
     x = np.empty((len(t_idx), lookback, feat.shape[1]), dtype=np.float32)
     for i, t in enumerate(t_idx):
         x[i] = feat[t - lookback:t]
     y = np.log(close[t_idx] / close[t_idx - horizon]).astype(np.float32)
     prev = close[t_idx - horizon]
-    return x, y.reshape(-1, 1), prev
+    prev2 = np.full(len(t_idx), np.nan)
+    valid2 = (t_idx - 2 * horizon) >= 0
+    prev2[valid2] = close[t_idx[valid2] - 2 * horizon]
+    return x, y.reshape(-1, 1), prev, prev2
 
 
 def prepare_h(df: pd.DataFrame, *, data_cfg: DataConfig, cfg: HConfig,
@@ -150,11 +158,12 @@ def prepare_h(df: pd.DataFrame, *, data_cfg: DataConfig, cfg: HConfig,
         )
     scaler = fit_scaler(m[:n_train], "minmax")
     scaled = scaler.transform(m)
-    tr = build_h_windows(scaled[:n_train], close[:n_train], cfg.lookback, cfg.horizon)
+    tr = build_h_windows(scaled[:n_train], close[:n_train], cfg.lookback,
+                         cfg.horizon, cfg.stride)
     va = build_h_windows(scaled[n_train:n_train + n_val], close[n_train:n_train + n_val],
-                          cfg.lookback, cfg.horizon)
+                          cfg.lookback, cfg.horizon, cfg.stride)
     te = build_h_windows(scaled[n_train + n_val:], close[n_train + n_val:],
-                         cfg.lookback, cfg.horizon)
+                         cfg.lookback, cfg.horizon, cfg.stride)
     ranges = ((0, n_train), (n_train, n_train + n_val), (n_train + n_val, n))
     return tr, va, te, scaler, (ranges, names)
 
@@ -172,9 +181,9 @@ def run_one(df: pd.DataFrame, *, data_cfg: DataConfig, cfg: HConfig,
     tr, va, te, scaler, (ranges, names) = prepare_h(
         df, data_cfg=data_cfg, cfg=cfg, features=cfg.features
     )
-    x_tr, y_tr, prev_tr = tr
-    x_va, y_va, _ = va
-    x_te, y_te, prev_te = te
+    x_tr, y_tr, prev_tr, prev2_tr = tr
+    x_va, y_va, _, _ = va
+    x_te, y_te, prev_te, prev2_te = te
 
     hybrid = cfg.loss == "hybrid"
     if hybrid:
@@ -225,6 +234,18 @@ def run_one(df: pd.DataFrame, *, data_cfg: DataConfig, cfg: HConfig,
                 "model": type(bl).__name__,
             }
 
+    # Causal momentum baseline: predict sign of the *previous* h-return,
+    # available at time t (no look-ahead). NaN rows (insufficient history)
+    # are excluded from the accuracy computation.
+    valid_m = ~np.isnan(prev2_te)
+    if valid_m.sum() > 0:
+        mom_dir = np.sign(np.log(prev_te[valid_m]) - np.log(prev2_te[valid_m]))
+        act_dir = np.sign(y_te[valid_m, 0])
+        out["momentum_baseline"] = {
+            "directional_accuracy": float(np.mean(mom_dir == act_dir)),
+            "n_valid": int(valid_m.sum()),
+        }
+
     run_id = make_run_id("horizon_experiment")
     payload = {
         "run_id": run_id,
@@ -252,6 +273,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--horizon", type=int, default=1)
     p.add_argument("--features", default="price",
                    choices=["price", "price+tech", "price+tech+sentiment"])
+    p.add_argument("--stride", default="overlap",
+                   choices=["overlap", "nonoverlap"],
+                   help="overlap (sliding) | nonoverlap (stride=horizon, disjoint eval)")
     p.add_argument("--loss", choices=["mse", "hybrid"], default="mse")
     p.add_argument("--baseline", choices=["none", "ridge", "gbr"], default="none")
     p.add_argument("--eps-deadzone", type=float, default=0.005)
@@ -294,7 +318,7 @@ def main(argv: list[str] | None = None) -> None:
     cfg = HConfig(
         horizon=args.horizon, loss=args.loss, baseline=args.baseline,
         deadzone_eps=args.eps_deadzone, features=args.features,
-        seed=args.seed, out_dir=args.out_dir,
+        stride=args.stride, seed=args.seed, out_dir=args.out_dir,
     )
     try:
         payload = run_one(df, data_cfg=data_cfg, cfg=cfg, model_cfg=model_cfg,
@@ -303,16 +327,21 @@ def main(argv: list[str] | None = None) -> None:
         raise SystemExit(f"error: {exc}") from None
     r = payload["results"]["gru"]
     print(f"[{payload['run_id']}] {source_label} h={cfg.horizon} "
-          f"feat={cfg.features} loss={cfg.loss} baseline={cfg.baseline} seed={cfg.seed}")
+          f"feat={cfg.features} loss={cfg.loss} baseline={cfg.baseline} "
+          f"stride={cfg.stride} seed={cfg.seed}")
     print(f"   GRU DirAcc={r['return_metrics']['directional_accuracy']:.4f} "
           f"strict={r['return_metrics']['directional_accuracy_strict']:.4f} "
           f"MAE={r['price_metrics']['mae']:.4f}")
-    for b in ("ridge", "gbr"):
+    for b in ("ridge", "gbr", "momentum_baseline"):
         if b in payload["results"]:
-            br = payload["results"][b]["return_metrics"]
-            bp = payload["results"][b]["price_metrics"]
-            print(f"   {b} DirAcc={br['directional_accuracy']:.4f} strict={br['directional_accuracy_strict']:.4f} "
-                  f"MAE={bp['mae']:.4f}")
+            if b == "momentum_baseline":
+                mb = payload["results"][b]
+                print(f"   momentum DirAcc={mb['directional_accuracy']:.4f} (n={mb['n_valid']})")
+            else:
+                br = payload["results"][b]["return_metrics"]
+                bp = payload["results"][b]["price_metrics"]
+                print(f"   {b} DirAcc={br['directional_accuracy']:.4f} strict={br['directional_accuracy_strict']:.4f} "
+                      f"MAE={bp['mae']:.4f}")
 
 
 if __name__ == "__main__":
