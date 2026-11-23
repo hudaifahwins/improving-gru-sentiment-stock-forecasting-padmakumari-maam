@@ -39,3 +39,8 @@ mlruns/
 # Secrets
 *.env
 .env
+
+# Generated run artifacts (keep local, out of git)
+results/*.json
+results/*.md
+results/*.png
