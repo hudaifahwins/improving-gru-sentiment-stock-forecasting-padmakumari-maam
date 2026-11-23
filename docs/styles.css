@@ -189,3 +189,69 @@ tbody tr:hover { background: color-mix(in srgb, var(--brass) 6%, transparent); }
   * { transition: none !important; animation: none !important; }
   .card, .reveal-target { opacity: 1 !important; transform: none !important; }
 }
+
+/* ------------------------------------------------------------------ charts */
+.chart-card {
+  background: var(--card); border: 1px solid var(--hair); border-radius: var(--radius);
+  padding: 26px; margin-top: 22px; box-shadow: var(--shadow); backdrop-filter: blur(10px);
+}
+.chart-card h3 { font-family: var(--font-serif); margin-bottom: 4px; }
+.chart-box { margin-top: 14px; width: 100%; }
+.chart-box svg { display: block; width: 100%; height: auto; }
+.chart-split { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 14px; }
+.chart-split .chart-box { margin-top: 0; }
+svg text { font-family: var(--font-mono); }
+.bar-label-t { font-size: 11px; fill: var(--mut); }
+.bar-val-t { font-size: 11px; fill: var(--ink); }
+
+.tooltip {
+  position: fixed; pointer-events: none; z-index: 40; max-width: 260px;
+  background: var(--ink); color: var(--paper); border-radius: 10px;
+  padding: 8px 12px; font-size: .8rem; opacity: 0; transition: opacity .15s;
+  box-shadow: var(--shadow);
+}
+.tooltip.visible { opacity: 1; }
+
+/* ------------------------------------------------------------------ gallery */
+.gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 28px; }
+.gallery figure { background: var(--card); border: 1px solid var(--hair); border-radius: var(--radius); padding: 12px; }
+.gallery img { width: 100%; border-radius: 10px; display: block; }
+.gallery figcaption { font-size: .82rem; color: var(--mut); margin-top: 8px; }
+
+/* ------------------------------------------------------------------ timeline */
+.timeline { list-style: none; margin-top: 30px; display: grid; gap: 0; }
+.tl-step { display: grid; grid-template-columns: 64px 1fr; gap: 18px; position: relative; padding-bottom: 26px; }
+.tl-step::before { content: ""; position: absolute; left: 31px; top: 56px; bottom: 0; width: 2px; background: var(--hair); }
+.tl-step:last-child::before { display: none; }
+.tl-badge {
+  width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--font-mono); font-weight: 700; font-size: 1rem;
+  background: var(--ink); color: var(--paper); border: 3px solid var(--brass);
+}
+html[data-theme="dark"] .tl-badge { background: var(--brass); color: #111; }
+.tl-body { background: var(--card); border: 1px solid var(--hair); border-radius: var(--radius); padding: 16px 20px; }
+.tl-body h3 { font-family: var(--font-serif); margin-bottom: 4px; }
+.tl-body p { font-size: .93rem; color: var(--ink-2); }
+
+/* ------------------------------------------------------------------ explorer */
+.explorer-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 22px; }
+.explorer-controls label { display: flex; align-items: center; gap: 8px; font-size: .9rem; color: var(--mut); }
+.explorer-controls input { background: var(--paper); border: 1px solid var(--hair); color: var(--ink); border-radius: 999px; padding: 9px 16px; outline: none; }
+.explorer-controls input:focus { border-color: var(--brass); }
+.table-wrap { margin-top: 16px; }
+tr.hl td { background: color-mix(in srgb, var(--brass) 14%, transparent); }
+
+/* ------------------------------------------------------------------ reproduce */
+.repro-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 26px; }
+.repro-card { background: var(--card); border: 1px solid var(--hair); border-radius: var(--radius); padding: 18px; }
+.repro-card h3 { font-family: var(--font-serif); margin-bottom: 10px; }
+.repro-card pre { white-space: pre-wrap; word-break: break-word; font-size: .78rem; line-height: 1.5; margin-bottom: 10px; color: var(--code); }
+.copy-btn { padding: 6px 14px; font-size: .82rem; }
+.links-card { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+
+:focus-visible { outline: 3px solid var(--brass); outline-offset: 2px; }
+
+@media (max-width: 760px) {
+  .chart-split { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}

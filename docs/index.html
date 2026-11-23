@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Improving GRU Sentiment Stock Forecasting — Research Showcase</title>
-  <meta name="description" content="Leakage-free GRU baseline and return/directional diagnostics for stock forecasting. Verified numbers only — seeds 42/43/44.">
+  <title>Improving GRU Sentiment Stock Forecasting — Research Dashboard</title>
+  <meta name="description" content="Interactive research dashboard, verified numbers only — seeds 42/43/44.">
   <link rel="stylesheet" href="./styles.css">
   <script defer src="./app.js"></script>
 </head>
@@ -15,148 +15,202 @@
     <nav class="nav wrap" aria-label="Primary">
       <span class="brand">GRU<span class="brand-dot">·</span>Sentiment</span>
       <div class="nav-links">
-        <a href="#engineering">Engineering</a>
-        <a href="#diagnostics">Diagnostics</a>
-        <a href="#ablation">Ablation</a>
-        <a href="#roadmap">Roadmap</a>
+        <a href="#overview">Overview</a>
+        <a href="#charts">Charts</a>
+        <a href="#timeline">Timeline</a>
+        <a href="#explorer">Data explorer</a>
+        <a href="#reproduce">Reproduce</a>
       </div>
       <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">◐</button>
     </nav>
   </header>
 
   <main id="main">
+
     <!-- Hero -->
-    <section class="hero">
+    <section class="hero" id="overview">
       <div class="wrap">
-        <p class="kicker">Research showcase · verified results only</p>
+        <p class="kicker">Research dashboard · verified results only</p>
         <h1>Improving GRU Sentiment<br>Stock Forecasting</h1>
-        <p class="lede">
-          A leakage-free PyTorch baseline and diagnostic harness for price-level and return/directional
-          forecasting, aligned to Padmakumari P. et&nbsp;al. (2026), <em>Computational Economics</em>.
-        </p>
+        <p class="lede">Leakage-free PyTorch baseline and diagnostics, aligned to Padmakumari P.
+        et&nbsp;al. (2026), <em>Computational Economics</em>.</p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="#diagnostics">See diagnostics</a>
+          <a class="btn btn-primary" href="#charts">Explore charts</a>
           <a class="btn btn-ghost" href="https://github.com/hudaifahwins/improving-gru-sentiment-stock-forecasting-padmakumari-maam" target="_blank" rel="noopener">Source code ↗</a>
         </div>
       </div>
     </section>
 
-    <!-- Fact strip -->
+    <!-- Facts -->
     <section class="facts" aria-label="Key verified facts">
       <div class="wrap facts-grid">
-        <div class="fact"><span class="fact-num" data-count="48">0</span><span class="fact-label">verified runs</span></div>
-        <div class="fact"><span class="fact-num" data-count="3">0</span><span class="fact-label">seeds (42/43/44)</span></div>
-        <div class="fact"><span class="fact-num" data-count="30">0</span><span class="fact-label">lookback windows</span></div>
+        <div class="fact"><span class="fact-num" data-count="48">0</span><span class="fact-label">verified runs (final battery)</span></div>
+        <div class="fact"><span class="fact-num" data-count="3">0</span><span class="fact-label">seeds · 42/43/44</span></div>
+        <div class="fact"><span class="fact-num" data-count="1222">0</span><span class="fact-label">AAPL lagged-tone rows</span></div>
+        <div class="fact"><span class="fact-num" data-count="1187">0</span><span class="fact-label">Samsung lagged-tone rows</span></div>
         <div class="fact"><span class="fact-num" data-count="0.038" data-decimals="3">0.000</span><span class="fact-label">Samsung nRMSE (paper 0.048)</span></div>
         <div class="fact"><span class="fact-num" data-count="0.0" data-decimals="1">0.0</span><span class="fact-label">alignment maxdiff (timestamp check)</span></div>
       </div>
     </section>
 
-    <!-- Engineering -->
-    <section class="section" id="engineering">
+    <!-- Ticker control -->
+    <section class="section" aria-label="Ticker selector">
       <div class="wrap">
-        <p class="kicker">Leak-free engineering</p>
-        <h2>The discipline behind every number</h2>
-        <div class="cards">
-          <article class="card card-reveal">
-            <h3>Chronological splits</h3>
-            <p>70/15/15 train/validation/test, strictly chronological — no temporal shuffling.</p>
-          </article>
-          <article class="card card-reveal">
-            <h3>Train-only scaler</h3>
-            <p>MinMaxScaler fitted on training rows only; validation/test use the same fitted
-            transform. Timestamp alignment verified with <code>maxdiff = 0.0</code>.</p>
-          </article>
-          <article class="card card-reveal">
-            <h3>Boundary-safe windows</h3>
-            <p><code>lookback = 30</code> windows built inside each split — no window crosses a split
-            boundary, and multi-day targets require their full history inside the segment.</p>
-          </article>
-          <article class="card card-reveal">
-            <h3>Explicit architecture</h3>
-            <p>GRU with <code>hidden_size = 50</code>, <code>num_layers = 1</code>, Adam + MSE,
-            early stopping on validation loss. Fully disclosed.</p>
-          </article>
+        <div class="tabs" role="group" aria-label="Ticker selector">
+          <button class="tab is-active" data-ticker="aapl" aria-pressed="true">AAPL</button>
+          <button class="tab" data-ticker="samsung" aria-pressed="false">005930.KS</button>
+        </div>
+        <p class="muted small" id="tickerMeta"></p>
+      </div>
+    </section>
+
+    <!-- Charts -->
+    <section class="section section-alt" id="charts">
+      <div class="wrap">
+        <p class="kicker">Interactive charts</p>
+        <h2>All verified graphs</h2>
+
+        <div class="chart-card">
+          <h3>1 · Horizon &amp; overlap decomposition (h=1/3/5)</h3>
+          <p class="muted small">Grouped bars: Overlap vs Strict Non-Overlap vs Causal Momentum, error bars = ± std across seeds.</p>
+          <div class="chart-box" id="chartHorizon"></div>
+        </div>
+
+        <div class="chart-card">
+          <h3>2 · Model family equivalence (h=1)</h3>
+          <p class="muted small">GRU (50/1), Ridge, GBR and Momentum converge at the daily noise floor.</p>
+          <div class="chart-box" id="chartEquiv"></div>
+        </div>
+
+        <div class="chart-card">
+          <h3>3 · Loss / target / dead-zone diagnostics</h3>
+          <p class="muted small">mse, strict(0.005), hybrid, strict hybrid, logvol; plus MAE scaling across horizons.</p>
+          <div class="chart-split">
+            <div class="chart-box" id="chartDiag"></div>
+            <div class="chart-box" id="chartMaeHorizon"></div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h3>4 · Sentiment &amp; feature ablation (h=1, overlap)</h3>
+          <p class="muted small">Price-only vs +tech vs +lagged GDELT tone; standalone tone deltas; zero-feature dummy control.</p>
+          <div class="chart-box" id="chartAblation"></div>
+        </div>
+
+        <div class="chart-card">
+          <h3>5 · Leak-free split architecture</h3>
+          <div class="chart-box" id="schematic"></div>
         </div>
       </div>
     </section>
 
-    <!-- Diagnostics -->
-    <section class="section section-alt" id="diagnostics">
+    <!-- Gallery -->
+    <section class="section" id="gallery">
       <div class="wrap">
-        <p class="kicker">Directional diagnostics</p>
-        <h2>h=1 floor, multi-day horizons, and baselines</h2>
-        <p class="muted">Interactive: pick a ticker and an evaluation mode. All values are
-        mean ± std over seeds 42/43/44 from 48/48 verified runs.</p>
-
-        <div class="tabs" role="tablist" aria-label="Ticker selector">
-          <button class="tab is-active" id="tab-aapl" role="tab" aria-selected="true" data-ticker="aapl">AAPL</button>
-          <button class="tab" id="tab-samsung" role="tab" aria-selected="false" data-ticker="samsung">005930.KS</button>
-        </div>
-        <div class="tabs tabs-sub" role="tablist" aria-label="Evaluation mode selector">
-          <button class="tab is-active" role="tab" aria-selected="true" data-mode="overlap">Overlap</button>
-          <button class="tab" role="tab" aria-selected="false" data-mode="strict">Strict non-overlap</button>
-          <button class="tab" role="tab" aria-selected="false" data-mode="momentum">Momentum</button>
-        </div>
-
-        <div class="chart-panel">
-          <h3 class="chart-title">DirAcc by horizon</h3>
-          <div class="bars" id="bars" aria-live="polite"></div>
-          <p class="muted small" id="chartCaveat"></p>
-        </div>
-
-        <div class="callout">
-          <h3>Honest reading</h3>
-          <p>No configuration beats the h=1 floor beyond seed noise: AAPL GRU
-          <strong>0.4832 ± 0.0089</strong> (= Ridge, vs. momentum 0.4841); Samsung GRU
-          <strong>0.4224 ± 0.0014</strong> (= Ridge, vs. momentum 0.4837). Non-overlapping horizons
-          lower multi-day DirAcc but the disjoint test windows are small (~tens of points) and the
-          remaining lift reflects multi-day trend persistence — <strong>not claimed tradeable alpha</strong>.</p>
+        <p class="kicker">Verified figures</p>
+        <h2>Rendered plots (from real runs)</h2>
+        <div class="gallery">
+          <figure><img src="./assets/actual_vs_predicted_aapl.png" alt="AAPL actual vs predicted close prices on the held-out split"><figcaption>AAPL · actual vs predicted (held-out)</figcaption></figure>
+          <figure><img src="./assets/actual_vs_predicted_synthetic.png" alt="Synthetic actual vs predicted close prices"><figcaption>Synthetic · actual vs predicted</figcaption></figure>
+          <figure><img src="./assets/pipeline.png" alt="Leakage-free pipeline diagram"><figcaption>Leakage-free pipeline</figcaption></figure>
+          <figure><img src="./assets/return_pathway.png" alt="Return-target modeling pathway"><figcaption>Return-target pathway</figcaption></figure>
+          <figure><img src="./assets/stress_checks.png" alt="Three stress checks"><figcaption>Stress checks</figcaption></figure>
+          <figure><img src="./assets/results_bars.png" alt="MAE and directional accuracy bars"><figcaption>MAE / DirAcc bars</figcaption></figure>
         </div>
       </div>
     </section>
 
-    <!-- Ablation -->
-    <section class="section" id="ablation">
+    <!-- Timeline -->
+    <section class="section section-alt" id="timeline">
       <div class="wrap">
-        <p class="kicker">Features &amp; sentiment ablation</p>
-        <h2>h=1, overlap evaluation</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Ticker</th><th>Setup</th><th>DirAcc (mean ± std)</th><th>Δ vs price</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>AAPL</td><td>price-only</td><td>0.4832 ± 0.0089</td><td>—</td></tr>
-              <tr><td>AAPL</td><td>price + tech</td><td>0.468 ± 0.011</td><td>flat / within noise</td></tr>
-              <tr><td>AAPL</td><td>price + tech + GDELT tone</td><td>0.5067 ± 0.0303</td><td>within seed noise</td></tr>
-              <tr><td>AAPL</td><td>standalone tone test</td><td>Δ −0.0022 ± 0.0154</td><td>≈ zero</td></tr>
-              <tr><td>005930.KS</td><td>price-only</td><td>0.4224 ± 0.0014</td><td>—</td></tr>
-              <tr><td>005930.KS</td><td>price + tech</td><td>0.448 ± 0.010</td><td>flat</td></tr>
-              <tr><td>005930.KS</td><td>price + tech + GDELT tone</td><td>0.492 ± 0.021</td><td>within seed noise</td></tr>
-              <tr><td>005930.KS</td><td>standalone tone test</td><td>Δ 0.0000 ± 0.0000</td><td>≈ zero</td></tr>
-              <tr><td>Zero-feature dummy</td><td>sentiment-ablation-stock-only (AAPL)</td><td>Δ ≈ +0.003</td><td>dummy control, not a true ablation</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="muted small">All deltas are within seed noise at n = 3 seeds. GDELT tone is an aggregate
-        news-tone proxy (lagged one trading day, no look-ahead), not labelled sentiment.</p>
-      </div>
-    </section>
-
-    <!-- Roadmap -->
-    <section class="section section-alt" id="roadmap">
-      <div class="wrap">
-        <p class="kicker">Open research roadmap</p>
-        <h2>Questions for faculty guidance</h2>
-        <ol class="roadmap">
-          <li>Labelled domain sentiment vs. aggregate GDELT tone — does a supervised sentiment signal add anything?</li>
-          <li>Korean-language coverage for <code>005930.KS</code> (current GDELT query is English).</li>
-          <li>OHLCV volume / volatility features (current loader is close-price-only).</li>
-          <li>Horizon and target definitions — multi-day evaluation with adequate disjoint sample sizes.</li>
+        <p class="kicker">Engineering &amp; audit timeline</p>
+        <h2>Every real phase executed</h2>
+        <ol class="timeline">
+          <li class="tl-step">
+            <div class="tl-badge">01</div>
+            <div class="tl-body"><h3>Leakage &amp; alignment audit</h3>
+            <p>Chronological 70/15/15 splits, scaler fit on train rows only, boundary-safe lookback=30 windows, and explicit timestamp probe verification — with maxdiff = 0.0.</p></div>
+          </li>
+          <li class="tl-step">
+            <div class="tl-badge">02</div>
+            <div class="tl-body"><h3>Bug fixes &amp; baseline reproduction</h3>
+            <p>Fixed build_feature_frame (Close feature inclusion) in src/horizon_experiment.py; clarified GRU disclosure (hidden_size=50, num_layers=1); reproduced Samsung nRMSE = 0.038 vs. paper 0.048.</p></div>
+          </li>
+          <li class="tl-step">
+            <div class="tl-badge">03</div>
+            <div class="tl-body"><h3>Return, volatility &amp; dead-zone diagnostics</h3>
+            <p>Implemented log, logvol, hybrid loss, and strict(0.005) dead-zone filtering (0.352 deadzone share on AAPL) with Ridge baselines — 18/18 runs completed.</p></div>
+          </li>
+          <li class="tl-step">
+            <div class="tl-badge">04</div>
+            <div class="tl-body"><h3>Real lagged GDELT sentiment ingestion</h3>
+            <p>Built src/sentiment_gdelt.py with a strict 1-trading-day causal lag — 1222 AAPL rows, 1187 Samsung rows; real tone ablations kept separate from the zero-feature dummy control.</p></div>
+          </li>
+          <li class="tl-step">
+            <div class="tl-badge">05</div>
+            <div class="tl-body"><h3>Multi-horizon &amp; hypothesis battery (42/42 runs)</h3>
+            <p>Tested h=1/3/5, causal technical features, and model families — GRU = Ridge = GBR at h=1; exposed MAE inflation at h=3/5.</p></div>
+          </li>
+          <li class="tl-step">
+            <div class="tl-badge">06</div>
+            <div class="tl-body"><h3>Strict non-overlapping stride &amp; momentum verification (48/48 runs)</h3>
+            <p>Added --stride nonoverlap and causal momentum baselines; h=3/5 stays 12–23 points above momentum on disjoint windows, with small sample sizes (~tens of points) explicitly noted.</p></div>
+          </li>
         </ol>
-        <p class="muted small">Reference: Padmakumari P. et al. (2026), Computational Economics,
-        DOI 10.1007/s10614-026-11393-w. Prepared by Muhammad Hudaifah Mubarak (25BIT0267).</p>
+      </div>
+    </section>
+
+    <!-- Data explorer -->
+    <section class="section" id="explorer">
+      <div class="wrap">
+        <p class="kicker">Full verified data</p>
+        <h2>Data explorer</h2>
+        <div class="explorer-controls">
+          <label>Filter
+            <input id="explorerQuery" type="search" placeholder="search e.g. 0.4832, h3, overlap…">
+          </label>
+          <button class="btn btn-ghost" id="exportCsv" type="button">Export CSV</button>
+          <button class="btn btn-ghost" id="exportJson" type="button">Export JSON</button>
+        </div>
+        <div class="table-wrap"><table id="explorerTable"><thead><tr></tr></thead><tbody></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- Reproduce -->
+    <section class="section section-alt" id="reproduce">
+      <div class="wrap">
+        <p class="kicker">Reproducibility</p>
+        <h2>Reproduce any run</h2>
+        <div class="repro-grid">
+          <div class="repro-card">
+            <h3>Baseline</h3>
+            <pre id="cmd-baseline">python -m src.baseline --ticker AAPL --seed 42</pre>
+            <button class="btn btn-ghost copy-btn" data-target="cmd-baseline" type="button">Copy</button>
+          </div>
+          <div class="repro-card">
+            <h3>Return / directional diagnostics</h3>
+            <pre id="cmd-return">python -m src.return_experiment --ticker AAPL --seed 42 \
+  --loss hybrid --return-type logvol --baseline ridge --epochs 100</pre>
+            <button class="btn btn-ghost copy-btn" data-target="cmd-return" type="button">Copy</button>
+          </div>
+          <div class="repro-card">
+            <h3>Horizon / feature battery</h3>
+            <pre id="cmd-horizon">python -m src.horizon_experiment --ticker AAPL --seed 42 \
+  --horizon 3 --features price+tech --loss mse --epochs 100</pre>
+            <button class="btn btn-ghost copy-btn" data-target="cmd-horizon" type="button">Copy</button>
+          </div>
+          <div class="repro-card">
+            <h3>Sentiment ingestion</h3>
+            <pre id="cmd-sentiment">python -m src.sentiment_gdelt --ticker AAPL \
+  --query "AAPL" --out data/sentiment_AAPL.csv --days 1825</pre>
+            <button class="btn btn-ghost copy-btn" data-target="cmd-sentiment" type="button">Copy</button>
+          </div>
+        </div>
+        <div class="links-card">
+          <a class="btn btn-primary" href="https://github.com/hudaifahwins/improving-gru-sentiment-stock-forecasting-padmakumari-maam/raw/main/PROJECT_OVERVIEW.pdf" target="_blank" rel="noopener">PROJECT_OVERVIEW.pdf ↗</a>
+          <a class="btn btn-primary" href="https://github.com/hudaifahwins/improving-gru-sentiment-stock-forecasting-padmakumari-maam/raw/main/PROJECT_PRESENTATION.pptx" target="_blank" rel="noopener">PROJECT_PRESENTATION.pptx ↗</a>
+          <a class="btn btn-ghost" href="https://github.com/hudaifahwins/improving-gru-sentiment-stock-forecasting-padmakumari-maam" target="_blank" rel="noopener">Repository ↗</a>
+        </div>
       </div>
     </section>
   </main>
@@ -164,7 +218,7 @@
   <footer class="site-foot">
     <div class="wrap">
       <p>Improving GRU Sentiment Stock Forecasting · verified numbers only · seeds 42/43/44</p>
-      <p><a href="https://github.com/hudaifahwins/improving-gru-sentiment-stock-forecasting-padmakumari-maam" target="_blank" rel="noopener">Repository ↗</a></p>
+      <p>Muhammad Hudaifah Mubarak (25BIT0267) · Padmakumari P. et al. (2026), Computational Economics, DOI 10.1007/s10614-026-11393-w</p>
     </div>
   </footer>
 </body>
