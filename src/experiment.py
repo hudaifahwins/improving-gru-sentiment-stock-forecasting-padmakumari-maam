@@ -222,6 +222,9 @@ def run_sentiment_ablation(
 ) -> dict[str, Any]:
     """Compare price-only vs. price+sentiment on the identical split & seed."""
     if not data_cfg.sentiment_cols:
+        if run_cfg.mode == "sentiment-ablation-stock-only":
+            return _stock_only_ablation(df, data_cfg=data_cfg, run_cfg=run_cfg,
+                                        model_cfg=model_cfg)
         raise SystemExit(
             "sentiment-ablation requires sentiment features: pass "
             "--sentiment-cols or rely on auto-detection."
@@ -229,48 +232,84 @@ def run_sentiment_ablation(
 
     price_only_cfg = replace(data_cfg, sentiment_cols=())
     variants: dict[str, Any] = {}
-
     for label, dc in (("price_only", price_only_cfg), ("with_sentiment", data_cfg)):
-        prep = prepare_dataframe(
-            df,
-            data_cfg=dc,
-            lookback=run_cfg.lookback,
-            horizon=1,
-            val_frac=run_cfg.val_frac,
-            test_frac=run_cfg.test_frac,
-            scaler_kind=run_cfg.scaler,
+        variants[label] = _fit_gru_variant(
+            df, dc=dc, run_cfg=run_cfg, model_cfg=model_cfg
         )
-        set_seed(model_cfg.seed)  # identical init/training for both variants
-        model = build_model(model_cfg.model, prep.input_size, model_cfg)
-        history = train_network(
-            model, prep.train.X, prep.train.y_scaled, prep.val.X, prep.val.y_scaled,
-            model_cfg,
-        )
-        ev = evaluate_model(model, prep, model_cfg)
-        per = evaluate_persistence(prep)
-
-        variants[label] = {
-            "features": list(prep.feature_names),
-            "input_size": prep.input_size,
-            "metrics": ev["metrics"],
-            "persistence_metrics": per["metrics"],
-            "train_time_s": history["train_time_s"],
-            "infer_time_s": ev["infer_time_s"],
-            "best_epoch": history["best_epoch"],
-            "epochs_run": history["epochs_run"],
-            "best_val_loss": history["best_val_loss"],
-        }
 
     delta = {
         key: variants["with_sentiment"]["metrics"][key]
         - variants["price_only"]["metrics"][key]
         for key in variants["price_only"]["metrics"]
     }
+    return {"mode": "sentiment-ablation", "variants": variants,
+            "delta_with_sentiment_minus_price_only": delta}
 
+
+def _fit_gru_variant(df, *, dc, run_cfg, model_cfg):
+    """Fit+evaluate the GRU on one variant on the identical chronological split."""
+    prep = prepare_dataframe(
+        df, data_cfg=dc, lookback=run_cfg.lookback, horizon=1,
+        val_frac=run_cfg.val_frac, test_frac=run_cfg.test_frac,
+        scaler_kind=run_cfg.scaler,
+    )
+    set_seed(model_cfg.seed)  # identical init/training across variants
+    model = build_model(model_cfg.model, prep.input_size, model_cfg)
+    history = train_network(
+        model, prep.train.X, prep.train.y_scaled, prep.val.X, prep.val.y_scaled,
+        model_cfg,
+    )
+    ev = evaluate_model(model, prep, model_cfg)
+    per = evaluate_persistence(prep)
     return {
-        "mode": "sentiment-ablation",
+        "features": list(prep.feature_names),
+        "input_size": prep.input_size,
+        "metrics": ev["metrics"],
+        "persistence_metrics": per["metrics"],
+        "train_time_s": history["train_time_s"],
+        "infer_time_s": ev["infer_time_s"],
+        "best_epoch": history["best_epoch"],
+        "epochs_run": history["epochs_run"],
+        "best_val_loss": history["best_val_loss"],
+    }
+
+
+def _stock_only_ablation(df, *, data_cfg, run_cfg, model_cfg):
+    """Ablation when the series has no sentiment columns (stock-only path).
+
+    Compares GRU with no sentiment feature vs. a zero-sentiment feature on the
+    identical chronological split and seed. Both use the caller's chosen
+    ``scaler_kind`` and splitting fractions.
+    """
+    price_only_cfg = data_cfg
+    zero_sentiment_cfg = replace(
+        data_cfg, sentiment_cols=(data_cfg.close_col + "__sentiment",)
+    )
+    df_zero = df.copy()
+    df_zero[zero_sentiment_cfg.sentiment_cols[0]] = 0.0
+
+    variants: dict[str, Any] = {}
+    for label, frame, dc in (
+        ("price_only", df, price_only_cfg),
+        ("zero_sentiment", df_zero, zero_sentiment_cfg),
+    ):
+        variants[label] = _fit_gru_variant(
+            frame, dc=dc, run_cfg=run_cfg, model_cfg=model_cfg
+        )
+    return {
+        "mode": "sentiment-ablation-stock-only",
+        "status": "completed",
+        "note": (
+            "No stock-specific sentiment series was provided; this compares a zero-valued "
+            "sentiment feature vs. a price-only series on the same split and seed, "
+            "identically to the aligned-sentiment ablation where sentiment exists."
+        ),
         "variants": variants,
-        "delta_with_sentiment_minus_price_only": delta,
+        "delta_zero_minus_price": {
+            key: variants["zero_sentiment"]["metrics"][key]
+            - variants["price_only"]["metrics"][key]
+            for key in variants["price_only"]["metrics"]
+        },
     }
 
 
@@ -293,7 +332,7 @@ def run_experiment(
         results = run_walk_forward(
             df, data_cfg=data_cfg, run_cfg=exp_cfg, model_cfg=model_cfg
         )
-    elif exp_cfg.mode == "sentiment-ablation":
+    elif exp_cfg.mode in ("sentiment-ablation", "sentiment-ablation-stock-only"):
         results = run_sentiment_ablation(
             df, data_cfg=data_cfg, run_cfg=exp_cfg, model_cfg=model_cfg
         )
@@ -349,7 +388,7 @@ def print_experiment_summary(payload: dict[str, Any]) -> None:
                   f"RMSE={m['rmse']:.4f} MAPE={m['mape']:.3f}% "
                   f"DirAcc={m['directional_accuracy']:.4f}")
 
-    elif results["mode"] == "sentiment-ablation":
+    elif results["mode"] in ("sentiment-ablation", "sentiment-ablation-stock-only"):
         print("\n-- Variants (same split & seed) --")
         for label, variant in results["variants"].items():
             m = variant["metrics"]
@@ -357,9 +396,13 @@ def print_experiment_summary(payload: dict[str, Any]) -> None:
             print(f"      MAE={m['mae']:.4f} RMSE={m['rmse']:.4f} "
                   f"MAPE={m['mape']:.3f}% R2={m['r2']:.4f} "
                   f"DirAcc={m['directional_accuracy']:.4f}")
-        print("\n-- Delta (with_sentiment - price_only) --")
-        for key, value in results["delta_with_sentiment_minus_price_only"].items():
+        delta = results.get("delta_with_sentiment_minus_price_only") or results.get(
+            "delta_zero_minus_price", {})
+        print("\n-- Delta --")
+        for key, value in delta.items():
             print(f"   {key:22s} {value:+.4f}")
+        if results["mode"] == "sentiment-ablation-stock-only":
+            print("   note:", results["note"])
 
     if payload.get("saved"):
         print(f"\nsaved: {payload['saved']}")
@@ -390,9 +433,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "--mode",
-        choices=["walk-forward", "sentiment-ablation"],
+        choices=["walk-forward", "sentiment-ablation", "sentiment-ablation-stock-only"],
         default="walk-forward",
-        help="which experiment to run (default: walk-forward)",
+        help=(
+            "walk-forward | sentiment-ablation | sentiment-ablation-stock-only "
+            "(default: walk-forward)"
+        ),
     )
 
     wf = parser.add_argument_group("walk-forward settings")
