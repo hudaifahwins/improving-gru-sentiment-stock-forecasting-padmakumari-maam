@@ -499,9 +499,18 @@ def prepare_dataframe(
     n_test = max(1, round(n * test_frac))
     n_val = max(1, round(n * val_frac))
     n_train = n - n_val - n_test
-    if n_train <= lookback + horizon:
+    min_seg = lookback + horizon + 1
+    if n_train < min_seg:
         raise ValueError(
-            f"Training split ({n_train} rows) is too small for lookback={lookback}."
+            f"Training split ({n_train} rows) is too small for lookback={lookback}: "
+            f"needs >= {min_seg} rows."
+        )
+    if n_val < min_seg or n_test < min_seg:
+        raise ValueError(
+            f"Dataset of {n} rows is too small for lookback={lookback}: with "
+            f"{val_frac:.0%}/{test_frac:.0%} validation/test splits, both segments "
+            f"need >= {min_seg} rows, but got val={n_val}, test={n_test}. "
+            f"Provide more data or pass a smaller --lookback."
         )
     return prepare_with_ranges(
         df,
@@ -1113,8 +1122,11 @@ def main(argv: list[str] | None = None) -> None:
         out_dir=args.out_dir,
     )
 
-    run_baseline(df, data_cfg=data_cfg, run_cfg=run_cfg,
-                 model_cfg=model_cfg, source_label=source_label)
+    try:
+        run_baseline(df, data_cfg=data_cfg, run_cfg=run_cfg,
+                     model_cfg=model_cfg, source_label=source_label)
+    except ValueError as exc:
+        raise SystemExit(f"error: {exc}") from None
 
 
 if __name__ == "__main__":

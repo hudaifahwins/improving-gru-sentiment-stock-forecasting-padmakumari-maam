@@ -657,13 +657,16 @@ def main(argv: list[str] | None = None) -> None:
         out_dir=args.out_dir,
     )
 
-    run_return_experiment(
-        df,
-        data_cfg=data_cfg,
-        exp_cfg=exp_cfg,
-        model_cfg=model_cfg,
-        source_label=source_label,
-    )
+    try:
+        run_return_experiment(
+            df,
+            data_cfg=data_cfg,
+            exp_cfg=exp_cfg,
+            model_cfg=model_cfg,
+            source_label=source_label,
+        )
+    except ValueError as exc:
+        raise SystemExit(f"error: {exc}") from None
 
 
 if __name__ == "__main__":
