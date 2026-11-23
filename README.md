@@ -14,6 +14,8 @@ This project builds on that paper: our baseline mirrors its protocol (lookback 3
 
 - **Leakage-free baseline** — `src/baseline.py`: chronological sorting, past-only missing-value handling (forward-fill), scaler fit on the training split only, sliding windows; naive persistence vs. GRU/LSTM (PyTorch); metrics in original price units (MAE, RMSE, MAPE, R², directional accuracy), saved as JSON/CSV/PNG under `results/`.
 - **Experiment harness** — `src/experiment.py`: expanding/rolling walk-forward with per-fold fitting, and sentiment ablation on identical splits/seeds (`--mode sentiment-ablation`). When no real sentiment columns exist, `--mode sentiment-ablation` refuses cleanly; `--mode sentiment-ablation-stock-only` runs a **zero-feature dummy control** (price-only vs. a constant-zero sentiment column) — it is not a true sentiment ablation.
+- **Return / directional diagnostics** — `src/return_experiment.py`: dead-zone directional accuracy (`|r| > ε`), variance-standardized targets (`logvol`/`pctvol`), and an optional ridge baseline on the same leak-free splits.
+- **Real sentiment ingestion** — `src/sentiment_gdelt.py`: fetches historical GDELT “Average Tone” (public API, no key), aligns to trading days, lags by one day (no look-ahead), and writes `data/sentiment_AAPL.csv` / `data/sentiment_005930.KS.csv` for true `--mode sentiment-ablation` runs.
 - **Real-data check (AAPL, 10y via yfinance):** baseline + 3-fold expanding walk-forward results, summarized in `NOTES.md` with artifacts in `results/`.
 
 Quick runs:
@@ -30,7 +32,9 @@ python -m src.experiment --mode sentiment-ablation --data data/prices.csv --sent
 - [x] Leakage-free baseline (persistence / GRU / LSTM)
 - [x] Experiment harness (walk-forward, sentiment ablation)
 - [x] AAPL real-data baseline + walk-forward results
-- [ ] Sentiment dataset (news/headlines) and ablation on real data
+- [x] Real sentiment ingestion (GDELT tone; AAPL + Samsung) and true ablation runs
+- [x] Dead-zone / vol-standardized / ridge diagnostics
+- [ ] Sentiment source quality & coverage review (tone ≠ labelled news sentiment)
 - [ ] Return / directional-target variants (next step under discussion — see below)
 
 ## Repository layout

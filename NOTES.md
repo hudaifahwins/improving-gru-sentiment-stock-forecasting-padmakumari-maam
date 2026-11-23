@@ -57,6 +57,13 @@ and code live elsewhere; this file tracks the reasoning.
 
 **One question for Dr. Padmakumari P.** Given the plain price-level GRU loses to persistence on RMSE/MAPE (a common artefact of trending assets), should the project target *direction/profitability-aware* evaluation (e.g., sign/return-based targets, volatility-adjusted or log-return targets) rather than raw price levels — and if so, what baseline comparison would you expect for the GRU to be considered a meaningful improvement?
 
+## Latest verified additions (2026-11-23)
+
+- **Dead-zone directional accuracy** (`|r| > 0.005`): AAPL mse/log DirAcc 0.489±0.003 → strict 0.461±0.002 (deadzone share 0.35); hybrid/log 0.496±0.021 → strict 0.498±0.042; logvol 0.482±0.005. Samsung mse/log 0.4214±0.0000 → strict 0.4161; hybrid 0.436±0.011; logvol 0.4214. Ridge baseline (same split): AAPL 0.4841, Samsung 0.4510. All near chance; no directional superiority claim.
+- **Real sentiment ablation (GDELT “Average Tone”, lagged 1 day)**: AAPL Δ DirAcc −0.0022±0.0154 (≈ zero, within noise); Samsung Δ DirAcc 0.0000±0.0000. Tone adds no measurable directional signal on these stocks/periods.
+- **Ingestion caveats**: GDELT DOC API is rate-limited (HTTP 429) and intermittently unavailable; retries with sleep succeeded after 2–4 attempts. Tone is an aggregate news-tone proxy, not labelled sentiment — coverage/quality still to be reviewed.
+- Files: `data/sentiment_AAPL.csv` (1222 rows), `data/sentiment_005930.KS.csv` (1187 rows) — gitignored.
+
 ## Proposed next step (to bring to Dr. Padmakumari P.)
 
 1. **Switch targets from raw close prices to returns / directional labels** (e.g., log-return or sign-of-return), with volatility-aware evaluation alongside RMSE/MAPE.

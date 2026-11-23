@@ -95,8 +95,10 @@ class ReturnExperimentConfig:
     lookback: int = DEFAULT_LOOKBACK
     val_frac: float = DEFAULT_VAL_FRAC
     test_frac: float = DEFAULT_TEST_FRAC
-    return_type: str = "log"  # "log" | "pct"
+    return_type: str = "log"  # "log" | "pct" | "logvol" | "pctvol"
     loss: str = "mse"  # "mse" | "hybrid"
+    deadzone_eps: float = 0.005  # |r| threshold for strict directional accuracy
+    baseline: str = "none"  # "none" | "ridge"
     seed: int = DEFAULT_SEED
     out_dir: Path = Path("results")
 
@@ -137,11 +139,16 @@ def compute_return_metrics(
     actual: np.ndarray,
     pred: np.ndarray,
     return_type: str = "log",
+    *,
+    deadzone_eps: float = 0.005,
 ) -> dict[str, float]:
     """Return-space metrics on natural return units.
 
     * directional_accuracy - sign(actual return) == sign(predicted return);
       zero-magnitude predictions only count if the actual move is also zero.
+    * directional_accuracy_strict - sign match *excluding* steps whose actual
+      move is inside the dead zone (|r| <= eps); NaN if no qualifying step.
+    * deadzone_share - fraction of steps inside the dead zone (small moves).
     * return_mae / return_rmse - error in return units.
     * hit_rate_sign_strategy - same as directional accuracy (zero-fee).
     * cumulative_return_buy_and_hold / cumulative_return_sign_strategy -
@@ -163,6 +170,15 @@ def compute_return_metrics(
     pred_dir = np.sign(pred)
     directional = float(np.mean(act_dir == pred_dir))
 
+    # Dead-zone (thresholded) directional accuracy on meaningful moves.
+    meaningful = np.abs(actual) > deadzone_eps
+    n_meaningful = int(np.sum(meaningful))
+    if n_meaningful > 0:
+        strict = float(np.mean(act_dir[meaningful] == pred_dir[meaningful]))
+    else:
+        strict = float("nan")
+    deadzone_share = float(np.mean(~meaningful))
+
     # Decimal returns for compounding (log-sum-exp form: stable, no overflow).
     r_dec = np.expm1(actual) if return_type == "log" else actual / 100.0
     strat = pred_dir * r_dec  # sign allocation x actual return
@@ -171,6 +187,9 @@ def compute_return_metrics(
 
     return {
         "directional_accuracy": directional,
+        "directional_accuracy_strict": strict,
+        "deadzone_share": deadzone_share,
+        "deadzone_eps": deadzone_eps,
         "return_mae": return_mae,
         "return_rmse": return_rmse,
         "hit_rate_sign_strategy": directional,
@@ -316,6 +335,28 @@ def _predict_returns(
     return np.concatenate(outputs, axis=0)
 
 
+def _fit_ridge_baseline(prep: Any, ret_train_raw: np.ndarray,
+                        ret_test_raw: np.ndarray, base_type: str, *,
+                        deadzone_eps: float) -> dict[str, Any]:
+    """Simple ridge baseline on the same leak-free windows (return targets)."""
+    from sklearn.linear_model import Ridge
+    x_train = prep.train.X.reshape(prep.train.X.shape[0], -1)
+    x_test = prep.test.X.reshape(prep.test.X.shape[0], -1)
+    ridge = Ridge(alpha=1.0, fit_intercept=True)
+    ridge.fit(x_train, ret_train_raw)
+    pred_ret = ridge.predict(x_test).reshape(-1, 1)
+    pred_price = _reconstruct_prices(prep.test.prev_raw, pred_ret, base_type)
+    return {
+        "model": "Ridge(alpha=1.0)",
+        "price_metrics_reconstructed": compute_metrics(
+            prep.test.y_raw, pred_price, prep.test.prev_raw
+        ),
+        "return_metrics": compute_return_metrics(
+            ret_test_raw, pred_ret, base_type, deadzone_eps=deadzone_eps
+        ),
+    }
+
+
 # ---------------------------------------------------------------------------
 # Orchestration + reporting
 # ---------------------------------------------------------------------------
@@ -355,9 +396,24 @@ def run_return_experiment(
     raw_ev = evaluate_model(raw_model, prep, model_cfg)
 
     # 3) Return-target GRU (same split/seed, same input windows).
-    ret_train = _window_return_targets(prep.train, exp_cfg.return_type)
-    ret_val = _window_return_targets(prep.val, exp_cfg.return_type)
-    ret_test = _window_return_targets(prep.test, exp_cfg.return_type)
+    # Variance-standardized targets ("logvol"/"pctvol") divide by the TRAIN-split
+    # return std only (leak-free); predictions are rescaled before reconstruction.
+    return_type = exp_cfg.return_type
+    vol = return_type.endswith("vol")
+    base_type = return_type[:-3] if vol else return_type
+    ret_train_raw = _window_return_targets(prep.train, base_type)
+    ret_val_raw = _window_return_targets(prep.val, base_type)
+    ret_test_raw = _window_return_targets(prep.test, base_type)
+    if vol:
+        sigma = float(np.std(ret_train_raw))
+        if sigma < 1e-12:
+            raise ValueError("Train-split return std is ~0; cannot standardize targets.")
+        ret_train, ret_val, ret_test = (
+            ret_train_raw / sigma, ret_val_raw / sigma, ret_test_raw / sigma
+        )
+    else:
+        sigma = 1.0
+        ret_train, ret_val, ret_test = ret_train_raw, ret_val_raw, ret_test_raw
 
     hybrid = exp_cfg.loss == "hybrid"
     if hybrid:
@@ -373,14 +429,25 @@ def run_return_experiment(
         model_cfg, loss_mode=exp_cfg.loss,
     )
     t0 = time.perf_counter()
-    pred_ret = _predict_returns(
+    pred_ret_scaled = _predict_returns(
         ret_model, prep.test.X,
         batch_size=model_cfg.batch_size, device=model_cfg.device, hybrid=hybrid,
     )
     ret_infer_time = time.perf_counter() - t0
-    pred_price = _reconstruct_prices(prep.test.prev_raw, pred_ret, exp_cfg.return_type)
+    pred_ret = pred_ret_scaled * sigma
+    pred_price = _reconstruct_prices(prep.test.prev_raw, pred_ret, base_type)
     price_metrics = compute_metrics(prep.test.y_raw, pred_price, prep.test.prev_raw)
-    return_metrics = compute_return_metrics(ret_test, pred_ret, exp_cfg.return_type)
+    return_metrics = compute_return_metrics(
+        ret_test_raw, pred_ret, base_type, deadzone_eps=exp_cfg.deadzone_eps
+    )
+
+    # Optional simple linear (ridge) baseline on the same leak-free split.
+    ridge_out = None
+    if exp_cfg.baseline == "ridge":
+        ridge_out = _fit_ridge_baseline(
+            prep, ret_train_raw, ret_test_raw, base_type,
+            deadzone_eps=exp_cfg.deadzone_eps,
+        )
 
     results: dict[str, Any] = {
         "persistence": {
@@ -405,6 +472,8 @@ def run_return_experiment(
             "best_val_loss": ret_hist["best_val_loss"],
             "train_time_s": ret_hist["train_time_s"],
             "infer_time_s": ret_infer_time,
+            "vol_standardized": vol,
+            "train_std": float(sigma),
             "diagnostics_note": (
                 "Sign-strategy cumulative return is a zero-fee, frictionless "
                 "diagnostic computed on out-of-sample returns; it is not "
@@ -412,6 +481,8 @@ def run_return_experiment(
             ),
         },
     }
+    if ridge_out is not None:
+        results["ridge_baseline"] = ridge_out
     run_id = make_run_id("return_experiment")
     payload: dict[str, Any] = {
         "run_id": run_id,
@@ -492,6 +563,8 @@ def _write_markdown(out_dir: Path, run_id: str, payload: dict[str, Any]) -> Path
     rm = res["return_gru"]["return_metrics"]
     lines += [
         f"- **directional_accuracy:** {rm['directional_accuracy']:.4f}",
+        f"- **directional_accuracy_strict (|r| > {rm['deadzone_eps']:.3f}):** "
+        f"{rm['directional_accuracy_strict']:.4f}  (deadzone share {rm['deadzone_share']:.3f})",
         f"- **return_mae:** {rm['return_mae']:.4f}",
         f"- **return_rmse:** {rm['return_rmse']:.4f}",
         f"- **hit_rate_sign_strategy:** {rm['hit_rate_sign_strategy']:.4f}",
@@ -501,6 +574,18 @@ def _write_markdown(out_dir: Path, run_id: str, payload: dict[str, Any]) -> Path
         f"_Note:_ {res['return_gru']['diagnostics_note']}",
         "",
     ]
+    if "ridge_baseline" in res:
+        rr = res["ridge_baseline"]["return_metrics"]
+        rp = res["ridge_baseline"]["price_metrics_reconstructed"]
+        lines += [
+            "### Ridge baseline (same split & seed)", "",
+            f"- Model: {res['ridge_baseline']['model']}",
+            f"- Price MAE {rp['mae']:.4f} · RMSE {rp['rmse']:.4f} · "
+            f"nRMSE {rp['nrmse']:.4f} · MAPE {rp['mape']:.3f}%",
+            f"- DirAcc {rr['directional_accuracy']:.4f} · strict "
+            f"{rr['directional_accuracy_strict']:.4f} · deadzone {rr['deadzone_share']:.3f}",
+            "",
+        ]
 
     path.write_text("\n".join(lines), encoding="utf-8")
     return path
@@ -531,10 +616,18 @@ def _print_summary(payload: dict[str, Any]) -> None:
     rm = res["return_gru"]["return_metrics"]
     print("\n-- Return-space metrics (return GRU) --")
     print(f"   directional_accuracy={rm['directional_accuracy']:.4f}  "
-          f"return_mae={rm['return_mae']:.4f}  return_rmse={rm['return_rmse']:.4f}")
+          f"strict_dir_acc(|r|>{rm['deadzone_eps']:.3f})={rm['directional_accuracy_strict']:.4f}  "
+          f"deadzone_share={rm['deadzone_share']:.3f}")
+    print(f"   return_mae={rm['return_mae']:.4f}  return_rmse={rm['return_rmse']:.4f}")
     print(f"   hit_rate_sign_strategy={rm['hit_rate_sign_strategy']:.4f}  "
           f"buy&hold_cum={rm['cumulative_return_buy_and_hold']:.4%}  "
           f"sign_strategy_cum={rm['cumulative_return_sign_strategy']:.4%}")
+    if "ridge_baseline" in res:
+        rr = res["ridge_baseline"]["return_metrics"]
+        rp = res["ridge_baseline"]["price_metrics_reconstructed"]
+        print(f"   [ridge] MAE={rp['mae']:.4f} RMSE={rp['rmse']:.4f} "
+              f"DirAcc={rr['directional_accuracy']:.4f} "
+              f"strict={rr['directional_accuracy_strict']:.4f}")
     print(f"   [{res['return_gru']['diagnostics_note']}]")
 
     print("\nsaved:")
@@ -579,10 +672,16 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--lookback", type=int, default=DEFAULT_LOOKBACK)
     run.add_argument("--val-frac", type=float, default=DEFAULT_VAL_FRAC)
     run.add_argument("--test-frac", type=float, default=DEFAULT_TEST_FRAC)
-    run.add_argument("--return-type", choices=["log", "pct"], default="log",
-                     help="return target: log-return (default) or percentage")
+    run.add_argument("--return-type", choices=["log", "pct", "logvol", "pctvol"],
+                     default="log",
+                     help="return target: log/pct (natural) or logvol/pctvol "
+                          "(variance-standardized by train-split std)")
     run.add_argument("--loss", choices=["mse", "hybrid"], default="mse",
                      help="mse (default) or hybrid MSE+BCE direction (GRU backbone)")
+    run.add_argument("--eps-deadzone", type=float, default=0.005,
+                     help="|r| dead-zone threshold for strict directional accuracy (default 0.005)")
+    run.add_argument("--baseline", choices=["none", "ridge"], default="none",
+                     help="extra simple baseline: ridge regression on same split (default none)")
     run.add_argument("--seed", type=int, default=DEFAULT_SEED)
 
     mod = parser.add_argument_group("model / training")
@@ -653,6 +752,8 @@ def main(argv: list[str] | None = None) -> None:
         test_frac=args.test_frac,
         return_type=args.return_type,
         loss=args.loss,
+        deadzone_eps=args.eps_deadzone,
+        baseline=args.baseline,
         seed=args.seed,
         out_dir=args.out_dir,
     )
