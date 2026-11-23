@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Notebooks / checkpoints
+.ipynb_checkpoints/
+*.ipynb
+*.ckpt
+*.pt
+*.pth
+*.onnx
+*.h5
+*.keras
+*.joblib
+
+# Data & logs (keep raw/manual data out unless intended)
+*.csv
+*.parquet
+*.jsonl
+*.log
+wandb/
+runs/
+lightning_logs/
+mlruns/
+
+# IDEs / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Secrets
+*.env
+.env
