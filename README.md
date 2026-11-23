@@ -16,6 +16,7 @@ This project builds on that paper: our baseline mirrors its protocol (lookback 3
 - **Experiment harness** — `src/experiment.py`: expanding/rolling walk-forward with per-fold fitting, and sentiment ablation on identical splits/seeds (`--mode sentiment-ablation`). When no real sentiment columns exist, `--mode sentiment-ablation` refuses cleanly; `--mode sentiment-ablation-stock-only` runs a **zero-feature dummy control** (price-only vs. a constant-zero sentiment column) — it is not a true sentiment ablation.
 - **Return / directional diagnostics** — `src/return_experiment.py`: dead-zone directional accuracy (`|r| > ε`), variance-standardized targets (`logvol`/`pctvol`), and an optional ridge baseline on the same leak-free splits.
 - **Real sentiment ingestion** — `src/sentiment_gdelt.py`: fetches historical GDELT “Average Tone” (public API, no key), aligns to trading days, lags by one day (no look-ahead), and writes `data/sentiment_AAPL.csv` / `data/sentiment_005930.KS.csv` for true `--mode sentiment-ablation` runs.
+- **Horizon / feature / model battery** — `src/horizon_experiment.py`: horizons 1/3/5d, causal technical + real sentiment transforms, and GRU vs Ridge vs HistGradientBoostingRegressor on identical leak-free splits (results in `results/hypothesis_battery.md`).
 - **Real-data check (AAPL, 10y via yfinance):** baseline + 3-fold expanding walk-forward results, summarized in `NOTES.md` with artifacts in `results/`.
 
 Quick runs:
@@ -34,7 +35,9 @@ python -m src.experiment --mode sentiment-ablation --data data/prices.csv --sent
 - [x] AAPL real-data baseline + walk-forward results
 - [x] Real sentiment ingestion (GDELT tone; AAPL + Samsung) and true ablation runs
 - [x] Dead-zone / vol-standardized / ridge diagnostics
+- [x] Horizon (1/3/5d), causal-feature, and model-family hypothesis battery
 - [ ] Sentiment source quality & coverage review (tone ≠ labelled news sentiment)
+- [ ] Volume features; volatility-scaled dead-zone eps
 - [ ] Return / directional-target variants (next step under discussion — see below)
 
 ## Repository layout

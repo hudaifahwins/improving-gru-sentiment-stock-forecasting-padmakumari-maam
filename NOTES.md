@@ -64,6 +64,38 @@ and code live elsewhere; this file tracks the reasoning.
 - **Ingestion caveats**: GDELT DOC API is rate-limited (HTTP 429) and intermittently unavailable; retries with sleep succeeded after 2–4 attempts. Tone is an aggregate news-tone proxy, not labelled sentiment — coverage/quality still to be reviewed.
 - Files: `data/sentiment_AAPL.csv` (1222 rows), `data/sentiment_005930.KS.csv` (1187 rows) — gitignored.
 
+## Hypothesis battery (2026-11-23, real data, seeds 42/43/44)
+
+`src/horizon_experiment.py`: horizons 1/3/5, causal features, real GDELT sentiment
+transforms, GRU (mse) vs Ridge vs HistGradientBoostingRegressor on identical splits.
+
+| Tick | Setup | DirAcc (eps=0) | DirAcc strict (0.005) | GRU price MAE |
+|---|---|---|---|---|
+| AAPL | price, h1 | 0.4832 ± 0.0089 | 0.4741 ± 0.0076 | 3.103 |
+| AAPL | price+tech, h1 | 0.4680 ± 0.0109 | 0.4459 ± 0.0133 | 3.525 |
+| AAPL | price+tech+sentiment, h1 | 0.5067 ± 0.0303 | 0.5061 ± 0.0494 | 10.842 |
+| AAPL | price, h3 | 0.7762 ± 0.0118 | 0.8351 ± 0.0114 | 4.273 |
+| AAPL | price, h5 | 0.7839 ± 0.0265 | 0.8120 ± 0.0286 | 6.910 |
+| Samsung | price, h1 | 0.4224 ± 0.0014 | 0.4207 ± 0.0066 | 6775 |
+| Samsung | price+tech, h1 | 0.4481 ± 0.0099 | 0.4531 ± 0.0173 | 8250 |
+| Samsung | price+tech+sentiment, h1 | 0.4920 ± 0.0213 | 0.5103 ± 0.0238 | 29470 |
+| Samsung | price, h3 | 0.6538 ± 0.0061 | 0.6730 ± 0.0052 | 47450 |
+| Samsung | price, h5 | 0.6785 ± 0.0028 | 0.6842 ± 0.0025 | 103778 |
+| AAPL | ridge baseline (h1, price) | 0.4832 ± 0.0089 | — | — |
+| AAPL | gbr baseline (h1, price) | 0.4832 ± 0.0089 | — | — |
+| Samsung | ridge baseline (h1, price) | 0.4224 ± 0.0014 | — | — |
+| Samsung | gbr baseline (h1, price) | 0.4224 ± 0.0014 | — | — |
+
+Honest reading:
+- Multi-day (h=3/5) DirAcc is much higher — but targets overlap (P_{t+h} vs P_t),
+  so these are NOT independent predictions; do not read them as tradeable signal.
+- Causal tech features did not help at h=1 (AAPL worse, Samsung similar).
+- Real sentiment transforms give noisy, statistically inconclusive deltas on both
+  tickers (overlapping ± intervals with the price baseline).
+- Ridge/GBR ≈ GRU on identical splits (no family beat another).
+- Volume features not included (loader drops OHLCV); volatility-scaled dead-zone
+  eps not yet run. Both are open limitations.
+
 ## Proposed next step (to bring to Dr. Padmakumari P.)
 
 1. **Switch targets from raw close prices to returns / directional labels** (e.g., log-return or sign-of-return), with volatility-aware evaluation alongside RMSE/MAPE.
