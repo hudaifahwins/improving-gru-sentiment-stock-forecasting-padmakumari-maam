@@ -40,7 +40,6 @@ mlruns/
 *.env
 .env
 
-# Generated run artifacts (keep local, out of git)
-results/*.json
-results/*.md
-results/*.png
+# Generated run artifacts (keep local, out of git — incl. nested folders)
+results/*
+!results/.gitkeep

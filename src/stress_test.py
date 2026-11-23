@@ -175,8 +175,14 @@ def check1_scaler_leakage(
     model_cfg: ModelConfig,
     lookback: int,
     ranges: tuple[tuple[int, int], tuple[int, int], tuple[int, int]],
+    clean_result: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """MinMaxScaler fitted on the full series vs. on the training split only."""
+    """MinMaxScaler fitted on the full series vs. on the training split only.
+
+    ``clean_result`` is the canonical train-only run (already computed by
+    :func:`run_stress_tests`); when supplied it is reused, avoiding one
+    duplicate GRU training.
+    """
     train_range, val_range, test_range = ranges
     full_m = _feature_matrix(df, data_cfg)
     leaky_scaler = fit_scaler(full_m, "minmax")
@@ -186,7 +192,7 @@ def check1_scaler_leakage(
         train_range=train_range, val_range=val_range, test_range=test_range,
         scaler=leaky_scaler,
     )
-    clean = _train_and_evaluate_gru(
+    clean = clean_result if clean_result is not None else _train_and_evaluate_gru(
         df, data_cfg=data_cfg, model_cfg=model_cfg, lookback=lookback,
         train_range=train_range, val_range=val_range, test_range=test_range,
     )
@@ -314,7 +320,7 @@ def run_stress_tests(
     results = {
         "check_1_scaler_leakage": check1_scaler_leakage(
             df, data_cfg=data_cfg, model_cfg=model_cfg,
-            lookback=stress_cfg.lookback, ranges=ranges
+            lookback=stress_cfg.lookback, ranges=ranges, clean_result=canonical
         ),
         "check_2_persistence_vs_gru": check2_persistence_vs_gru(canonical),
         "check_3_sentiment_sanity": check3_sentiment_sanity(

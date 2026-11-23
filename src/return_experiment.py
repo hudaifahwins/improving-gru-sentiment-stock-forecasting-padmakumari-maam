@@ -113,12 +113,12 @@ def _window_return_targets(window: Any, return_type: str) -> np.ndarray:
     """
     p_prev = window.prev_raw
     p_now = window.y_raw[:, 0]
+    if np.any(p_now <= 0.0) or np.any(p_prev <= 0.0):
+        raise ValueError(
+            "Return targets require strictly positive prices "
+            "(found non-positive values in the data)."
+        )
     if return_type == "log":
-        if np.any(p_now <= 0.0) or np.any(p_prev <= 0.0):
-            raise ValueError(
-                "Log-return targets require strictly positive prices "
-                "(found non-positive values in the data)."
-            )
         return np.log(p_now / p_prev)
     return (p_now / p_prev - 1.0) * 100.0
 
