@@ -3,6 +3,12 @@
 Scratchpad for ideas, literature references, and decisions. Heavy experiments
 and code live elsewhere; this file tracks the reasoning.
 
+## Reference
+
+> Padmakumari P., et al. (2026). **Precision Investing: Combining Gated Recurrent Unit and Sentiment Analysis for Enhanced Stock Market Predictions.** *Computational Economics*. DOI: 10.1007/s10614-026-11393-w.
+
+Our baseline mirrors the paper's GRU configuration (lookback 30, hidden size 50) and extends it with leakage-free evaluation and sentiment-augmented experiments.
+
 ## Open questions
 
 - Which sentiment source? (news headlines, Twitter/X, Reddit, analyst reports)
@@ -35,4 +41,9 @@ and code live elsewhere; this file tracks the reasoning.
 | GRU | 15.20 ± 7.69 | 6.50% ± 3.34% | 0.492 ± 0.030 |
 
 **One question for Dr. Padmakumari P.** Given the plain price-level GRU loses to persistence on RMSE/MAPE (a common artefact of trending assets), should the project target *direction/profitability-aware* evaluation (e.g., sign/return-based targets, volatility-adjusted or log-return targets) rather than raw price levels — and if so, what baseline comparison would you expect for the GRU to be considered a meaningful improvement?
+
+## Proposed next step (to bring to Dr. Padmakumari P.)
+
+1. **Switch targets from raw close prices to returns / directional labels** (e.g., log-return or sign-of-return), with volatility-aware evaluation alongside RMSE/MAPE.
+2. **Test date-aligned sentiment features** by running `--mode sentiment-ablation` on the same AAPL splits once we have a sentiment source (e.g., news headlines / analyst tone); the harness already supports this unchanged.
 
