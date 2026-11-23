@@ -114,6 +114,11 @@ def _window_return_targets(window: Any, return_type: str) -> np.ndarray:
     p_prev = window.prev_raw
     p_now = window.y_raw[:, 0]
     if return_type == "log":
+        if np.any(p_now <= 0.0) or np.any(p_prev <= 0.0):
+            raise ValueError(
+                "Log-return targets require strictly positive prices "
+                "(found non-positive values in the data)."
+            )
         return np.log(p_now / p_prev)
     return (p_now / p_prev - 1.0) * 100.0
 
@@ -229,6 +234,7 @@ def _train_return_model(
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg.lr)
 
     def batch_loss(out: Any, yb: Any) -> Any:
+        """Loss on flattened 1-D targets (matches ``(B,)`` head slices exactly)."""
         if loss_mode == "hybrid":
             out_ret, out_dir = out
             return F.mse_loss(out_ret[:, 0], yb) + 0.5 * F.binary_cross_entropy_with_logits(
@@ -248,6 +254,7 @@ def _train_return_model(
         total = 0.0
         for xb, yb in train_dl:
             xb, yb = xb.to(device), yb.to(device)
+            yb = yb.reshape(-1)  # (B,1) -> (B,): no broadcast confusion in loss
             optimizer.zero_grad()
             loss = batch_loss(model(xb), yb)
             loss.backward()
@@ -260,6 +267,7 @@ def _train_return_model(
         with torch.no_grad():
             for xb, yb in val_dl:
                 xb, yb = xb.to(device), yb.to(device)
+                yb = yb.reshape(-1)
                 vtotal += batch_loss(model(xb), yb).item() * xb.size(0)
         val_loss = vtotal / len(val_ds)
 
@@ -363,10 +371,12 @@ def run_return_experiment(
         ret_model, prep.train.X, ret_train, prep.val.X, ret_val,
         model_cfg, loss_mode=exp_cfg.loss,
     )
+    t0 = time.perf_counter()
     pred_ret = _predict_returns(
         ret_model, prep.test.X,
         batch_size=model_cfg.batch_size, device=model_cfg.device, hybrid=hybrid,
     )
+    ret_infer_time = time.perf_counter() - t0
     pred_price = _reconstruct_prices(prep.test.prev_raw, pred_ret, exp_cfg.return_type)
     price_metrics = compute_metrics(prep.test.y_raw, pred_price, prep.test.prev_raw)
     return_metrics = compute_return_metrics(ret_test, pred_ret, exp_cfg.return_type)
@@ -393,7 +403,7 @@ def run_return_experiment(
             "epochs_run": ret_hist["epochs_run"],
             "best_val_loss": ret_hist["best_val_loss"],
             "train_time_s": ret_hist["train_time_s"],
-            "infer_time_s": None,  # backfilled below
+            "infer_time_s": ret_infer_time,
             "diagnostics_note": (
                 "Sign-strategy cumulative return is a zero-fee, frictionless "
                 "diagnostic computed on out-of-sample returns; it is not "
@@ -401,14 +411,6 @@ def run_return_experiment(
             ),
         },
     }
-    # Measure inference separately for the return model.
-    t0 = time.perf_counter()
-    _predict_returns(
-        ret_model, prep.test.X,
-        batch_size=model_cfg.batch_size, device=model_cfg.device, hybrid=hybrid,
-    )
-    results["return_gru"]["infer_time_s"] = time.perf_counter() - t0
-
     run_id = make_run_id("return_experiment")
     payload: dict[str, Any] = {
         "run_id": run_id,
@@ -579,7 +581,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--return-type", choices=["log", "pct"], default="log",
                      help="return target: log-return (default) or percentage")
     run.add_argument("--loss", choices=["mse", "hybrid"], default="mse",
-                     help="mse (default) or hybrid MSE+BCE direction")
+                     help="mse (default) or hybrid MSE+BCE direction (GRU backbone)")
     run.add_argument("--seed", type=int, default=DEFAULT_SEED)
 
     mod = parser.add_argument_group("model / training")
