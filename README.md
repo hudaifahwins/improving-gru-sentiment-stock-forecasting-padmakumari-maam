@@ -6,9 +6,9 @@ Research project on improving GRU-based stock forecasting by incorporating senti
 
 ## Reference paper
 
-> Padmakumari P., et al. (2026). **Precision Investing: Combining Gated Recurrent Unit and Sentiment Analysis for Enhanced Stock Market Predictions.** *Computational Economics*. DOI: [10.1007/s10614-026-11393-w](https://doi.org/10.1007/s10614-026-11393-w)
+> Padmakumari P., Pranav R. Swaminathan, Harshavardhan S.R., Viswadarsini S., Jaiaakaash J.S. (2026). **Precision Investing: Combining Gated Recurrent Unit and Sentiment Analysis for Enhanced Stock Market Predictions.** *Computational Economics*. DOI: [10.1007/s10614-026-11393-w](https://doi.org/10.1007/s10614-026-11393-w)
 
-This project builds on that paper: our baseline mirrors its GRU setup (lookback 30, hidden size 50) and adds leakage-free evaluation plus sentiment-augmented extensions.
+This project builds on that paper: our baseline mirrors its protocol (lookback 30, chronological 70/15/15 split, forward-fill imputation, MinMax scaling, Adam + MSE + early stopping, close-price-only features) and adds leakage-free evaluation plus sentiment-augmented extensions. Protocol details and our alignment/gaps are tracked in `NOTES.md`.
 
 ## What is implemented and tested
 
