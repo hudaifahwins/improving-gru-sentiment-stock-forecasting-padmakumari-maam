@@ -132,3 +132,17 @@ python3 scripts/enrich_seed_abstracts.py                                      # 
 python3 scripts/extract_corpus_findings.py                                    # 12 batch notes + stats
 python3 scripts/build_synthesis_pack.py                                       # stratified reading pack
 ```
+
+---
+
+## 9. 168-run leak-free batch verification status (E1–E8 outcomes)
+
+**Batch:** `results/batch_e1e8/` — 168 runs, seeds 42/43/44, chronological 70/15/15 per seed, train-only scaler, backward-looking windows, GDELT tone lagged 1 trading day. **0 failures**, 32.9 min, all `rc=0`. Aggregated by `scripts/aggregate_experiments.py`; audited by `scripts/write_batch_report.py`.
+
+**Headline verified results (all numbers from the batch; mean ± std over seeds; every claim base-rate audited):**
+
+- **E1 (return/directional targets):** AAPL `logvol + dir_margin` return-GRU DirAcc `0.5360 ± 0.0152` (seeds `{0.5476, 0.5418, 0.5187}`) vs raw-price GRU `0.4870 ± 0.0115` / Ridge `0.4899` — **excess `+0.0014` over the `0.5346` majority-sign base rate** (bias fix only, not directional skill). Return-GRU reconstructed-price nRMSE (Samsung, `logvol/mse`) `0.0343` vs documented verified `0.038` vs paper `0.048`; raw price-level nRMSE `0.16`. Samsung return-target runs collapse to all-down (`0.4184` ≈ down-base `0.4180`).
+- **E2 (non-overlapping multi-day):** genuine disjoint-window beats (no collapse, window-level sign tests significant): AAPL h=3 `price+tech` `0.8067 ± 0.0115` (excess `+0.1667`, p ≈ 1.9e-6, n=50 disjoint) / `price+tech+ohlcv_volnorm` `0.8200 ± 0.0529` (excess `+0.1800`, p ≈ 2.7e-8, n=50); AAPL h=5 `tech` `0.8222 ± 0.0385` (excess `+0.1556`, p = 0.004, n=30); Samsung `005930.KS` h=5 `tech` `0.6437 ± 0.0718` (excess `+0.1609`, p = 0.047, n=29). Sentiment full-stack underperforms tech/volnorm at multi-day (AAPL h=3 full `0.6867` vs `0.8200`/`0.8067`; AAPL h=5 full `0.7111` vs `0.8222`; Samsung h=3 full `0.5486`, seed 42 collapsed, vs tech `0.6667`).
+- **E1/E3/E7/E8:** h=1 shows no directional skill beyond the majority-sign base rate for any feature/loss/return variant (excess ≤ +0.01); OHLCV volnorm (E7) tested; attention/TCN baseline (E8) not implemented.
+
+**Honesty:** momentum also sits below the majority-sign base rate on these trend windows; h=1 "no-skill" conclusion; constant-sign collapses disclosed and excluded from verdicts.

@@ -31,13 +31,14 @@ except ImportError:  # pragma: no cover
 BASE = "https://api.gdeltproject.org/api/v2/doc/doc"
 
 
-def fetch_tone_timeline(query: str, start: date, end: date, timeout: int = 60):
-    """Return date->tone Series from GDELT TimelineTone."""
+def fetch_timeline(query: str, start: date, end: date, mode: str = "TimelineTone",
+                   series_name: str = "Average Tone", timeout: int = 60):
+    """Return date->value Series from GDELT DOC timeline APIs."""
     if requests is None:
         raise RuntimeError("requests not installed: pip install requests")
     params = {
         "query": query,
-        "mode": "TimelineTone",
+        "mode": mode,
         "format": "json",
         "startdatetime": start.strftime("%Y%m%d%H%M%S"),
         "enddatetime": end.strftime("%Y%m%d%H%M%S"),
@@ -45,33 +46,40 @@ def fetch_tone_timeline(query: str, start: date, end: date, timeout: int = 60):
     }
     resp = requests.get(BASE, params=params, timeout=timeout)
     if resp.status_code != 200:
-        raise RuntimeError(
-            f"GDELT HTTP {resp.status_code}: {resp.text[:300]}"
-        )
+        raise RuntimeError(f"GDELT HTTP {resp.status_code}: {resp.text[:300]}")
     data = resp.json()
     timeline = data.get("timeline")
     if isinstance(timeline, dict):
         if "date" not in timeline:
             raise RuntimeError("GDELT response missing 'timeline.date' key: " + str(data)[:300])
         dates = pd.to_datetime(timeline["date"], format="%Y%m%d")
-        tone = np.asarray(pd.to_numeric(timeline["value"], errors="coerce"))
-        return pd.Series(tone, index=dates).sort_index()
+        values = np.asarray(pd.to_numeric(timeline["value"], errors="coerce"))
+        return pd.Series(values, index=dates).sort_index()
     if isinstance(timeline, list):
-        series = next((s for s in timeline if s.get("series") == "Average Tone"), None)
+        series = next((s for s in timeline if s.get("series") == series_name), None)
         if series is None or "data" not in series:
-            raise RuntimeError("GDELT timeline missing 'Average Tone' series: " + str(data)[:300])
+            available = [s.get("series") for s in timeline]
+            raise RuntimeError(
+                f"GDELT timeline missing '{series_name}' series "
+                f"(available: {available}): " + str(data)[:300]
+            )
         dates = pd.to_datetime([d["date"] for d in series["data"]], format="%Y%m%dT%H%M%SZ")
-        tone = np.asarray(pd.to_numeric([d["value"] for d in series["data"]], errors="coerce"))
-        return pd.Series(tone, index=dates).sort_index()
+        values = np.asarray(pd.to_numeric([d["value"] for d in series["data"]], errors="coerce"))
+        return pd.Series(values, index=dates).sort_index()
     raise RuntimeError("GDELT response has unexpected timeline type: " + str(data)[:300])
 
 
-def make_sentiment_csv(ticker: str, query: str, out: Path, days: int = 3650) -> Path:
+def make_sentiment_csv(ticker: str, query: str, out: Path, days: int = 3650,
+                       with_count: bool = True) -> Path:
     import yfinance as yf
 
     end = date.today()
     start = end - timedelta(days=days)
-    tone = fetch_tone_timeline(query, start, end)
+    tone = fetch_timeline(query, start, end, mode="TimelineTone", series_name="Average Tone")
+    counts = None
+    if with_count:
+        counts = fetch_timeline(query, start, end, mode="TimelineVol",
+                                series_name="Volume Intensity")
 
     prices = yf.download(ticker, start=start, end=end, auto_adjust=True, progress=False)
     if prices is None or len(prices) == 0:
@@ -83,19 +91,27 @@ def make_sentiment_csv(ticker: str, query: str, out: Path, days: int = 3650) -> 
     frame = pd.DataFrame({"Date": closes.index, "Close": closes.values})
     frame["Date"] = pd.to_datetime(frame["Date"]).dt.normalize()
     tone.index = pd.to_datetime(tone.index).normalize()
-    # Coverage stats (honest reporting).
-    overlap = len(set(frame["Date"]) & set(tone.index))
-    # Lag tone by one calendar-before-trading-day step: tone known before close of t.
+    # Lag tone/count by one trading day: info known before close of t.
     frame = frame.merge(tone.rename("Sentiment_raw"), left_on="Date", right_index=True,
                         how="left")
     frame["Sentiment"] = frame["Sentiment_raw"].shift(1)
-    frame = frame.drop(columns=["Sentiment_raw"]).dropna(subset=["Sentiment"])
+    frame = frame.drop(columns=["Sentiment_raw"])
+    if counts is not None:
+        counts.index = pd.to_datetime(counts.index).normalize()
+        frame = frame.merge(counts.rename("NewsCount_raw"), left_on="Date", right_index=True,
+                            how="left")
+        frame["NewsCount"] = frame["NewsCount_raw"].shift(1)
+        frame = frame.drop(columns=["NewsCount_raw"])
+        frame = frame.dropna(subset=["Sentiment", "NewsCount"])
+    else:
+        frame = frame.dropna(subset=["Sentiment"])
 
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     frame.to_csv(out, index=False)
     print(f"wrote {out}: rows={len(frame)} price_days={len(closes)} "
-          f"tone_days={len(tone)} aligned_lag_rows={len(frame)}")
+          f"tone_days={len(tone)} count_days={None if counts is None else len(counts)} "
+          f"aligned_lag_rows={len(frame)}")
     return out
 
 

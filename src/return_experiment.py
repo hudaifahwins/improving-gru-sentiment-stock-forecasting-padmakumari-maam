@@ -262,6 +262,15 @@ def _train_return_model(
             return F.mse_loss(out_ret[:, 0], yb) + 0.5 * F.binary_cross_entropy_with_logits(
                 out_dir[:, 0], (yb >= 0).float()
             )
+        if loss_mode == "dir_margin":
+            # Directional-margin surrogate: Huber magnitude + BCE direction,
+            # with k calibrated on the train-split return std.
+            k = 1.0 / max(float(np.std(y_train)), 1e-4)
+            magnitude = F.huber_loss(out[:, 0], yb, delta=1.0)
+            direction = F.binary_cross_entropy_with_logits(
+                k * out[:, 0], (yb > 0).float()
+            )
+            return 0.5 * magnitude + 0.5 * direction
         return F.mse_loss(out[:, 0], yb)
 
     best_loss = float("inf")
@@ -676,8 +685,9 @@ def build_parser() -> argparse.ArgumentParser:
                      default="log",
                      help="return target: log/pct (natural) or logvol/pctvol "
                           "(variance-standardized by train-split std)")
-    run.add_argument("--loss", choices=["mse", "hybrid"], default="mse",
-                     help="mse (default) or hybrid MSE+BCE direction (GRU backbone)")
+    run.add_argument("--loss", choices=["mse", "hybrid", "dir_margin"], default="mse",
+                     help="mse (default), hybrid MSE+BCE, or directional-margin "
+                          "(Huber + BCE, k calibrated on train return std)")
     run.add_argument("--eps-deadzone", type=float, default=0.005,
                      help="|r| dead-zone threshold for strict directional accuracy (default 0.005)")
     run.add_argument("--baseline", choices=["none", "ridge"], default="none",

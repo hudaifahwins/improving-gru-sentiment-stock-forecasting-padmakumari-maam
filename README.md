@@ -88,6 +88,17 @@ Static research showcase (verified numbers only) hosted on GitHub Pages:
 Source lives in `docs/` (`index.html`, `styles.css`, `app.js`, `.nojekyll`). Local preview:
 `python3 -m http.server 8000 --directory docs`.
 
+## 168-run verified batch results (base-rate audited)
+
+`results/batch_e1e8/` — **168/168 runs, 0 failures, 32.9 min, seeds 42/43/44**; leak-free (70/15/15 chronological, train-only scaler, backward-looking windows, 1-day GDELT lag). Aggregated in `scripts/aggregate_experiments.py`; audited in `scripts/write_batch_report.py`.
+
+- **nRMSE labeling:** `0.038` = return-reconstructed nRMSE (verified battery / this batch best: Samsung `logvol/mse` `0.0343`); `0.16` = raw price-level nRMSE (this batch: Samsung `0.1619 ± 0.0207`; multifront raw `0.1618`). Paper: `0.048`.
+- **h=1:** no directional skill beyond the majority-sign base rate for any config; AAPL `logvol + dir_margin` reaches `0.5360 ± 0.0152` (excess `+0.0014` over `0.5346` base — bias fix, not skill). Samsung h=1 sign / return-target runs collapse (all-down).
+- **Genuine multi-day beats (disjoint, non-collapsed):** AAPL h=3 `price+tech` `0.8067 ± 0.0115` (excess `+0.1667`, p≈1.9e-6, n=50); AAPL h=3 `price+tech+ohlcv_volnorm` `0.8200 ± 0.0529` (excess `+0.1800`, p≈2.7e-8, n=50); AAPL h=5 `tech` `0.8222 ± 0.0385` (excess `+0.1556`, p=0.004, n=30); Samsung h=5 `tech` `0.6437 ± 0.0718` (excess `+0.1609`, p=0.047, n=29).
+- **Underperformers:** sentiment full-stack multi-day drag; hybrid losses; volnorm h=1 AAPL.
+
+Full numbers: `results/batch_e1e8/SUMMARY.md` (base-rate audited) and `results/batch_e1e8/batch_summary.json`.
+
 ## Next step — question for Dr. Padmakumari P.
 
 We want her guidance on **moving from raw price-level targets to return/directional targets** and **testing date-aligned sentiment features** on the same splits:

@@ -54,6 +54,10 @@ from src.return_experiment import (  # noqa: E402
     _reconstruct_prices,
     compute_return_metrics,
 )
+from src.features_research import (  # noqa: E402
+    build_ohlcv_volnorm_features,
+    has_ohlcv,
+)
 
 DEFAULT_EPOCHS = 200
 
@@ -68,8 +72,9 @@ class HConfig:
     return_type: str = "log"
     deadzone_eps: float = 0.005
     baseline: str = "none"  # none | ridge | gbr
-    features: str = "price"  # price | price+tech | price+tech+sentiment
+    features: str = "price"  # price | price+tech | price+tech+sentiment | +ohlcv_volnorm...
     stride: str = "overlap"  # overlap (sliding) | nonoverlap (stride = horizon)
+    vol_deadzone: float = 0.0  # 0 = report unfiltered only; >0 filters |target| > k·std20
     seed: int = DEFAULT_SEED
     out_dir: Path = Path("results")
 
@@ -101,6 +106,19 @@ def build_feature_frame(df: pd.DataFrame, data_cfg: DataConfig,
         out["tone5"] = tone.rolling(5, min_periods=1).mean()
         out["tone_shock"] = tone.diff()
         out["active10"] = (tone != 0).astype(float).rolling(10, min_periods=1).sum()
+        if "count" in data_cfg.sentiment_cols[0].lower() or len(data_cfg.sentiment_cols) > 1:
+            count_col = data_cfg.sentiment_cols[1]
+            cnt = df[count_col].astype(float)
+            lc = np.log1p(cnt)
+            out["sent_vol_z"] = (lc - lc.rolling(20, min_periods=10).mean()) / (
+                lc.rolling(20, min_periods=10).std() + 1e-8
+            )
+            out["sent_x_vol"] = out["tone_shock"] * np.clip(out["sent_vol_z"], 0, 3)
+    if "ohlcv_volnorm" in features:
+        if has_ohlcv(df):
+            ohlcv = build_ohlcv_volnorm_features(df, close_col=data_cfg.close_col)
+            for col in ohlcv.columns:
+                out[col] = ohlcv[col]
     return out.dropna()
 
 
@@ -198,16 +216,33 @@ def run_one(df: pd.DataFrame, *, data_cfg: DataConfig, cfg: HConfig,
     pred = _predict_returns(model, x_te, batch_size=model_cfg.batch_size,
                             device=model_cfg.device, hybrid=hybrid)
     infer = time.perf_counter() - t0
-    pred = pred * (1.0 if not cfg.return_type.endswith("vol") else 1.0)
 
     out: dict[str, Any] = {}
     price = _reconstruct_prices(prev_te, pred, "log")
+    ret_metrics = compute_return_metrics(
+        y_te[:, 0], pred[:, 0], "log", deadzone_eps=cfg.deadzone_eps
+    )
+    if cfg.vol_deadzone > 0:
+        # Causal volatility dead-zone: threshold uses only the previous target
+        # history (rows < t) so no look-ahead is introduced.
+        n = len(y_te)
+        roll = np.empty(n)
+        for i in range(n):
+            lo = max(0, i - 20)
+            roll[i] = float(np.std(y_te[lo:i])) if i > lo else 0.0
+        mask = np.abs(y_te[:, 0]) > cfg.vol_deadzone * (roll + 1e-8)
+        if mask.sum() > 0:
+            act = np.sign(y_te[mask, 0])
+            prd = np.sign(pred[mask, 0])
+            ret_metrics["dir_acc_vol_filtered"] = float(np.mean(act == prd))
+            ret_metrics["vol_filtered_share"] = float(np.mean(mask))
+        else:
+            ret_metrics["dir_acc_vol_filtered"] = float("nan")
+            ret_metrics["vol_filtered_share"] = 0.0
     out["gru"] = {
         "price_metrics": compute_metrics(np.exp(np.log(prev_te) + y_te[:, 0]),
                                          price, prev_te),
-        "return_metrics": compute_return_metrics(
-            y_te[:, 0], pred[:, 0], "log", deadzone_eps=cfg.deadzone_eps
-        ),
+        "return_metrics": ret_metrics,
         "best_epoch": hist["best_epoch"],
         "epochs_run": hist["epochs_run"],
         "train_time_s": hist["train_time_s"],
@@ -217,12 +252,15 @@ def run_one(df: pd.DataFrame, *, data_cfg: DataConfig, cfg: HConfig,
     # baselines (same windows)
     flat_tr = x_tr.reshape(x_tr.shape[0], -1)
     flat_te = x_te.reshape(x_te.shape[0], -1)
+    ridge_pred = None
     for bname, bl in (("ridge", Ridge(alpha=1.0)),
                       ("gbr", HistGradientBoostingRegressor(random_state=cfg.seed,
                                                             max_iter=300))):
         if cfg.baseline == bname:
             bl.fit(flat_tr, y_tr.ravel())
             bp = bl.predict(flat_te).reshape(-1, 1)
+            if bname == "ridge":
+                ridge_pred = bp.ravel()
             bprice = _reconstruct_prices(prev_te, bp, "log")
             out[bname] = {
                 "price_metrics": compute_metrics(
@@ -238,13 +276,24 @@ def run_one(df: pd.DataFrame, *, data_cfg: DataConfig, cfg: HConfig,
     # available at time t (no look-ahead). NaN rows (insufficient history)
     # are excluded from the accuracy computation.
     valid_m = ~np.isnan(prev2_te)
+    mom_sign = np.full(len(y_te), np.nan)
     if valid_m.sum() > 0:
         mom_dir = np.sign(np.log(prev_te[valid_m]) - np.log(prev2_te[valid_m]))
         act_dir = np.sign(y_te[valid_m, 0])
+        mom_sign[valid_m] = mom_dir
         out["momentum_baseline"] = {
             "directional_accuracy": float(np.mean(mom_dir == act_dir)),
             "n_valid": int(valid_m.sum()),
         }
+
+    # Per-window dump for window-level tests (McNemar vs momentum, Wilcoxon
+    # vs ridge) and disjoint-n reporting. y/pred are log h-returns.
+    out["windows"] = {
+        "y": y_te[:, 0].tolist(),
+        "pred": pred[:, 0].tolist(),
+        "momentum_sign": [None if np.isnan(v) else float(v) for v in mom_sign],
+        "ridge_pred": None if ridge_pred is None else ridge_pred.tolist(),
+    }
 
     run_id = make_run_id("horizon_experiment")
     payload = {
@@ -272,11 +321,17 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--no-sentiment", action="store_true")
     p.add_argument("--horizon", type=int, default=1)
     p.add_argument("--features", default="price",
-                   choices=["price", "price+tech", "price+tech+sentiment"])
+                   choices=[
+                       "price", "price+tech", "price+tech+sentiment",
+                       "price+tech+ohlcv_volnorm",
+                       "price+tech+ohlcv_volnorm+sentiment",
+                   ])
+    p.add_argument("--loss", choices=["mse", "hybrid", "dir_margin"], default="mse")
+    p.add_argument("--vol-deadzone", type=float, default=0.0,
+                   help="0 = unfiltered only; >0 filters |target| > k·std20 (causal)")
     p.add_argument("--stride", default="overlap",
                    choices=["overlap", "nonoverlap"],
                    help="overlap (sliding) | nonoverlap (stride=horizon, disjoint eval)")
-    p.add_argument("--loss", choices=["mse", "hybrid"], default="mse")
     p.add_argument("--baseline", choices=["none", "ridge", "gbr"], default="none")
     p.add_argument("--eps-deadzone", type=float, default=0.005)
     p.add_argument("--seed", type=int, default=DEFAULT_SEED)
@@ -318,7 +373,8 @@ def main(argv: list[str] | None = None) -> None:
     cfg = HConfig(
         horizon=args.horizon, loss=args.loss, baseline=args.baseline,
         deadzone_eps=args.eps_deadzone, features=args.features,
-        stride=args.stride, seed=args.seed, out_dir=args.out_dir,
+        stride=args.stride, vol_deadzone=args.vol_deadzone,
+        seed=args.seed, out_dir=args.out_dir,
     )
     try:
         payload = run_one(df, data_cfg=data_cfg, cfg=cfg, model_cfg=model_cfg,
