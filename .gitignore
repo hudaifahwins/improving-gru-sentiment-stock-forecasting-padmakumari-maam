@@ -43,3 +43,7 @@ mlruns/
 # Generated run artifacts (keep local, out of git — incl. nested folders)
 results/*
 !results/.gitkeep
+
+# Literature corpus (bulk, regenerable via scripts/fetch_literature_md.py)
+literature_corpus/
+!literature_corpus/.gitkeep

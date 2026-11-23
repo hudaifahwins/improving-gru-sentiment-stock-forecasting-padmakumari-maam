@@ -19,6 +19,14 @@ This project builds on that paper: our baseline mirrors its protocol (lookback 3
 - **Horizon / feature / model battery** — `src/horizon_experiment.py`: horizons 1/3/5d, causal technical + real sentiment transforms, and GRU vs Ridge vs HistGradientBoostingRegressor on identical leak-free splits (results in `results/hypothesis_battery.md`). Supports `--stride overlap|nonoverlap` for disjoint multi-day evaluation and reports a causal momentum baseline (results in `results/strict_verification.md`).
 - **Real-data check (AAPL, 10y via yfinance):** baseline + 3-fold expanding walk-forward results, summarized in `NOTES.md` with artifacts in `results/`.
 
+## Literature corpus — 575 real papers anchored to the faculty paper
+
+Built from OpenAlex, anchored to Padmakumari et al. (2026): its **18 references** + **9 related works** + **404 papers citing those seeds** + **144 tight title/abstract-search backfill** = **575 papers (2018–2026), 570 with abstracts (99.1%), 400 open access**. 208 records rejected by dedupe + finance-domain guards + post-audit cull (25 off-domain lineage false-positives preserved in `literature_corpus/_excluded/`).
+
+- Pipeline: `scripts/fetch_literature_md.py` → `scripts/enrich_seed_abstracts.py` (Crossref → Semantic Scholar backfill) → `scripts/extract_corpus_findings.py` (12 batch notes, every paper accounted) → `scripts/build_synthesis_pack.py`.
+- Master synthesis: **`docs/literature_synthesis.md`** — grounded themes (LSTM 44.2% vs GRU 13.0%; GDELT mentioned by 0 papers; price-level targets 48.3%; 0/575 non-overlapping multi-day evaluation; significance tests 3.5%; Korea 0.3%), pitfalls mapped to the faculty paper and our leak-free audit, and 8 prioritized experiments.
+- Interactive: dashboard **#literature** section (searchable via the global bar).
+
 Quick runs:
 
 ```bash
@@ -36,6 +44,7 @@ python -m src.experiment --mode sentiment-ablation --data data/prices.csv --sent
 - [x] Real sentiment ingestion (GDELT tone; AAPL + Samsung) and true ablation runs
 - [x] Dead-zone / vol-standardized / ridge diagnostics
 - [x] Horizon (1/3/5d), causal-feature, and model-family hypothesis battery
+- [x] 575-paper literature corpus + synthesis (fetch → enrich → extract → batch notes → synthesis; dashboard #literature)
 - [ ] Sentiment source quality & coverage review (tone ≠ labelled news sentiment)
 - [ ] Volume features; volatility-scaled dead-zone eps
 - [ ] Return / directional-target variants (next step under discussion — see below)
@@ -48,6 +57,8 @@ python -m src.experiment --mode sentiment-ablation --data data/prices.csv --sent
 ├── src/            # source code
 │   ├── baseline.py # baseline GRU/LSTM forecasting (leakage-free)
 │   └── experiment.py # walk-forward + sentiment-ablation harness
+├── scripts/        # literature-corpus pipeline (fetch / enrich / extract / pack)
+├── docs/           # dashboard + literature_synthesis.md
 ├── experiments/    # experiment configs/notes
 └── results/        # outputs, metrics, figures
 ```

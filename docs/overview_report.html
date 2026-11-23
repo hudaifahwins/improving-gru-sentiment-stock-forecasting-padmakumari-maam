@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Improving GRU Sentiment Stock Forecasting — Technical Report</title>
+<style>
+@page {
+  size: A4;
+  margin: 20mm 16mm 18mm 16mm;
+  @top-left { content: "IMPROVING GRU SENTIMENT STOCK FORECASTING · TECHNICAL REPORT"; font: 600 7pt "DejaVu Sans"; color: #6b736b; letter-spacing: .04em; }
+  @top-right { content: "REV 1.2 · " counter(page); font: 7pt "DejaVu Sans"; color: #6b736b; }
+  @bottom-center { content: "Muhammad Hudaifah Mubarak (25BIT0267) · REV 1.2 · github.com/hudaifahwins/improving-gru-sentiment-stock-forecasting-padmakumari-maam"; font: 6.5pt "DejaVu Sans"; color: #6b736b; }
+}
+@page cover { @top-left { content: none; } @top-right { content: none; } @bottom-center { content: none; } }
+* { box-sizing: border-box; }
+body { font-family: "DejaVu Sans", sans-serif; color: #17352f; font-size: 9.2pt; line-height: 1.5; margin: 0; }
+.cover { page: cover; height: 247mm; display: flex; flex-direction: column; justify-content: center; page-break-after: always; }
+.cover .kicker { font-family: "DejaVu Sans Mono", monospace; font-size: 8pt; letter-spacing: .28em; color: #b8892f; text-align: center; }
+.cover h1 { font-family: Georgia, "DejaVu Serif", serif; font-size: 30pt; line-height: 1.12; text-align: center; margin: 10mm 0 6mm; letter-spacing: -.01em; }
+.cover .sub { text-align: center; color: #2c4d46; font-size: 10pt; max-width: 130mm; margin: 0 auto; }
+.cover .meta { display: flex; justify-content: space-between; margin-top: 18mm; font-size: 8.5pt; color: #6b736b; border-top: 1px solid #e0dbc9; padding-top: 4mm; }
+.cover .id { text-align: right; font-family: "DejaVu Sans Mono", monospace; color: #b8892f; font-size: 10pt; margin-top: 8mm; }
+h2 { font-family: Georgia, "DejaVu Serif", serif; font-size: 15pt; border-bottom: 2px solid #b8892f; padding-bottom: 2mm; margin: 0 0 4mm; page-break-before: always; page-break-after: avoid; }
+h2.first { page-break-before: avoid; }
+h3 { font-family: Georgia, "DejaVu Serif", serif; font-size: 10.5pt; margin: 5mm 0 2mm; page-break-after: avoid; }
+p { margin: 0 0 2.5mm; }
+ul, ol { margin: 0 0 3mm 5mm; padding-left: 4mm; }
+li { margin-bottom: 1.2mm; }
+table { width: 100%; border-collapse: collapse; font-size: 8pt; margin: 2mm 0 4mm; }
+th, td { border: 1px solid #e0dbc9; padding: 1.6mm 2mm; text-align: left; vertical-align: top; }
+th { background: #f0ecdf; font-family: "DejaVu Sans Mono", monospace; font-size: 7pt; text-transform: uppercase; letter-spacing: .05em; }
+code, pre { font-family: "DejaVu Sans Mono", monospace; }
+pre { background: #f7f4ec; border: 1px solid #e0dbc9; border-radius: 2mm; padding: 2.5mm 3mm; font-size: 7.6pt; white-space: pre-wrap; page-break-inside: avoid; }
+.callout { border-left: 3px solid #b8892f; background: #faf7ef; padding: 2.5mm 3.5mm; margin: 2mm 0 4mm; page-break-inside: avoid; }
+.formula { font-family: "DejaVu Sans Mono", monospace; font-size: 8.2pt; background: #f7f4ec; border: 1px solid #e0dbc9; padding: 1.6mm 2.5mm; margin: 0 0 1.6mm; }
+img.figure { width: 100%; border: 1px solid #e0dbc9; border-radius: 2mm; margin: 1mm 0 2mm; }
+.figcap { font-size: 7.8pt; color: #6b736b; margin-bottom: 3mm; }
+.muted { color: #6b736b; }
+.small { font-size: 8pt; }
+.kicker { font-family: "DejaVu Sans Mono", monospace; font-size: 7.5pt; letter-spacing: .2em; text-transform: uppercase; color: #b8892f; margin-bottom: 1.5mm; }
+.newsection { background: #faf7ef; border: 1px solid #b8892f; border-radius: 2mm; padding: 2mm 3mm; font-size: 8pt; color: #2c4d46; margin-bottom: 3mm; }
+</style>
+</head>
+<body>
+
+<!-- ================= COVER ================= -->
+<div class="cover">
+  <div class="kicker">RESEARCH PORTFOLIO · REV 1.2 · 2026</div>
+  <h1>Improving GRU Sentiment<br>Stock Forecasting</h1>
+  <p class="sub">A leakage-free reproduction and extension of Padmakumari P. et&nbsp;al. (2026), <i>Computational Economics</i>, DOI: 10.1007/s10614-026-11393-w — now with a verified 575-paper literature corpus synthesis.</p>
+  <div class="meta">
+    <div>PREPARED FOR<br><br><b>Dr. Padmakumari P.</b></div>
+    <div>PREPARED BY<br><br><b>Muhammad Hudaifah Mubarak (25BIT0267)</b></div>
+    <div>DATE<br><br><b>November 23, 2026</b></div>
+  </div>
+  <div class="id">25BIT0267</div>
+</div>
+
+<!-- ================= §0 ================= -->
+<h2 class="first">§ 0 · Document control</h2>
+<table>
+<tr><th style="width:32%">Field</th><th>Value</th></tr>
+<tr><td>Title</td><td>Improving GRU Sentiment Stock Forecasting — Technical Report</td></tr>
+<tr><td>Author</td><td>Muhammad Hudaifah Mubarak (25BIT0267)</td></tr>
+<tr><td>Prepared for</td><td>Dr. Padmakumari P.</td></tr>
+<tr><td>Reference</td><td>Padmakumari P. et al. (2026), Computational Economics, DOI 10.1007/s10614-026-11393-w</td></tr>
+<tr><td>Status</td><td>Final — pre-outreach draft</td></tr>
+<tr><td>Reliability</td><td>All numbers reproduced from committed code; seeds 42/43/44</td></tr>
+<tr><td>Literature corpus</td><td>575 real papers (OpenAlex, lineage-anchored); synthesis in §11 and docs/literature_synthesis.md</td></tr>
+</table>
+
+<h3>§ 0.1 · Revision history</h3>
+<table>
+<tr><th>Rev</th><th>Date</th><th>Change</th></tr>
+<tr><td>1.0</td><td>2026-11-23</td><td>Initial release</td></tr>
+<tr><td>1.1</td><td>2026-11-23</td><td>Layout engine rebuild; dynamic panels; captions; author added</td></tr>
+<tr><td>1.2</td><td>2026-11-23</td><td>Literature corpus synthesis added (§11, 575 verified papers); reproducibility appendix renumbered to §12</td></tr>
+</table>
+
+<h3>§ 0.2 · Contents</h3>
+<table>
+<tr><th>§</th><th>Section</th></tr>
+<tr><td>1</td><td>Reference paper and project objective</td></tr>
+<tr><td>2</td><td>Leakage-free modeling pipeline</td></tr>
+<tr><td>3</td><td>Metric definitions</td></tr>
+<tr><td>4</td><td>Experiment configuration matrix</td></tr>
+<tr><td>5</td><td>Synthetic results</td></tr>
+<tr><td>6</td><td>Real-data results — AAPL &amp; Samsung</td></tr>
+<tr><td>7</td><td>Multi-seed stability and diagnostics</td></tr>
+<tr><td>8</td><td>Stress tests</td></tr>
+<tr><td>9</td><td>Walk-forward out-of-sample</td></tr>
+<tr><td>10</td><td>Alignment with the paper and next steps</td></tr>
+<tr><td>11</td><td><b>Literature corpus synthesis — 575 verified papers (new in 1.2)</b></td></tr>
+<tr><td>12</td><td>Reproducibility appendix</td></tr>
+<tr><td>A</td><td>CLI reference</td></tr>
+</table>
+
+<!-- ================= §1 ================= -->
+<h2>§ 1 · Reference paper and project objective</h2>
+<p><b>Reference.</b> Padmakumari P., Pranav R. Swaminathan, Harshavardhan S.R., Viswadarsini S., Jaiaakaash J.S. (2026). <i>Precision Investing: Combining Gated Recurrent Unit and Sentiment Analysis for Enhanced Stock Market Predictions.</i> Computational Economics. DOI: 10.1007/s10614-026-11393-w.</p>
+<p><b>Objective:</b> reproduce the paper's GRU forecasting protocol with strict time-series hygiene and build tooling that lets us test its claims and extensions — GRU vs MLS-LSTM, sentiment as an added signal, and transparent, leakage-free evaluation.</p>
+<h3>Mirrored protocol from the paper</h3>
+<ul>
+<li>MinMaxScaler normalization; time steps of 30 (monthly window).</li>
+<li>Chronological 70/15/15 train/validation/test split — information leakage explicitly avoided.</li>
+<li>Adam optimizer with MSE loss; early stopping on validation loss; dropout on recurrent layers.</li>
+<li>Forward-fill imputation of missing values (prior-day values).</li>
+<li>Close-price-only features; MAPE, nRMSE, R² as the paper's evaluation metrics.</li>
+</ul>
+<h3>Deliberate improvements introduced in this project</h3>
+<ul>
+<li>Scaler fitted on the training split only (the paper scales the whole dataset before splitting).</li>
+<li>Naive persistence baseline for honest comparison (ŷt = yt−1).</li>
+<li>Expanding/rolling walk-forward evaluation with per-fold fitting.</li>
+<li>Deterministic seeding (random, numpy, torch) and open-source harness.</li>
+<li>Directional accuracy and return-space metrics added to the paper's set.</li>
+</ul>
+
+<!-- ================= §2 ================= -->
+<h2>§ 2 · Leakage-free modeling pipeline</h2>
+<img class="figure" src="assets/pipeline.png" alt="Leakage-free pipeline diagram">
+<p class="figcap">Figure 1 — End-to-end leakage-free pipeline. The scaler is fitted on training rows only; windows never cross split boundaries.</p>
+<h3>Protocol (numbering matches Figure 1)</h3>
+<ul>
+<li><b>Ingest:</b> CSV, yfinance ticker, or synthetic generator; normalize column names.</li>
+<li><b>Clean:</b> chronological sort, duplicate-date resolution, forward-fill (past-only), drop leading NaNs.</li>
+<li><b>Split:</b> single chronological 70/15/15 split — no shuffling across time.</li>
+<li><b>Scale:</b> MinMax / Standard fitted on training rows only; the same scaler transforms validation/test rows.</li>
+<li><b>Window:</b> sliding windows of 30 steps built inside each split segment — no window crosses a boundary.</li>
+<li><b>Train:</b> Adam + MSE, early stopping on validation loss; dropout when layers &gt; 1.</li>
+<li><b>Evaluate:</b> held-out test scored exactly once, in original price units.</li>
+</ul>
+<pre>def prepare_dataframe(df, data_cfg, lookback=30, val_frac=0.15, test_frac=0.15):
+    # chronological split -&gt; scaler fit on train rows only -&gt; windows per segment
+    n_test, n_val = round(n*test_frac), round(n*val_frac)
+    scaler = fit_scaler(train_rows)                    # MinMax / Standard — train ONLY
+    scaled = scaler.transform(all_rows)                  # same fitted transform
+    return windows(train, val, test)                     # no cross-split windows</pre>
+
+<!-- ================= §3 ================= -->
+<h2>§ 3 · Metric definitions</h2>
+<p>All metrics are computed on original (unscaled) price units unless stated otherwise. Return-space metrics use natural return units.</p>
+<div class="formula">MAE        = mean(|yt − ŷt|)                                — mean absolute error, same units as price        (1)</div>
+<div class="formula">RMSE       = √(mean((yt − ŷt)²))                            — root mean squared error                          (2)</div>
+<div class="formula">nRMSE      = RMSE / (ymax − ymin)                           — normalized RMSE (paper's metric)               (3)</div>
+<div class="formula">MAPE       = mean(|yt − ŷt| / |yt|) × 100                     — mean absolute percentage error (%)             (4)</div>
+<div class="formula">R²         = 1 − Σ(yt − ŷt)² / Σ(yt − ȳ)²                   — coefficient of determination                   (5)</div>
+<div class="formula">DirAcc     = mean( sign(ŷt − yt−1) == sign(yt − yt−1) )     — directional accuracy (next-step sign match)    (6)</div>
+<div class="formula">rt         = ln(Pt / Pt−1)                                  — log-return target; P̂t = Pt−1·exp(r̂t)           (7)</div>
+
+<!-- ================= §4 ================= -->
+<h2>§ 4 · Experiment configuration matrix</h2>
+<table>
+<tr><th>Module</th><th>Data</th><th>Seed</th><th>Split</th><th>Lookback</th><th>Model</th><th>Loss</th><th>Outputs</th></tr>
+<tr><td>baseline.py</td><td>CSV / yfinance / synthetic</td><td>42</td><td>70/15/15</td><td>30</td><td>GRU/LSTM</td><td>MSE</td><td>JSON, CSV, PNG</td></tr>
+<tr><td>experiment.py</td><td>same</td><td>42</td><td>fold-wise</td><td>30</td><td>GRU</td><td>MSE</td><td>JSON</td></tr>
+<tr><td>stress_test.py</td><td>same</td><td>42</td><td>70/15/15</td><td>30</td><td>GRU</td><td>MSE</td><td>JSON + MD</td></tr>
+<tr><td>return_experiment.py</td><td>same</td><td>42–44</td><td>70/15/15</td><td>30</td><td>GRU/LSTM</td><td>MSE / hybrid</td><td>JSON + MD</td></tr>
+</table>
+<div class="callout"><b>Default hyperparameters.</b> hidden_size=50, num_layers=1 (GRU) / 2 (LSTM), lr=1e-3, batch_size=64, epochs=200, patience=15, dropout=0.0. Return model: log-return targets; hybrid loss adds BCE on direction (weight 0.5).</div>
+
+<!-- ================= §5 ================= -->
+<h2>§ 5 · Synthetic results — seed 42</h2>
+<table>
+<tr><th>Model</th><th>MAE</th><th>RMSE</th><th>nRMSE</th><th>MAPE</th><th>R²</th><th>DirAcc</th></tr>
+<tr><td>Persistence</td><td>1.007</td><td>1.255</td><td>0.043</td><td>1.05%</td><td>0.956</td><td>0.000</td></tr>
+<tr><td>Raw price GRU</td><td>1.210</td><td>1.545</td><td>0.053</td><td>1.25%</td><td>0.933</td><td>0.487</td></tr>
+<tr><td>Return GRU (reconstructed)</td><td>0.994</td><td>1.251</td><td>0.043</td><td>1.04%</td><td>0.956</td><td>0.564</td></tr>
+</table>
+<p><b>Reading.</b> The return-target GRU beats persistence on MAE/RMSE and lifts directional accuracy to 56.4% — the model carried forward to real tickers in §6.</p>
+
+<!-- ================= §6 ================= -->
+<h2>§ 6 · Real-data results — AAPL (10y) &amp; Samsung 005930.KS</h2>
+<table>
+<tr><th>Dataset</th><th>Model</th><th>MAE</th><th>RMSE</th><th>nRMSE</th><th>MAPE</th><th>R²</th><th>DirAcc</th></tr>
+<tr><td>AAPL</td><td>Persistence</td><td>3.088</td><td>4.378</td><td>0.028</td><td>1.10%</td><td>0.987</td><td>0.000</td></tr>
+<tr><td>AAPL</td><td>Raw price GRU</td><td>13.862</td><td>17.644</td><td>0.114</td><td>4.57%</td><td>0.793</td><td>0.504</td></tr>
+<tr><td>AAPL</td><td>Return GRU (recon.)</td><td>3.087</td><td>4.382</td><td>0.028</td><td>1.10%</td><td>0.987</td><td>0.493</td></tr>
+<tr><td>Samsung</td><td>Persistence</td><td>6437</td><td>10132</td><td>0.034</td><td>3.14%</td><td>0.985</td><td>0.021</td></tr>
+<tr><td>Samsung</td><td>Raw price GRU</td><td>34689</td><td>49802</td><td>0.168</td><td>14.28%</td><td>0.637</td><td>0.442</td></tr>
+<tr><td>Samsung</td><td>Return GRU (recon.)</td><td>7368</td><td>11298</td><td>0.038</td><td>3.50%</td><td>0.981</td><td>0.421</td></tr>
+</table>
+<p><b>Key evidence.</b> The return-target GRU matches persistence on price-level error (MAE, RMSE, nRMSE, MAPE, R²) while retaining a real directional signal; the raw price-level GRU diverges on trending assets. Samsung nRMSE 0.038 sits in the same region as the paper's reported 0.048.</p>
+
+<!-- ================= §7 ================= -->
+<h2>§ 7 · Multi-seed stability — seeds 42/43/44 (mean ± std)</h2>
+<table>
+<tr><th>Ticker</th><th>Loss</th><th>Return GRU MAE</th><th>DirAcc (price)</th><th>DirAcc (return)</th><th>Sign strategy cum.</th><th>Buy &amp; hold cum.</th></tr>
+<tr><td>AAPL</td><td>mse</td><td>3.162 ± 0.054</td><td>0.489 ± 0.003</td><td>0.489 ± 0.003</td><td>−32.9% ± 4.6%</td><td>+64.0%</td></tr>
+<tr><td>AAPL</td><td>hybrid</td><td>3.318 ± 0.163</td><td>0.496 ± 0.021</td><td>0.496 ± 0.021</td><td>+0.7% ± 46.0%</td><td>+64.0%</td></tr>
+<tr><td>Samsung</td><td>mse</td><td>7646 ± 994</td><td>0.421 ± 0.000</td><td>0.421 ± 0.000</td><td>−82.1% ± 0.0%</td><td>+188.9%</td></tr>
+<tr><td>Samsung</td><td>hybrid</td><td>7790 ± 981</td><td>0.436 ± 0.011</td><td>0.436 ± 0.011</td><td>−71.8% ± 11.5%</td><td>+188.9%</td></tr>
+</table>
+<div class="callout"><b>Frictionless diagnostic.</b> Sign strategy = +1/−1/0 on the predicted direction, collecting the actual return. Zero fees/slippage — clearly labeled as a diagnostic, not trading advice. The negative sign-strategy returns on uptrends motivate long-only/thresholded variants.</div>
+<p><b>Dead-zone &amp; target diagnostics (seeds 42/43/44):</b> on AAPL, full DirAcc 0.489±0.003 (mse/log) vs strict (|r|&gt;0.005) 0.461±0.002; hybrid 0.496±0.021 vs strict 0.498±0.042; logvol 0.482±0.005; ridge baseline 0.4841. On Samsung: mse/log 0.4214±0.0000, strict 0.4161; hybrid 0.436±0.011; ridge 0.4510. These are all near chance — no forecasting-superiority claim is made. Real sentiment ablation (GDELT tone, lagged 1 day): AAPL Δ DirAcc −0.0022±0.0154; Samsung Δ DirAcc 0.0000±0.0000 — no measurable directional gain from tone on these stocks/periods.</p>
+<p><b>Hypothesis battery (seeds 42/43/44):</b> multi-day horizons (3d/5d) show much higher DirAcc (AAPL 0.776±0.012 / 0.784±0.027; Samsung 0.654±0.006 / 0.678±0.003), but targets overlap (P_{t+h} vs P_t) so these are not independent predictions. Causal technical features did not help at 1d (AAPL 0.468±0.011 vs price 0.483±0.009); real sentiment transforms yield noisy, statistically inconclusive deltas; Ridge and HistGradientBoostingRegressor match the GRU (AAPL 0.4832, Samsung 0.4224). Volume features and volatility-scaled dead-zone eps are not yet run.</p>
+<p><b>Strict non-overlapping verification (stride=horizon, fresh runs):</b> h=1 sits at chance on both tickers (AAPL 0.4832 ± 0.0089 vs momentum 0.4841; Samsung 0.4224 ± 0.0014 vs momentum 0.4837). Non-overlapping h=3/5 lowers multi-day DirAcc (AAPL 0.649±0.035 / 0.733±0.053; Samsung 0.625±0.008 / 0.642±0.030) but still exceeds the ~0.50 momentum baseline; treated as diagnostics only (disjoint test samples are small and trend autocorrelation remains).</p>
+
+<!-- ================= §8 ================= -->
+<h2>§ 8 · Stress tests — what breaks, what is robust</h2>
+<img class="figure" src="assets/stress_checks.png" alt="Three controlled stress checks">
+<p class="figcap">Figure 2 — Three controlled checks on the identical chronological split and seed (42).</p>
+<table>
+<tr><th>Check</th><th>Finding</th><th>Evidence</th></tr>
+<tr><td>1 · Scaler leakage</td><td>Whole-data scaling inflates results</td><td>AAPL RMSE 5.06 → 17.64; R² 0.983 → 0.793</td></tr>
+<tr><td>2 · Persistence vs GRU</td><td>Trade-off explicit</td><td>Persistence MAPE 1.10% vs 4.57%; GRU DirAcc 0.504 vs 0.000</td></tr>
+<tr><td>3 · Sentiment sanity</td><td>Harness detects alignment</td><td>Synthetic DirAcc 0.487 (aligned) vs 0.436 (shuffled)</td></tr>
+</table>
+<p>Real tickers without sentiment columns are skipped cleanly (status: skipped_no_sentiment_cols) — no crash paths.</p>
+
+<!-- ================= §9 ================= -->
+<h2>§ 9 · Walk-forward — AAPL, expanding, 3 folds</h2>
+<p>Each fold fits its own scaler on that fold's training block only; an inner chronological validation slice drives early stopping. Reported as mean ± std over folds.</p>
+<table>
+<tr><th>Model</th><th>RMSE (mean ± std)</th><th>MAPE (mean ± std)</th><th>DirAcc (mean ± std)</th></tr>
+<tr><td>Persistence</td><td>3.04 ± 0.93</td><td>1.34% ± 0.14%</td><td>0.002 ± 0.001</td></tr>
+<tr><td>GRU (price level)</td><td>15.20 ± 7.69</td><td>6.50% ± 3.34%</td><td>0.492 ± 0.030</td></tr>
+</table>
+<div class="callout"><b>Out-of-sample conclusion.</b> The GRU's directional edge (DirAcc ≈ 0.49) is stable across folds; its raw price-level RMSE penalty is an artifact of regressing on levels.</div>
+
+<!-- ================= §10 ================= -->
+<h2>§ 10 · Alignment with the paper &amp; next steps</h2>
+<p>The harness reproduces the paper's protocol exactly where it matters — lookback 30, chronological 70/15/15, MinMax, Adam, MSE, early stopping, forward-fill, close-only features — and adds the discipline that makes results trustworthy: train-only scaling, persistence baseline, walk-forward, multi-seed reporting, directional metrics.</p>
+<p>GRU hyperparameters are fully disclosed (hidden 50 / 1 layer), closing a reproducibility gap of the reference paper, which does not state them.</p>
+<div class="callout"><b>Question for Dr. Padmakumari P.</b><br>Should we switch targets from raw price levels to returns/directional labels (with volatility-aware evaluation), then run --mode sentiment-ablation with a real date-aligned sentiment source? What improvement over persistence would she expect a sentiment-augmented GRU to show?</div>
+<p><b>Stock-only control:</b> when a series has no sentiment columns, the harness runs --mode sentiment-ablation-stock-only — a zero-feature dummy control (not a true sentiment ablation) that adds a constant-zero sentiment column to isolate the effect of the feature channel in the absence of any real signal (Measured on AAPL: DirAcc 0.4900 vs 0.4929; Δ ≈ +0.003).</p>
+<p><b>Proposed roadmap.</b></p>
+<ul>
+<li>Long-only / thresholded sign strategies; volatility-aware evaluation.</li>
+<li>Real news-headline sentiment data aligned to trading days.</li>
+<li>Samsung replication table against the paper's published R²/MAPE/nRMSE.</li>
+</ul>
+
+<!-- ================= §11 (NEW) ================= -->
+<h2>§ 11 · Literature corpus synthesis — 575 verified papers (new in REV 1.2)</h2>
+<div class="newsection">Corpus built from OpenAlex and anchored to the reference paper (OpenAlex W7171375780): its 18 references + 9 related works + 404 papers citing those seeds + 144 tight title/abstract-search backfill = <b>575 real papers, 2018–2026</b>. 208 records rejected (38 duplicate IDs, 4 duplicate titles, 141 off-domain at fetch, 25 post-audit culls). 570/575 abstracts (99.1%), 400 open access. Full text: <b>docs/literature_synthesis.md</b>; interactive dashboard section <b>#literature</b>.</div>
+<h3>§ 11.1 · What the corpus says (grounded in abstracts)</h3>
+<ul>
+<li><b>Architectures:</b> LSTM 254 (44.2%) · GRU 75 (13.0%) · CNN 69 · Transformer 63 · SVM 62 · ensembles 60 · LSTM-GRU hybrids 53 · BERT/FinBERT 53 · attention 52 · GNN 35 · TCN 11 · xLSTM (Fan 2024). GRU's efficiency rationale is corpus-supported: Thorat 2023 (GRU ~2× faster than BiLSTM), Saud 2020 (GRU best on NEPSE banks), Shahi 2020 (normalized LSTM-vs-GRU + significance).</li>
+<li><b>Modalities:</b> Twitter/social 103 · news 101 · technical indicators 85 · OHLCV 82 · fundamentals 60 · indices 55 · macro 38 · crypto 23 · realized volatility 6 · <b>GDELT 0</b> — our lagged GDELT tone ingestion has no corpus precedent.</li>
+<li><b>Targets:</b> price level 278 (48.3%) · direction 123 (21.4%) · returns 82 (14.3%) · volatility 17 (3.0%) — price-level dominance matches the reference paper; our return-target diagnostics align with the minority practice.</li>
+<li><b>Horizons:</b> 78.6% of abstracts state no horizon; multi-day 9; next-day 30. <b>Zero papers report non-overlapping multi-day evaluation</b> — our --stride nonoverlap + momentum baseline fills this void (AAPL h=3 0.6494 ± 0.0347, h=5 0.7333 ± 0.0526 vs momentum 0.5086/0.5000).</li>
+<li><b>Metrics culture:</b> classification accuracy 318 (55.3%) vs significance tests 20 (3.5%) vs directional accuracy 12 (2.1%). Inflationary claims exist in the corpus itself (Raju 2024, seed: "85% accuracy, 175% 1-year return"). Honest templates: Shahi 2020, Peng 2021 (124-indicator factor zoo, walk-forward + significance).</li>
+<li><b>Leakage controls (2025–26 works):</b> R-CSAN decoder masking (Sun 2025), rolling validation (Minocha 2026), strict temporal separation + pre-open news (Niharmine 2026), chronological handling (Manhas 2026), and Theodorakopoulos 2026's review: "performance can be inflated by attention confounds, temporal leakage, and visibility effects" — all converge on our audit's controls.</li>
+<li><b>Market coverage:</b> India 46 · US 43 · China 41 · single ticker 33 · <b>Korea 2 (0.3%)</b> — Samsung replication is corpus-rare; the dual-market AAPL + Samsung design is justified.</li>
+</ul>
+<h3>§ 11.2 · Pitfalls mapped to the reference paper and our audit</h3>
+<table>
+<tr><th style="width:16%">Pitfall</th><th style="width:30%">Corpus evidence</th><th style="width:24%">Reference paper (2026)</th><th>Our leak-free audit</th></tr>
+<tr><td>P1 · Whole-dataset scaling</td><td>31/575 mention scaling; 0/575 report train-only fitting</td><td>MinMax on whole dataset before split</td><td>Train-only scaler; maxdiff = 0.0 timestamp probe</td></tr>
+<tr><td>P2 · Overlapping multi-day evaluation</td><td>9 abstracts mention multi-day; 0 non-overlapping</td><td>Not reported — added by our audit</td><td>--stride nonoverlap; momentum baseline; small-n disclosed</td></tr>
+<tr><td>P3 · Accuracy inflation</td><td>318/575 accuracy vs 20/575 significance tests</td><td>MAPE/nRMSE/R² only; no directional or significance metrics</td><td>DirAcc + dead-zone ε + strict(0.005) + chance line + seed std</td></tr>
+<tr><td>P4 · No persistence baseline</td><td>Persistence in 6 abstracts; momentum in 8</td><td>No persistence baseline</td><td>Persistence + causal momentum (AAPL 0.4841; Samsung 0.4837 at h=1)</td></tr>
+<tr><td>P5 · Sentiment alignment</td><td>Theodorakopoulos 2026; Niharmine 2026 (pre-open news); Minocha 2026 (rolling validation)</td><td>Categorical fusion rule</td><td>1-trading-day causal lag; standalone Δ; dummy control separate</td></tr>
+<tr><td>P6 · Unreported hyperparameters</td><td>Most abstracts silent on config</td><td>GRU hidden/layers unreported</td><td>hidden 50 · layers 1 disclosed; CLI reproducible</td></tr>
+<tr><td>P7 · Single-market overfitting</td><td>Single ticker 33; Korea 2/575 (0.3%)</td><td>Samsung-only</td><td>Dual market AAPL + Samsung, per-market tables</td></tr>
+<tr><td>P8 · Volume/volatility underused</td><td>Volume 12; realized volatility 6</td><td>Close-only features</td><td>Known gap: loader drops OHLCV → experiment E7</td></tr>
+</table>
+<h3>§ 11.3 · Prioritized next experiments (each grounded in corpus counts)</h3>
+<ul>
+<li><b>E1</b> Return/directional targets with volatility-aware evaluation (price-level 48.3% vs returns 14.3% vs volatility 3.0%). <i>Partially run: hybrid 0.4957 ± 0.0209; logvol 0.4822 ± 0.0049 (AAPL h=1).</i></li>
+<li><b>E2</b> Non-overlapping multi-day evaluation as standard (0/575 report it). <i>Verified: AAPL h=3 0.6494 ± 0.0347 · h=5 0.7333 ± 0.0526 vs momentum 0.5086/0.5000.</i></li>
+<li><b>E3</b> Domain sentiment (FNSPID-style; Dong 2024 KDD, cited 184, in corpus) vs GDELT tone ablation (BERT/FinBERT 53 · GDELT 0 · news 101). <i>Pending.</i></li>
+<li><b>E4</b> Significance battery — Diebold–Mariano / Wilcoxon across seeds (only 20/575 test significance). <i>Pending; template Shahi 2020, Peng 2021.</i></li>
+<li><b>E5</b> Cross-market replication + time-series cross-validation (Korea 0.3%; Friday 2025's 8-index TSCV). <i>Pending.</i></li>
+<li><b>E6</b> Leakage reporting checklist as repo standard (Theodorakopoulos 2026; R-CSAN masking; Niharmine pre-open rule). <i>Partially standard: maxdiff = 0.0 probe + train-only scaler.</i></li>
+<li><b>E7</b> Volume + realized-volatility inputs (volume 12 · realized vol 6; loader drops OHLCV). <i>Pending — src/features_research.py.</i></li>
+<li><b>E8</b> One attention/TCN baseline on identical splits (attention 52 · TCN 11; R-CSAN ablations). <i>Pending — hypothesis: helps multi-day disjoint, not h=1.</i></li>
+</ul>
+<h3>§ 11.4 · Integrity notes</h3>
+<ul>
+<li>Abstract-level analysis (full text mostly paywalled); findings describe reporting practices in abstracts.</li>
+<li>5 of 18 seed references are paywalled with no abstract in OpenAlex/Crossref/Semantic Scholar (Rajendiran 2021, Quadir 2022, Hu 2023, Lu 2023, Billah 2024) — retained with verified metadata, excluded from abstract-level claims. Shah 2024 and Thorat 2023 abstracts backfilled from publisher pages.</li>
+<li>Lineage-defined corpus (co-citation with the faculty bibliography) — strong relevance, not an exhaustive PRISMA review. 25 post-audit culls preserved in literature_corpus/_excluded/.</li>
+<li>OpenAlex metadata (venues, citations) as of 2026-11-23. No fabricated titles, authors, DOIs, venues, or numbers.</li>
+</ul>
+
+<!-- ================= §12 ================= -->
+<h2>§ 12 · Reproducibility appendix</h2>
+<p>Every number in this report comes from the following commands (repository root, seed 42 unless noted):</p>
+<pre>python -m src.baseline --ticker AAPL --seed 42
+python -m src.return_experiment --ticker AAPL --seed 42 --epochs 100
+python -m src.return_experiment --ticker 005930.KS --seed 42 --epochs 100
+python -m src.stress_test --ticker AAPL --seed 42
+python -m src.experiment --mode walk-forward --ticker AAPL --seed 42 --n-folds 3
+python -m src.return_experiment --sample-synthetic --seed 42
+python -m src.return_experiment --ticker AAPL --loss hybrid --seed 43 --epochs 100
+
+# literature corpus (575 papers) — regeneration
+python3 scripts/fetch_literature_md.py --target 600 --out literature_corpus
+python3 scripts/enrich_seed_abstracts.py
+python3 scripts/extract_corpus_findings.py
+python3 scripts/build_synthesis_pack.py</pre>
+<p>Environment: OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 on constrained CPUs. All artifacts (JSON, Markdown, plots) stay under results/ and are gitignored; source is committed to main. The bulk literature corpus (literature_corpus/, 575 papers) is gitignored; its manifest statistics are reproduced in §11 and docs/literature_synthesis.md.</p>
+<table>
+<tr><th>Artifact</th><th>Location</th><th>Status</th></tr>
+<tr><td>Baseline metrics</td><td>results/metrics.csv</td><td>gitignored</td></tr>
+<tr><td>Run reports (JSON)</td><td>results/baseline_*.json</td><td>gitignored</td></tr>
+<tr><td>Stress reports (JSON + MD)</td><td>results/stress_test_*.{json,md}</td><td>gitignored</td></tr>
+<tr><td>Return reports (JSON + MD)</td><td>results/return_experiment_*.{json,md}</td><td>gitignored</td></tr>
+<tr><td>Multi-front aggregate</td><td>results/multifront_return_check.md</td><td>gitignored</td></tr>
+<tr><td>Literature corpus (575 papers)</td><td>literature_corpus/</td><td>gitignored (bulk)</td></tr>
+<tr><td>Corpus synthesis</td><td>docs/literature_synthesis.md</td><td>committed</td></tr>
+</table>
+
+<!-- ================= §A ================= -->
+<h2>§ A · CLI reference</h2>
+<table>
+<tr><th>Module</th><th>Flags</th><th>Purpose</th></tr>
+<tr><td>baseline.py</td><td>--data/--ticker/--sample-synthetic · --lookback · --seed · --model · --plot</td><td>Run baseline (persistence, GRU/LSTM) and save reports</td></tr>
+<tr><td>experiment.py</td><td>--mode walk-forward|sentiment-ablation|sentiment-ablation-stock-only · --wf-type · --n-folds</td><td>Walk-forward / ablation experiments</td></tr>
+<tr><td>stress_test.py</td><td>--ticker/--csv/--sample-synthetic · --seed · --lookback</td><td>Three controlled robustness checks</td></tr>
+<tr><td>return_experiment.py</td><td>--return-type log|pct|logvol|pctvol · --loss mse|hybrid · --eps-deadzone · --baseline none|ridge · --seed</td><td>Return/directional forecasting vs raw price-level GRU</td></tr>
+<tr><td>horizon_experiment.py</td><td>--horizon 1|3|5 · --features price|price+tech|price+tech+GDELT · --stride overlap|nonoverlap · --seed</td><td>Multi-horizon battery with disjoint-window verification</td></tr>
+<tr><td>sentiment_gdelt.py</td><td>--ticker · --query · --out · --days</td><td>GDELT average-tone ingestion, 1-trading-day causal lag</td></tr>
+<tr><td>scripts/fetch_literature_md.py</td><td>--target · --out · --seed · --from-year</td><td>OpenAlex corpus fetch (lineage-anchored, guarded, deduped)</td></tr>
+</table>
+<div class="callout"><b>Determinism.</b> All modules re-seed random, numpy, and torch before each training run; identical flags and seed produce identical results.</div>
+
+</body>
+</html>

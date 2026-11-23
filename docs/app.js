@@ -397,6 +397,181 @@
   };
   document.querySelectorAll(".fact-num").forEach(el => animateCount(el));
 
+  /* ---------------------------------------------------------------- literature corpus synthesis */
+  const LIT = {
+    facts: [
+      [575, "real papers in corpus (all verified)"],
+      [18, "seed refs of Padmakumari et al. (2026)"],
+      [404, "citing-lineage papers (cite the 18 seeds)"],
+      [144, "tight title/abstract-search backfill"],
+      [208, "records rejected (dedupe + guards + cull)"],
+      [570, "abstracts (99.1%) · 400 open access"],
+      [12, "batch notes · every paper accounted"],
+      [0, "GDELT-mentioning papers — our ingestion is corpus-novel"]
+    ],
+    themes: [
+      ["T1 · LSTM dominates; GRU is the efficient minority", "LSTM 254 (44.2%) vs GRU 75 (13.0%). GRU efficiency precedents: Thorat 2023 (GRU ~2× faster than BiLSTM), Saud 2020 (GRU best on NEPSE banks, look-back study), Shahi 2020 (normalized LSTM-vs-GRU + significance), Farhadi 2025 (LSTM-GRU + full technical features), Vancsura 2025 (PRISMA: LSTM/GRU/XGBoost/hybrids dominate 4 asset classes)."],
+      ["T2 · Sentiment is shallow in time discipline; GDELT absent", "Twitter/social 103, news 101, BERT/FinBERT 53 abstracts; GDELT 0. Memi 2024 (BIST100 tweets, CNN 83.02%), Mehta 2021 (harvesting + DL), Zhang 2023 (DGATS graph + Kronecker fusion), Das 2024 (GNN+sentiment survey). Our 1-day-lagged GDELT tone has no corpus precedent."],
+      ["T3 · Price-level targets dominate", "Price level 278 (48.3%) vs returns 82 (14.3%) vs direction 123 (21.4%) vs volatility 17 (3.0%) — our return-target diagnostics (logvol/hybrid, dead-zone DirAcc) align with the minority practice."],
+      ["T4 · Multi-day evaluation barely exists", "9 abstracts state multi-day horizons; 0 report non-overlapping evaluation. Friday 2025 (ViT+TFT, time-series CV, 8 indices, h=1/3/7/10) is the closest practice. Our --stride nonoverlap + momentum baseline fills this void."],
+      ["T5 · Accuracy-chasing culture", "Classification accuracy 318 (55.3%) vs significance tests 20 (3.5%) vs directional accuracy 12 (2.1%). Raju 2024 (seed) claims 85% accuracy + 175% 1-year return. Honest templates: Shahi 2020, Peng 2021 (124-indicator factor zoo, walk-forward + significance)."],
+      ["T6 · Leakage controls named by 2025–26 works", "R-CSAN decoder masking (Sun 2025), rolling validation (Minocha 2026), strict temporal separation + pre-open news (Niharmine 2026), chronological handling (Manhas 2026), temporal-leakage review (Theodorakopoulos 2026) — all converge on our audit's controls."],
+      ["T7 · Korea nearly absent", "India 46 · US 43 · China 41 · single ticker 33 · Korea 2 (0.3%). Samsung replication is corpus-rare; dual-market AAPL + Samsung design is justified."],
+      ["T8 · Frontier ≠ validity", "Transformer 63 · attention 52 · GNN 35 · xLSTM (Fan 2024) · FNSPID dataset (Dong 2024, KDD, cited 184) — yet Theodorakopoulos 2026: gains depend more on alignment discipline than architectural novelty. Matches our h=1 equivalence (GRU = Ridge = GBR = momentum)."]
+    ],
+    pitfalls: [
+      { id: "P1", pitfall: "Whole-dataset scaling", corpus: "31/575 mention scaling; 0/575 report train-only fitting", paper: "MinMax on whole dataset before split (per audit)", audit: "Train-only scaler; maxdiff = 0.0 timestamp probe" },
+      { id: "P2", pitfall: "Overlapping multi-day evaluation", corpus: "9 abstracts mention multi-day; 0 report non-overlapping evaluation", paper: "Not reported — added by our audit", audit: "--stride nonoverlap; momentum baseline; small-n disclosed" },
+      { id: "P3", pitfall: "Accuracy inflation / R²-as-accuracy", corpus: "318/575 classification accuracy vs 20/575 significance tests", paper: "MAPE/nRMSE/R² only; no directional or significance metrics", audit: "DirAcc + dead-zone ε + strict(0.005) + chance line + seed std" },
+      { id: "P4", pitfall: "No persistence/momentum baseline", corpus: "Persistence in 6 abstracts; momentum rules in 8", paper: "No persistence baseline", audit: "Persistence + causal momentum (AAPL 0.4841; Samsung 0.4837 at h=1)" },
+      { id: "P5", pitfall: "Sentiment alignment undisciplined", corpus: "Theodorakopoulos 2026 (temporal leakage); Niharmine 2026 (pre-open news); Minocha 2026 (rolling validation)", paper: "Categorical fusion rule", audit: "1-trading-day causal lag; standalone Δ; dummy control separate" },
+      { id: "P6", pitfall: "Unreported hyperparameters", corpus: "Most abstracts silent on config", paper: "GRU hidden/layers unreported", audit: "hidden 50 · layers 1 disclosed; CLI reproducible" },
+      { id: "P7", pitfall: "Single-market overfitting", corpus: "Single ticker 33; Korea 2/575 (0.3%)", paper: "Samsung-only", audit: "Dual market AAPL + Samsung, per-market tables" },
+      { id: "P8", pitfall: "Volume/volatility inputs underused", corpus: "Volume 12; realized volatility 6", paper: "Close-only features", audit: "Known gap: loader drops OHLCV → experiment E7" }
+    ],
+    experiments: [
+      { id: "E1", t: "Return/directional targets with volatility-aware evaluation", why: "price-level 48.3% vs returns 14.3% vs volatility 3.0%", status: "Partially run: hybrid 0.4957 ± 0.0209; logvol 0.4822 ± 0.0049 (AAPL h=1)" },
+      { id: "E2", t: "Non-overlapping multi-day evaluation as standard", why: "0/575 corpus papers report it", status: "Verified: AAPL h=3 0.6494 ± 0.0347 · h=5 0.7333 ± 0.0526 vs momentum 0.5086/0.5000" },
+      { id: "E3", t: "Domain sentiment (FNSPID-style) vs GDELT tone ablation", why: "BERT/FinBERT 53 · GDELT 0 · news 101", status: "Pending — FNSPID (Dong 2024, KDD, cited 184) is in corpus" },
+      { id: "E4", t: "Significance battery (Diebold–Mariano / Wilcoxon across seeds)", why: "only 20/575 (3.5%) test significance", status: "Pending — template: Shahi 2020, Peng 2021" },
+      { id: "E5", t: "Cross-market replication + time-series cross-validation", why: "Korea 0.3% of corpus; Friday 2025's 8-index TSCV", status: "Pending" },
+      { id: "E6", t: "Leakage reporting checklist as repo standard", why: "Theodorakopoulos 2026 checklists; R-CSAN masking; Niharmine pre-open rule", status: "Partially: maxdiff = 0.0 probe + train-only scaler already standard" },
+      { id: "E7", t: "Volume + realized-volatility inputs", why: "volume 12 · realized vol 6; our loader drops OHLCV", status: "Pending — src/features_research.py" },
+      { id: "E8", t: "One attention/TCN baseline on identical splits", why: "attention 52 · TCN 11; R-CSAN ablations", status: "Pending — hypothesis: helps multi-day disjoint, not h=1" }
+    ],
+    limits: [
+      "Abstract-level analysis (full text mostly paywalled) — findings are about reporting practices in abstracts.",
+      "5 of 18 seed references are paywalled with no abstract in OpenAlex/Crossref/Semantic Scholar; retained with verified metadata, excluded from abstract-level claims.",
+      "Lineage-defined corpus (co-citation with the faculty bibliography) — strong relevance, not an exhaustive PRISMA review.",
+      "25 post-audit culls preserved in literature_corpus/_excluded/; 208 total rejections logged in the manifest.",
+      "OpenAlex metadata (venues, citations) as of 2026-11-23."
+    ],
+    papers: [
+      { cited: 841, year: 2020, title: "Stock Closing Price Prediction using Machine Learning Techniques", venue: "Procedia Computer Science", doi: "10.1016/j.procs.2020.03.326", seed: true, why: "Faculty paper's most-cited reference: ANN + Random Forest, next-day close, RMSE/MAPE." },
+      { cited: 258, year: 2020, title: "Stock Price Forecasting with Deep Learning: A Comparative Study", venue: "Mathematics", doi: "10.3390/math8091441", seed: false, why: "Normalized LSTM-vs-GRU comparison with significance assessment — the honest-comparison template." },
+      { cited: 246, year: 2023, title: "TRNN: An efficient time-series recurrent neural network for stock price prediction", venue: "Information Sciences", doi: "10.1016/j.ins.2023.119951", seed: true, why: "Seed reference (paywalled; metadata verified). Time-series RNN variant." },
+      { cited: 228, year: 2022, title: "Novel optimization approach for stock price forecasting using multi-layered sequential LSTM", venue: "Applied Soft Computing", doi: "10.1016/j.asoc.2022.109830", seed: true, why: "Seed reference (paywalled; metadata verified). Multi-layered sequential LSTM + optimization." },
+      { cited: 226, year: 2021, title: "Harvesting social media sentiment analysis to enhance stock market prediction using deep learning", venue: "PeerJ Computer Science", doi: "10.7717/peerj-cs.476", seed: false, why: "Social-media sentiment harvesting pipeline feeding deep learning." },
+      { cited: 184, year: 2024, title: "FNSPID: A Comprehensive Financial News Dataset in Time Series", venue: "ACM SIGKDD (KDD)", doi: "10.1145/3637528.3671629", seed: false, why: "Labelled financial-news dataset — the E3 domain-sentiment candidate source." },
+      { cited: 137, year: 2022, title: "Stock market prediction based on statistical data using machine learning algorithms", venue: "J. King Saud University - Science", doi: "10.1016/j.jksus.2022.101940", seed: true, why: "Seed: RF + SVM; 80.3% accuracy claim — accuracy-culture example." },
+      { cited: 135, year: 2020, title: "Analysis of look back period for stock price prediction with RNN variants", venue: "Procedia Computer Science", doi: "10.1016/j.procs.2020.03.419", seed: true, why: "Seed: Vanilla RNN vs LSTM vs GRU on NEPSE banks; GRU most successful; look-back analysis." },
+      { cited: 124, year: 2021, title: "Feature selection and deep neural networks for stock price direction forecasting using technical analysis indicators", venue: "Machine Learning with Applications", doi: "10.1016/j.mlwa.2021.100060", seed: false, why: "124-indicator factor zoo + feature selection; walk-forward, baseline, significance." },
+      { cited: 122, year: 2025, title: "Deep learning for financial forecasting: A review of recent trends", venue: "International Review of Economics & Finance", doi: "10.1016/j.iref.2025.104719", seed: false, why: "Review of 187 Scopus studies (2020–2024): MLP, RNN variants, CNN, transformers." },
+      { cited: 113, year: 2024, title: "Deep-learning-based stock market prediction incorporating ESG sentiment and technical indicators", venue: "Scientific Reports", doi: "10.1038/s41598-024-61106-2", seed: false, why: "ESG sentiment fused with technical indicators." },
+      { cited: 109, year: 2024, title: "A Novel Variant of LSTM Stock Prediction Method Incorporating Attention Mechanism", venue: "Mathematics", doi: "10.3390/math12070945", seed: true, why: "Seed: AMV-LSTM — attention-coupled LSTM variant, Adam, generalization claims." },
+      { cited: 101, year: 2024, title: "Stock price prediction: comparison of different moving average techniques using deep learning model", venue: "Neural Computing and Applications", doi: "10.1007/s00521-023-09369-0", seed: true, why: "Seed (paywalled; metadata verified): moving-average technique comparison with DL." },
+      { cited: 98, year: 2024, title: "Integrating sentiment analysis with graph neural networks for enhanced stock prediction: A comprehensive survey", venue: "Decision Analytics Journal", doi: "10.1016/j.dajour.2024.100417", seed: true, why: "Seed: GNN + sentiment survey; names data collection/preprocessing/annotation as open challenges." },
+      { cited: 91, year: 2024, title: "How effective is machine learning in stock market predictions?", venue: "Heliyon", doi: "10.1016/j.heliyon.2024.e24123", seed: false, why: "ML comparison across NYSE100, NIKKEI225, FTSE100, CAC40, DAX30, FTSE MIB, TSX." },
+      { cited: 85, year: 2022, title: "A Novel Ensemble Learning Approach for Stock Market Prediction Based on Sentiment Analysis and the Sliding Window Method", venue: "IEEE Trans. Computational Social Systems", doi: "10.1109/tcss.2022.3182375", seed: false, why: "Ensemble + sliding window + financial news." },
+      { cited: 84, year: 2024, title: "A deep fusion model for stock market prediction with news headlines and time series data", venue: "Neural Computing and Applications", doi: "10.1007/s00521-024-10303-1", seed: false, why: "Deep fusion of news headlines + time series." },
+      { cited: 80, year: 2024, title: "Advanced Stock Price Prediction with xLSTM-Based Models: Improving Long-Term Forecasting", venue: "ISCMI", doi: "10.1109/iscmi63661.2024.10851608", seed: false, why: "xLSTM — modern RNN revival for long-term stock forecasting." },
+      { cited: 79, year: 2025, title: "A Hybrid LSTM-GRU Model for Stock Price Prediction", venue: "IEEE Access", doi: "10.1109/access.2025.3586558", seed: false, why: "Hybrid LSTM-GRU leveraging the full range of technical analysis features." },
+      { cited: 79, year: 2024, title: "A Systematic Review on Graph Neural Network-based Methods for Stock Market Forecasting", venue: "ACM Computing Surveys", doi: "10.1145/3696411", seed: false, why: "GNN survey; inter-stock dependence beyond single-ticker models." },
+      { cited: 74, year: 2025, title: "Navigating AI-Driven Financial Forecasting: A Systematic Review of Current Status and Critical Research Gaps", venue: "Forecasting", doi: "10.3390/forecast7030036", seed: false, why: "PRISMA SLR across equities, crypto, commodities, FX; LSTM/GRU/XGBoost/hybrids dominate." },
+      { cited: 49, year: 2024, title: "Comparative Study for Sentiment Analysis of Financial Tweets with Deep Learning Methods", venue: "Applied Sciences", doi: "10.3390/app14020588", seed: true, why: "Seed: BIST100 tweets; CNN best (83.02% binary); GRU-CNN competitive." },
+      { cited: 44, year: 2023, title: "A Dynamic Attributes-driven Graph Attention Network Modeling on Behavioral Finance for Stock Prediction", venue: "ACM TKDD", doi: "10.1145/3611311", seed: true, why: "Seed: DGATS — dynamic graph attention + Kronecker tensor fusion of sentiment, transactions, text." },
+      { cited: 32, year: 2025, title: "RCSAN residual enhanced channel spatial attention network for stock price forecasting", venue: "Scientific Reports", doi: "10.1038/s41598-025-06885-y", seed: false, why: "Decoder masking prevents future information leakage; full ablation table; cross-market." },
+      { cited: 26, year: 2023, title: "Study on the sentimental influence on Indian stock price", venue: "Heliyon", doi: "10.1016/j.heliyon.2023.e22788", seed: true, why: "Seed: modified VADER + Shannon/Rényi entropy causality between news sentiment and price." },
+      { cited: 17, year: 2025, title: "A Multi-Modal Approach Using a Hybrid Vision Transformer and Temporal Fusion Transformer Model for Stock Price Movement Classification", venue: "IEEE Access", doi: "10.1109/access.2025.3589063", seed: false, why: "ViT + TFT; time-series cross-validation; 8 indices; horizons 1/3/7/10 days." },
+      { cited: 17, year: 2024, title: "A comprehensive review on sentiment analysis of social/web media big data for stock market prediction", venue: "Int. J. Systems Assurance Engineering and Management", doi: "10.1007/s13198-023-02214-6", seed: true, why: "Seed review (abstract backfilled from Springer): social/web media sentiment + big data analytics." },
+      { cited: 1, year: 2026, title: "Big Data and Graph Deep Learning for Financial Decision Support from Social Networks: A Critical Review", venue: "Electronics", doi: "10.3390/electronics15071405", seed: false, why: "Names temporal leakage, attention confounds, visibility effects; demands auditable pipelines + checklists." },
+      { cited: 0, year: 2026, title: "Deep Learning for Morocco Stock Market Prediction Based on News Sentiment Analysis", venue: "IRASET", doi: "10.1109/iraset68627.2026.11538843", seed: false, why: "MASI index; strict temporal separation; news only before market open; CNN-LSTM 78.6% direction; SHAP." },
+      { cited: 0, year: 2026, title: "AI-Powered Sentiment Analysis for Stock Market Prediction in Renewable Energy", venue: "Int. J. Software & Hardware Research in Engineering", doi: "10.26821/ijshre.14.09.2026.140904", seed: false, why: "FinBERT + decay weights + rolling validation eliminating look-ahead bias; h=1–5." },
+      { cited: 0, year: 2026, title: "An Explainable Hybrid Artificial Intelligence Framework for Stock Market Prediction Using Financial Time-Series and Market Sentiment", venue: "Zenodo (dissertation)", doi: "10.5281/zenodo.22065590", seed: false, why: "Chronological data handling to prevent information leakage; XAI emphasis." },
+      { cited: 27, year: 2023, title: "Stock Price Prediction Using GRU and BiLSTM Models", venue: "LNNS 641 (BITS-EEE-CON 2022)", doi: "10.1007/978-981-99-0483-9_9", seed: false, why: "Related work: BiLSTM slightly better, but GRU ~2× faster — the efficiency precedent for GRU." }
+    ]
+  };
+
+  function renderLiterature() {
+    const facts = $("#litFacts");
+    LIT.facts.forEach(([n, label]) => {
+      const d = document.createElement("div");
+      d.className = "fact lit-fact";
+      const num = document.createElement("span");
+      num.className = "fact-num";
+      num.textContent = typeof n === "number" ? n.toLocaleString("en-US") : String(n);
+      const lab = document.createElement("span");
+      lab.className = "fact-label";
+      lab.textContent = label;
+      d.append(num, lab);
+      facts.appendChild(d);
+    });
+    const themes = $("#litThemes");
+    themes.innerHTML = "<h3>Cross-corpus themes (grounded in abstracts)</h3>";
+    LIT.themes.forEach(([t, dsc]) => {
+      const el = document.createElement("div");
+      el.className = "lit-item";
+      const h = document.createElement("h4");
+      h.textContent = t;
+      const p = document.createElement("p");
+      p.textContent = dsc;
+      el.append(h, p);
+      themes.appendChild(el);
+    });
+    const pit = $("#litPitfalls");
+    pit.innerHTML = "<h3>Methodological pitfalls → faculty paper → our audit</h3>";
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    thead.innerHTML = "<tr><th>Pitfall</th><th>Corpus evidence</th><th>Faculty paper (2026)</th><th>Our leak-free audit</th></tr>";
+    const tbody = document.createElement("tbody");
+    LIT.pitfalls.forEach(r => {
+      const tr = document.createElement("tr");
+      [r.id + " · " + r.pitfall, r.corpus, r.paper, r.audit].forEach(c => {
+        const td = document.createElement("td");
+        td.textContent = c;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.append(thead, tbody);
+    pit.appendChild(table);
+    const exp = $("#litExperiments");
+    exp.innerHTML = "<h3>Prioritized next experiments</h3><ul></ul>";
+    const ul = exp.querySelector("ul");
+    LIT.experiments.forEach(e => {
+      const li = document.createElement("li");
+      const b = document.createElement("b");
+      b.textContent = e.id + " — " + e.t + ". ";
+      const i = document.createElement("i");
+      i.textContent = "Corpus: " + e.why + ". ";
+      const s = document.createElement("span");
+      s.textContent = e.status;
+      li.append(b, i, s);
+      ul.appendChild(li);
+    });
+    const lim = $("#litLimits");
+    lim.innerHTML = "<h3>Limits &amp; integrity notes</h3><ul></ul>";
+    const limUl = lim.querySelector("ul");
+    LIT.limits.forEach(l => {
+      const li = document.createElement("li");
+      li.textContent = l;
+      limUl.appendChild(li);
+    });
+    const wrap = $("#litPapers");
+    LIT.papers.forEach(p => {
+      const d = document.createElement("div");
+      d.className = "lit-paper";
+      const t = document.createElement("div");
+      t.className = "lp-title";
+      t.textContent = p.title;
+      if (p.seed) {
+        const badge = document.createElement("span");
+        badge.className = "lp-seed";
+        badge.textContent = "FACULTY BIBLIOGRAPHY";
+        t.appendChild(badge);
+      }
+      const meta = document.createElement("div");
+      meta.className = "lp-meta";
+      meta.textContent = p.year + " · " + p.venue + " · cited " + p.cited + " · doi " + p.doi;
+      const why = document.createElement("div");
+      why.className = "lp-why";
+      why.textContent = p.why;
+      d.append(t, meta, why);
+      wrap.appendChild(d);
+    });
+    $("#litFoot").textContent = "All counts from literature_corpus/_manifest.json + _corpus_stats.json (regenerated by scripts/). 5 paywalled seed abstracts disclosed in the synthesis. This section is covered by the global search bar above.";
+  }
+
   /* ---------------------------------------------------------------- paper vs audit matrix */
   const MATRIX = [
     { label: "Samsung nRMSE (test)", paper: "0.048 (reported)", val: 0.038,
@@ -453,6 +628,7 @@
   function renderMatrix() {
     const tbody = document.querySelector("#auditTable tbody");
     const foot = $("#matrixFoot");
+    const empty = $("#matrixEmpty");
     let rows = MATRIX.filter(matrixVisible);
     const key = matrixState.sortKey;
     rows.sort((a, b) => {
@@ -471,6 +647,7 @@
       tbody.appendChild(tr);
     });
     foot.textContent = "Above = verified numbers from seeds 42/43/44 (48/48 runs). Empty paper cells mean the 2026 paper did not report that metric.";
+    empty.hidden = rows.length > 0;
     // sort arrows
     document.querySelectorAll("#auditTable th.sortable").forEach(th => {
       th.classList.toggle("asc", th.dataset.key === matrixState.sortKey && matrixState.sortDir === 1);
@@ -499,7 +676,7 @@
   /* ---------------------------------------------------------------- global live search */
   const searchInput = $("#search-metrics");
   const searchCount = $("#searchCount");
-  const SEARCHABLES = ".chart-card, .tl-step, .repro-card";
+  const SEARCHABLES = ".chart-card, .tl-step, .repro-card, .lit-card, .lit-paper, .lit-fact";
 
   function applySearch() {
     const q = searchInput.value.trim().toLowerCase();
@@ -518,11 +695,24 @@
   searchInput.addEventListener("input", applySearch);
   $("#searchClear").addEventListener("click", () => { searchInput.value = ""; applySearch(); searchInput.focus(); });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "/" && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
+    const typing = document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA";
+    if (e.key === "/" && !typing) {
       e.preventDefault(); searchInput.focus();
     }
+    if (e.key === "Escape" && typing) {
+      searchInput.blur();
+    }
+  });
+  $("#matrixReset").addEventListener("click", () => {
+    document.querySelectorAll("#paper-audit .pill").forEach(p => {
+      const active = p.dataset.v === "all";
+      p.classList.toggle("is-active", active);
+    });
+    matrixState.ticker = "all"; matrixState.h = "all"; matrixState.mode = "all";
+    searchInput.value = ""; applySearch();
   });
 
   renderMatrix();
+  renderLiterature();
   redraw();
 })();
