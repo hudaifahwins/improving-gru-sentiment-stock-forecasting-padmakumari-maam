@@ -53,6 +53,18 @@
       </div>
     </section>
 
+    <!-- Live search -->
+    <section class="section search-section" aria-label="Live search">
+      <div class="wrap">
+        <div class="searchbar">
+          <label class="search-label" for="search-metrics">Search</label>
+          <input id="search-metrics" type="search" placeholder="Search metrics, tickers, horizons, models, steps… (press /)" autocomplete="off">
+          <button class="clear-btn" id="searchClear" type="button" aria-label="Clear search">✕</button>
+          <span class="search-count" id="searchCount" aria-live="polite"></span>
+        </div>
+      </div>
+    </section>
+
     <!-- Ticker control -->
     <section class="section" aria-label="Ticker selector">
       <div class="wrap">
@@ -117,6 +129,42 @@
           <figure><img src="./assets/stress_checks.png" alt="Three stress checks"><figcaption>Stress checks</figcaption></figure>
           <figure><img src="./assets/results_bars.png" alt="MAE and directional accuracy bars"><figcaption>MAE / DirAcc bars</figcaption></figure>
         </div>
+      </div>
+    </section>
+
+    <!-- Paper vs audit matrix -->
+    <section class="section" id="paper-audit">
+      <div class="wrap">
+        <p class="kicker">Paper vs. leak-free audit</p>
+        <h2>Comparison matrix</h2>
+        <div class="pills" role="group" aria-label="Filter comparison matrix">
+          <span class="pills-group">Ticker</span>
+          <button class="pill is-active" data-f="ticker" data-v="all">All</button>
+          <button class="pill" data-f="ticker" data-v="AAPL">AAPL</button>
+          <button class="pill" data-f="ticker" data-v="005930.KS">005930.KS</button>
+          <span class="pills-group">Horizon</span>
+          <button class="pill is-active" data-f="h" data-v="all">All</button>
+          <button class="pill" data-f="h" data-v="h=1">h=1</button>
+          <button class="pill" data-f="h" data-v="h=3">h=3</button>
+          <button class="pill" data-f="h" data-v="h=5">h=5</button>
+          <span class="pills-group">Mode</span>
+          <button class="pill is-active" data-f="mode" data-v="all">All</button>
+          <button class="pill" data-f="mode" data-v="Overlap">Overlap</button>
+          <button class="pill" data-f="mode" data-v="Non-Overlap">Non-Overlap</button>
+          <button class="pill" data-f="mode" data-v="Momentum">Momentum</button>
+        </div>
+        <div class="table-wrap">
+          <table id="auditTable">
+            <thead><tr>
+              <th class="sortable" data-key="label">Metric <span class="sort-arrow" aria-hidden="true"></span></th>
+              <th>Paper (2026) setup / benchmark</th>
+              <th class="sortable" data-key="val">Verified leak-free audit <span class="sort-arrow" aria-hidden="true"></span></th>
+              <th>Notes</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="muted small" id="matrixFoot"></p>
       </div>
     </section>
 

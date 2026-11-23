@@ -255,3 +255,34 @@ tr.hl td { background: color-mix(in srgb, var(--brass) 14%, transparent); }
   .chart-split { grid-template-columns: 1fr; }
   .nav-links { display: none; }
 }
+
+/* ------------------------------------------------------------------ search */
+.search-section { padding: 12px 0 8px; }
+.searchbar {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--card); border: 1px solid var(--hair); border-radius: 999px;
+  padding: 8px 10px 8px 20px; box-shadow: var(--shadow); backdrop-filter: blur(10px);
+}
+.search-label { font-family: var(--font-mono); font-size: .8rem; color: var(--mut); letter-spacing: .1em; }
+#search-metrics { flex: 1; background: transparent; border: none; outline: none; color: var(--ink); font-size: 1rem; }
+#search-metrics::placeholder { color: var(--mut); }
+.clear-btn { background: transparent; border: 1px solid var(--hair); color: var(--ink); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; }
+.search-count { font-family: var(--font-mono); font-size: .78rem; color: var(--mut); white-space: nowrap; }
+
+/* ------------------------------------------------------------------ pills */
+.pills { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 22px; }
+.pills-group { font-family: var(--font-mono); font-size: .74rem; letter-spacing: .12em; color: var(--mut); text-transform: uppercase; margin-right: 2px; }
+.pill { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--hair); background: transparent; color: var(--ink); font-weight: 600; cursor: pointer; font-size: .85rem; }
+.pill:hover { border-color: var(--brass); }
+.pill.is-active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+html[data-theme="dark"] .pill.is-active { background: var(--brass); color: #111; border-color: var(--brass); }
+
+/* ------------------------------------------------------------------ sortable */
+th.sortable { cursor: pointer; user-select: none; }
+th.sortable:hover { color: var(--brass); }
+.sort-arrow { display: inline-block; margin-left: 4px; }
+th.asc .sort-arrow::after { content: "↑"; }
+th.desc .sort-arrow::after { content: "↓"; }
+
+/* ------------------------------------------------------------------ hidden rows */
+[id].is-hidden { display: none; }

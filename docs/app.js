@@ -397,5 +397,132 @@
   };
   document.querySelectorAll(".fact-num").forEach(el => animateCount(el));
 
+  /* ---------------------------------------------------------------- paper vs audit matrix */
+  const MATRIX = [
+    { label: "Samsung nRMSE (test)", paper: "0.048 (reported)", val: 0.038,
+      audit: "0.038 (verified)", note: "Same asset class; smaller is better",
+      tick: "005930.KS", h: "", mode: "" },
+    { label: "DirAcc h=1 · AAPL", paper: "not reported", val: 0.4832,
+      audit: "GRU 0.4832 ± 0.0089 (= Ridge; momentum 0.4841)",
+      note: "At the daily noise floor", tick: "AAPL", h: "h=1", mode: "" },
+    { label: "DirAcc h=1 · Samsung", paper: "not reported", val: 0.4224,
+      audit: "GRU 0.4224 ± 0.0014 (= Ridge; momentum 0.4837)",
+      note: "Below causal momentum", tick: "005930.KS", h: "h=1", mode: "" },
+    { label: "DirAcc h=3 · AAPL", paper: "—", val: 0.6494,
+      audit: "Overlap 0.7762 ± 0.0118 · Non-overlap 0.6494 ± 0.0347 · Momentum 0.5086",
+      note: "Overlapping windows inflate; disjoint samples small (~tens of points)",
+      tick: "AAPL", h: "h=3", mode: "Non-Overlap" },
+    { label: "DirAcc h=5 · AAPL", paper: "—", val: 0.7333,
+      audit: "Overlap 0.7839 ± 0.0265 · Non-overlap 0.7333 ± 0.0526 · Momentum 0.5000",
+      note: "Same multi-day caveat", tick: "AAPL", h: "h=5", mode: "Non-Overlap" },
+    { label: "DirAcc h=3 · Samsung", paper: "—", val: 0.6254,
+      audit: "Overlap 0.6538 ± 0.0061 · Non-overlap 0.6254 ± 0.0083 · Momentum 0.5044",
+      note: "Disjoint windows, small sample", tick: "005930.KS", h: "h=3", mode: "Non-Overlap" },
+    { label: "DirAcc h=5 · Samsung", paper: "—", val: 0.6422,
+      audit: "Overlap 0.6785 ± 0.0028 · Non-overlap 0.6422 ± 0.0302 · Momentum 0.5000",
+      note: "Same multi-day caveat", tick: "005930.KS", h: "h=5", mode: "Non-Overlap" },
+    { label: "Sentiment ablation h=1 · AAPL", paper: "categorical fusion rule (paper)", val: 0.5067,
+      audit: "price 0.4832 ± 0.0089 · +tech 0.468 ± 0.011 · +GDELT tone 0.5067 ± 0.0303 · standalone Δ −0.0022 ± 0.0154",
+      note: "Within seed noise (n=3)", tick: "AAPL", h: "h=1", mode: "" },
+    { label: "Sentiment ablation h=1 · Samsung", paper: "categorical fusion rule (paper)", val: 0.492,
+      audit: "price 0.4224 ± 0.0014 · +tech 0.448 ± 0.010 · +GDELT tone 0.492 ± 0.021 · standalone Δ 0.0000 ± 0.0000",
+      note: "Within seed noise (n=3)", tick: "005930.KS", h: "h=1", mode: "" },
+    { label: "Zero-feature dummy control", paper: "n/a", val: 0.003,
+      audit: "Δ ≈ +0.003 (AAPL) — sentiment-ablation-stock-only",
+      note: "Dummy control, NOT a true sentiment ablation", tick: "AAPL", h: "h=1", mode: "" },
+    { label: "Split / scaler / windows", paper: "chronological 70/15/15; whole-data MinMax; step 30",
+      val: null, audit: "train-only scaler; per-split windows; maxdiff = 0.0",
+      note: "Leak-free engineering improvement", tick: "", h: "", mode: "" },
+    { label: "Architecture disclosure", paper: "hyperparameters unreported", val: null,
+      audit: "GRU hidden 50 · layers 1 disclosed", note: "Closes reproducibility gap", tick: "", h: "", mode: "" }
+  ];
+
+  const matrixState = { ticker: "all", h: "all", mode: "all", q: "", sortKey: "val", sortDir: -1 };
+
+  function matrixVisible(r) {
+    if (matrixState.ticker !== "all" && r.tick !== matrixState.ticker) return false;
+    if (matrixState.h !== "all" && r.h !== matrixState.h) return false;
+    if (matrixState.mode !== "all" && r.mode && r.mode !== matrixState.mode) return false;
+    if (matrixState.q) {
+      const hay = JSON.stringify(r).toLowerCase();
+      if (!hay.includes(matrixState.q)) return false;
+    }
+    return true;
+  }
+
+  function renderMatrix() {
+    const tbody = document.querySelector("#auditTable tbody");
+    const foot = $("#matrixFoot");
+    let rows = MATRIX.filter(matrixVisible);
+    const key = matrixState.sortKey;
+    rows.sort((a, b) => {
+      const av = key === "label" ? a.label : a.val;
+      const bv = key === "label" ? b.label : b.val;
+      if (av === null) return 1; if (bv === null) return -1;
+      if (typeof av === "number" && typeof bv === "number") return (av - bv) * matrixState.sortDir;
+      return String(av).localeCompare(String(bv)) * matrixState.sortDir;
+    });
+    tbody.innerHTML = "";
+    rows.forEach(r => {
+      const tr = document.createElement("tr");
+      [
+        r.label, r.paper, r.audit, r.note
+      ].forEach(c => { const td = document.createElement("td"); td.textContent = c; tr.appendChild(td); });
+      tbody.appendChild(tr);
+    });
+    foot.textContent = "Above = verified numbers from seeds 42/43/44 (48/48 runs). Empty paper cells mean the 2026 paper did not report that metric.";
+    // sort arrows
+    document.querySelectorAll("#auditTable th.sortable").forEach(th => {
+      th.classList.toggle("asc", th.dataset.key === matrixState.sortKey && matrixState.sortDir === 1);
+      th.classList.toggle("desc", th.dataset.key === matrixState.sortKey && matrixState.sortDir === -1);
+    });
+  }
+
+  document.querySelectorAll("#paper-audit .pill").forEach(pill => {
+    pill.addEventListener("click", () => {
+      const group = pill.dataset.f;
+      document.querySelectorAll(`#paper-audit .pill[data-f="${group}"]`).forEach(p => p.classList.remove("is-active"));
+      pill.classList.add("is-active");
+      matrixState[group === "ticker" ? "ticker" : group] = pill.dataset.v;
+      renderMatrix();
+    });
+  });
+  document.querySelectorAll("#auditTable th.sortable").forEach(th => {
+    th.addEventListener("click", () => {
+      const k = th.dataset.key;
+      if (matrixState.sortKey === k) matrixState.sortDir *= -1;
+      else { matrixState.sortKey = k; matrixState.sortDir = -1; }
+      renderMatrix();
+    });
+  });
+
+  /* ---------------------------------------------------------------- global live search */
+  const searchInput = $("#search-metrics");
+  const searchCount = $("#searchCount");
+  const SEARCHABLES = ".chart-card, .tl-step, .repro-card";
+
+  function applySearch() {
+    const q = searchInput.value.trim().toLowerCase();
+    matrixState.q = q;
+    renderMatrix();
+    let visibleCards = 0, totalCards = 0;
+    document.querySelectorAll(SEARCHABLES).forEach(el => {
+      totalCards++;
+      const hit = !q || el.textContent.toLowerCase().includes(q);
+      el.classList.toggle("is-hidden", !hit);
+      if (hit) visibleCards++;
+    });
+    searchCount.textContent = `Showing ${matrixVisibleRows()} of ${MATRIX.length} matrix rows · ${visibleCards}/${totalCards} cards & steps`;
+  }
+  function matrixVisibleRows() { return MATRIX.filter(matrixVisible).length; }
+  searchInput.addEventListener("input", applySearch);
+  $("#searchClear").addEventListener("click", () => { searchInput.value = ""; applySearch(); searchInput.focus(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/" && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
+      e.preventDefault(); searchInput.focus();
+    }
+  });
+
+  renderMatrix();
   redraw();
 })();
