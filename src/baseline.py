@@ -37,6 +37,7 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+from numpy.lib.stride_tricks import sliding_window_view
 
 try:  # PyTorch is optional at import time (needed only for model work).
     import torch
@@ -191,7 +192,13 @@ def sort_and_clean(
     df = df.dropna(subset=[close_col])
     if sentiment_cols:
         df = df.dropna(subset=list(sentiment_cols))
-    return df.reset_index(drop=True)
+    df = df.reset_index(drop=True)
+    if len(df) == 0:
+        raise ValueError(
+            f"No rows remain after parsing dates and cleaning missing values "
+            f"(date_col={date_col!r}, close_col={close_col!r})."
+        )
+    return df
 
 
 def load_stock_csv(
@@ -370,6 +377,8 @@ def build_windows(
 
     All values are derived from the *given segment only*; window ``i`` covers
     rows ``[i, i + lookback)`` and predicts the close at row ``i + lookback``.
+    Vectorized (sliding-window view + fancy indexing) — semantics identical to
+    the former per-window Python loop.
     """
     n = len(feat_scaled)
     if n <= lookback + horizon:
@@ -377,21 +386,19 @@ def build_windows(
             f"Not enough rows ({n}) for lookback={lookback}, horizon={horizon}."
         )
     count = n - lookback - horizon + 1
-    X = np.empty((count, lookback, feat_scaled.shape[1]), dtype=np.float32)
-    y_scaled = np.empty((count, horizon), dtype=np.float32)
-    y_raw = np.empty((count, horizon))
-    prev_raw = np.empty(count)
-    dates_out = (
-        np.empty(count, dtype=dates.dtype) if dates is not None and len(dates) == n else None
-    )
-    for i in range(count):
-        X[i] = feat_scaled[i : i + lookback]
-        t = i + lookback
-        y_scaled[i] = feat_scaled[t : t + horizon, close_idx]
-        y_raw[i] = close_raw[t : t + horizon]
-        prev_raw[i] = close_raw[t - 1]
-        if dates_out is not None:
-            dates_out[i] = dates[t - 1]
+    X = np.ascontiguousarray(
+        sliding_window_view(feat_scaled, lookback, axis=0)[:count].transpose(0, 2, 1)
+    ).astype(np.float32, copy=False)
+
+    target_idx = lookback + np.arange(count)[:, None] + np.arange(horizon)[None, :]
+    y_scaled = np.asarray(feat_scaled[target_idx, close_idx], dtype=np.float32)
+    y_raw = np.asarray(close_raw[target_idx], dtype=float)
+    prev_raw = close_raw[lookback - 1 : lookback - 1 + count].copy()
+
+    dates_out = None
+    if dates is not None and len(dates) == n:
+        dates_out = dates[lookback - 1 : lookback - 1 + count].copy()
+
     return WindowSet(
         X=X,
         y_scaled=y_scaled,
@@ -533,6 +540,8 @@ def compute_metrics(
     y_pred = np.asarray(y_pred, dtype=float).ravel()
     if len(y_true) != len(y_pred):
         raise ValueError(f"Length mismatch: y_true={len(y_true)}, y_pred={len(y_pred)}")
+    if len(y_true) == 0:
+        raise ValueError("compute_metrics requires non-empty arrays.")
 
     err = y_true - y_pred
     mae = float(np.mean(np.abs(err)))

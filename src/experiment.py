@@ -129,6 +129,10 @@ def run_walk_forward(
         val_len = max(1, round(0.15 * inner_len))
         if inner_len - val_len <= run_cfg.lookback + 1:
             val_len = 0
+        if val_len == 0:
+            print(f"[walk-forward] skipping fold {k}: no room for an inner "
+                  f"validation slice (inner_len={inner_len}, lookback={run_cfg.lookback})")
+            continue
         val_start = train_end - val_len
 
         try:

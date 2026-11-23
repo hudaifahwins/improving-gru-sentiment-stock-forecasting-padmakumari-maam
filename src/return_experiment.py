@@ -163,11 +163,11 @@ def compute_return_metrics(
     pred_dir = np.sign(pred)
     directional = float(np.mean(act_dir == pred_dir))
 
-    # Decimal returns for compounding.
+    # Decimal returns for compounding (log-sum-exp form: stable, no overflow).
     r_dec = np.expm1(actual) if return_type == "log" else actual / 100.0
     strat = pred_dir * r_dec  # sign allocation x actual return
-    buy_hold = float(np.prod(1.0 + r_dec) - 1.0)
-    sign_strategy = float(np.prod(1.0 + strat) - 1.0)
+    buy_hold = float(np.expm1(np.sum(np.log1p(r_dec))))
+    sign_strategy = float(np.expm1(np.sum(np.log1p(strat))))
 
     return {
         "directional_accuracy": directional,
@@ -223,11 +223,14 @@ def _train_return_model(
     device = resolve_device(cfg.device)
     model = model.to(device)
 
+    # Targets are pre-flattened to 1-D so losses never broadcast (B,1) vs (B,).
     train_ds = TensorDataset(
-        torch.from_numpy(x_train), torch.from_numpy(np.asarray(y_train, dtype=np.float32))
+        torch.from_numpy(x_train),
+        torch.from_numpy(np.asarray(y_train, dtype=np.float32).reshape(-1)),
     )
     val_ds = TensorDataset(
-        torch.from_numpy(x_val), torch.from_numpy(np.asarray(y_val, dtype=np.float32))
+        torch.from_numpy(x_val),
+        torch.from_numpy(np.asarray(y_val, dtype=np.float32).reshape(-1)),
     )
     train_dl = DataLoader(train_ds, batch_size=cfg.batch_size, shuffle=True)
     val_dl = DataLoader(val_ds, batch_size=cfg.batch_size, shuffle=False)
@@ -254,7 +257,6 @@ def _train_return_model(
         total = 0.0
         for xb, yb in train_dl:
             xb, yb = xb.to(device), yb.to(device)
-            yb = yb.reshape(-1)  # (B,1) -> (B,): no broadcast confusion in loss
             optimizer.zero_grad()
             loss = batch_loss(model(xb), yb)
             loss.backward()
@@ -267,7 +269,6 @@ def _train_return_model(
         with torch.no_grad():
             for xb, yb in val_dl:
                 xb, yb = xb.to(device), yb.to(device)
-                yb = yb.reshape(-1)
                 vtotal += batch_loss(model(xb), yb).item() * xb.size(0)
         val_loss = vtotal / len(val_ds)
 
