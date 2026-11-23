@@ -13,7 +13,7 @@ This project builds on that paper: our baseline mirrors its protocol (lookback 3
 ## What is implemented and tested
 
 - **Leakage-free baseline** — `src/baseline.py`: chronological sorting, past-only missing-value handling (forward-fill), scaler fit on the training split only, sliding windows; naive persistence vs. GRU/LSTM (PyTorch); metrics in original price units (MAE, RMSE, MAPE, R², directional accuracy), saved as JSON/CSV/PNG under `results/`.
-- **Experiment harness** — `src/experiment.py`: expanding/rolling walk-forward with per-fold fitting, and sentiment ablation on identical splits/seeds (`--mode sentiment-ablation`).
+- **Experiment harness** — `src/experiment.py`: expanding/rolling walk-forward with per-fold fitting, and sentiment ablation on identical splits/seeds (`--mode sentiment-ablation`). When no real sentiment columns exist, `--mode sentiment-ablation` refuses cleanly; `--mode sentiment-ablation-stock-only` runs a **zero-feature dummy control** (price-only vs. a constant-zero sentiment column) — it is not a true sentiment ablation.
 - **Real-data check (AAPL, 10y via yfinance):** baseline + 3-fold expanding walk-forward results, summarized in `NOTES.md` with artifacts in `results/`.
 
 Quick runs:

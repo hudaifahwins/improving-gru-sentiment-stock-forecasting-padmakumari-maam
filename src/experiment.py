@@ -277,9 +277,12 @@ def _fit_gru_variant(df, *, dc, run_cfg, model_cfg):
 def _stock_only_ablation(df, *, data_cfg, run_cfg, model_cfg):
     """Ablation when the series has no sentiment columns (stock-only path).
 
-    Compares GRU with no sentiment feature vs. a zero-sentiment feature on the
-    identical chronological split and seed. Both use the caller's chosen
-    ``scaler_kind`` and splitting fractions.
+    This is a zero-feature dummy control, not a true sentiment ablation: it
+    compares GRU with no sentiment feature vs. a constant-zero sentiment feature
+    on the identical chronological split and seed. Both use the caller's chosen
+    ``scaler_kind`` and splitting fractions. It exists to isolate the effect of
+    adding a feature channel when no real signal is available; conclusions about
+    sentiment itself cannot be drawn from it.
     """
     price_only_cfg = data_cfg
     zero_sentiment_cfg = replace(
@@ -300,9 +303,10 @@ def _stock_only_ablation(df, *, data_cfg, run_cfg, model_cfg):
         "mode": "sentiment-ablation-stock-only",
         "status": "completed",
         "note": (
-            "No stock-specific sentiment series was provided; this compares a zero-valued "
-            "sentiment feature vs. a price-only series on the same split and seed, "
-            "identically to the aligned-sentiment ablation where sentiment exists."
+            "No stock-specific sentiment series was provided. This is a zero-feature dummy "
+            "control: price-only vs. a constant-zero sentiment column on the same split and "
+            "seed. It is NOT a true sentiment ablation and cannot support conclusions about "
+            "sentiment itself."
         ),
         "variants": variants,
         "delta_zero_minus_price": {

@@ -22,7 +22,7 @@ and code live elsewhere; this file tracks the reasoning.
 **Alignment with our code.**
 - Matches: lookback 30 (`--lookback`), chronological 70/15/15, forward-fill imputation, MinMaxScaler, Adam + MSE, early stopping on val loss, close-price-only features, GRU/LSTM stacks.
 - Improvements over the paper: scaler fitted on the training split only (paper scales the whole dataset — mild leakage); persistence baseline; expanding/rolling walk-forward with per-fold fitting; directional accuracy + MAE; deterministic seeds.
-- Gaps to discuss with Dr. P.: (1) GRU hidden size/layers unreported (we use 50/1); (2) internal inconsistencies: dataset period (2016–2021 in §4/§5.1 vs. 2019–2024 in §5) and validation split (0.1 vs. 15%); (3) we don't yet compute nRMSE — adding it to `src/baseline.py` would allow head-to-head comparison with the paper's numbers; (4) the paper fuses sentiment post-hoc via a categorical signal rule, while our `--mode sentiment-ablation` concatenates daily numeric sentiment as a model feature — a different mechanism worth validating together.
+- Gaps to discuss with Dr. P.: (1) GRU hidden size/layers unreported (we use 50/1); (2) internal inconsistencies: dataset period (2016–2021 in §4/§5.1 vs. 2019–2024 in §5) and validation split (0.1 vs. 15%); (3) we now compute nRMSE in `compute_metrics` — the return-experiment report already prints it, so head-to-head comparison with the paper's numbers is possible (Samsung nRMSE 0.038 vs. paper 0.048); (4) the paper fuses sentiment post-hoc via a categorical signal rule, while our `--mode sentiment-ablation` concatenates daily numeric sentiment as a model feature — a different mechanism worth validating together.
 
 ## Open questions
 
