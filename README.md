@@ -68,6 +68,15 @@ pip install --user --break-system-packages -r requirements.txt
 
 (`yfinance` is optional, only needed for `--ticker`.)
 
+## Live Project Showcase
+
+Static research showcase (verified numbers only) hosted on GitHub Pages:
+
+**https://hudaifahwins.github.io/improving-gru-sentiment-stock-forecasting-padmakumari-maam/**
+
+Source lives in `docs/` (`index.html`, `styles.css`, `app.js`, `.nojekyll`). Local preview:
+`python3 -m http.server 8000 --directory docs`.
+
 ## Next step — question for Dr. Padmakumari P.
 
 We want her guidance on **moving from raw price-level targets to return/directional targets** and **testing date-aligned sentiment features** on the same splits:
