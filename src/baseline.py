@@ -71,9 +71,9 @@ _CSV_COLUMNS = [
     "run_id", "timestamp", "model", "data_source", "n_rows", "lookback",
     "hidden_size", "num_layers", "epochs_run", "best_epoch",
     "train_time_s", "infer_time_s",
-    "mae", "rmse", "mape", "r2", "directional_accuracy",
-    "persistence_mae", "persistence_rmse", "persistence_mape",
-    "persistence_r2", "persistence_directional_accuracy",
+    "mae", "rmse", "nrmse", "mape", "r2", "directional_accuracy",
+    "persistence_mae", "persistence_rmse", "persistence_nrmse",
+    "persistence_mape", "persistence_r2", "persistence_directional_accuracy",
 ]
 
 
@@ -435,19 +435,21 @@ def prepare_with_ranges(
     val_range: tuple[int, int],
     test_range: tuple[int, int],
     scaler_kind: str = "minmax",
+    scaler: Any | None = None,
 ) -> PreparedData:
     """Prepare windows from explicit chronological row ranges.
 
-    A scaler is fitted on the *training* rows only and then applied to the
-    whole feature matrix; windows are built per segment so a window never
-    spans split boundaries.
+    Unless a pre-fit ``scaler`` is injected, a scaler is fitted on the
+    *training* rows only and then applied to the whole feature matrix; windows
+    are built per segment so a window never spans split boundaries.
     """
     features = [data_cfg.close_col, *data_cfg.sentiment_cols]
     m = df[features].to_numpy(dtype=float)
     dates = df["_date"].to_numpy() if "_date" in df.columns else None
 
     a, b = train_range
-    scaler = fit_scaler(m[a:b], scaler_kind)
+    if scaler is None:
+        scaler = fit_scaler(m[a:b], scaler_kind)
     scaled = scaler.transform(m)
 
     def window_set(rows: tuple[int, int]) -> WindowSet:
@@ -519,6 +521,8 @@ def compute_metrics(
 
     * MAE        - mean absolute error
     * RMSE       - root mean squared error
+    * NRMSE      - RMSE normalized by the observed target range (ymax - ymin);
+      falls back to NaN if the range is ~0
     * MAPE       - mean absolute percentage error (%)
     * R2         - coefficient of determination
     * directional_accuracy - fraction of steps where the sign of the change
@@ -533,6 +537,9 @@ def compute_metrics(
     err = y_true - y_pred
     mae = float(np.mean(np.abs(err)))
     rmse = float(np.sqrt(np.mean(err**2)))
+
+    y_range = float(np.nanmax(y_true) - np.nanmin(y_true))
+    nrmse = rmse / y_range if y_range > 1e-12 else float("nan")
 
     denom = np.abs(y_true)
     safe = np.where(denom > 1e-8, denom, np.nan)
@@ -553,6 +560,7 @@ def compute_metrics(
     return {
         "mae": mae,
         "rmse": rmse,
+        "nrmse": nrmse,
         "mape": mape,
         "r2": r2,
         "directional_accuracy": directional,
