@@ -188,12 +188,32 @@
         </div>
 
         <div class="chart-card">
+          <h3>Consensus &amp; conviction filters (seeds 42/123/2026)</h3>
+          <p class="muted small">Same models, decision filters only — no extra parameters.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Config</th><th>Filter</th><th>n</th><th>DirAcc</th><th>excess</th><th>DM p</th><th>net 5bps</th></tr></thead>
+              <tbody>
+                <tr><td>AAPL h=3 · concat sentiment GRU</td><td>3/3 consensus</td><td>12</td><td><strong>0.9167</strong></td><td>+0.2500</td><td>0.5489</td><td>0.2000</td></tr>
+                <tr><td>AAPL h=3 · no-sent mse</td><td>3/3 consensus</td><td>21</td><td>0.8095</td><td>+0.2381</td><td>0.7857</td><td>0.2232</td></tr>
+                <tr><td>AAPL h=3 · concat sentiment GRU</td><td>conviction (|pred|&gt;q)</td><td>20.7 ± 2.6</td><td>0.8025 ± 0.0982</td><td>—</td><td>—</td><td>0.2267 ± 0.0189</td></tr>
+                <tr><td>Samsung h=5 · concat sentiment GRU (WF)</td><td>3/3 consensus</td><td>69</td><td><strong>0.8406</strong></td><td>+0.3073</td><td>—</td><td>3.5978</td></tr>
+                <tr><td>Samsung h=3 · concat sentiment GRU (WF)</td><td>3/3 consensus</td><td>—</td><td>0.5918+</td><td>—</td><td>—</td><td>0.5913</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="muted small">Honest note: consensus/convinction raise profile DirAcc and net return, but most DM p-values are NOT significant (small n). The strongest combination is Samsung h=5 concat sentiment under walk-forward + 3/3 consensus (n=69, DirAcc 0.8406, net 3.60 after costs). Do not read the others as definitive.</p>
+        </div>
+
+        <div class="chart-card">
           <h3>Data &amp; integrity caveats</h3>
           <ul class="roadmap">
-            <li><code>sent_vol_z</code> / <code>sent_x_vol</code> use an <em>activity proxy</em>
-            (rolling count of non-zero tone days); raw news article counts were unavailable — GDELT
-            DOC Vol API is rate-limited (HTTP 429). No fabricated counts were substituted.</li>
-            <li>Sentiment remains the real cached GDELT tone, lagged 1 trading day.</li>
+            <li>AAPL now uses <em>local firm-level sentiment</em>: real SEC EDGAR 8-K text scored with
+            the Loughran–McDonald lexicon (27 filings, 2024-02 → 2026-11, strictly lagged). GDELT tone
+            remains the source for Samsung (no SEC coverage → documented gap).</li>
+            <li><code>sent_vol_z</code> for Samsung uses an <em>activity proxy</em> over non-zero tone
+            days; raw article counts remain unavailable (GDELT DOC Vol API rate-limited). No fabricated
+            counts were substituted.</li>
             <li>Non-overlapping test windows are small (~tens of points); multi-day results reflect
             trend persistence unless a significant DM statistic says otherwise.</li>
           </ul>
