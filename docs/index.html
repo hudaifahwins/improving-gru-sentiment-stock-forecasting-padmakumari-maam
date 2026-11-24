@@ -206,6 +206,28 @@
         </div>
 
         <div class="chart-card">
+          <h3>Firm-level sentiment ablation (AAPL) &amp; baseline rigor audit</h3>
+          <p class="muted small">AAPL: no-sent vs cached GDELT tone vs local firm-level EDGAR 8-K
+          LM-lexicon polarity (27 filings, lagged). Same splits/seeds.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Source</th><th>h</th><th>split</th><th>full DirAcc</th><th>consensus 3/3</th><th>net 5bps (full)</th></tr></thead>
+              <tbody>
+                <tr><td>no-sent</td><td>3</td><td>70/15/15</td><td>0.6405 ± 0.0092</td><td>0.6596 (n=47)</td><td>0.7189</td></tr>
+                <tr><td>GDELT tone</td><td>3</td><td>70/15/15</td><td>0.7056 ± 0.0306</td><td>0.7391 (n=69)</td><td>1.2867</td></tr>
+                <tr><td>Firm LM-lexicon</td><td>3</td><td>70/15/15</td><td>0.7308 ± 0.0314</td><td>0.9167 (n=12)</td><td>0.2223</td></tr>
+                <tr><td>GDELT tone</td><td>5</td><td>70/15/15</td><td>0.8156 ± 0.0100</td><td>0.8409 (n=44, excess +0.2955)</td><td>1.0021</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="muted small">Baseline rigor audit (Ridge / HistGBR): identical windows; 12/48 cells
+          flagged small-n (&lt;30). Holm/BH-adjusted p-values applied across 48 tested hypotheses —
+          several nominal DM p-values do not survive adjustment. Deterministic baselines show 0 std
+          across seeds (expected). Full tables: results/firm_sentiment_ablation/report.md,
+          results/baseline_rigor_audit/report.md.</p>
+        </div>
+
+        <div class="chart-card">
           <h3>Data &amp; integrity caveats</h3>
           <ul class="roadmap">
             <li>AAPL now uses <em>local firm-level sentiment</em>: real SEC EDGAR 8-K text scored with

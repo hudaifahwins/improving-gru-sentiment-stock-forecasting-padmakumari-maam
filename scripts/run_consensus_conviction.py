@@ -237,11 +237,12 @@ def _run_split(cfg: Cfg, df: pd.DataFrame,
         split = out["split"]
         y = split.y_test[:, 0]
         p = out["pred_test"]
+        prev = split.prev_test
         q, _ = conviction_q_val(out["pred_val"], split.y_val[:, 0])
         n_tot = len(y)
         extra = {"q_val": q, "n_test_total": n_tot, "split": "701515"}
-        return {"y": y, "p": p, "n_tot": n_tot, "extra": extra}
-    ys, ps, n_tot = [], [], 0
+        return {"y": y, "p": p, "prev": prev, "n_tot": n_tot, "extra": extra}
+    ys, ps, prevs, n_tot = [], [], [], 0
     qs = []
     for fold in run_wf_folds(cfg, df):
         model = BaselineGRU(input_size=fold.x_train.shape[2])
@@ -251,16 +252,17 @@ def _run_split(cfg: Cfg, df: pd.DataFrame,
                     epochs=cfg.epochs, seed=cfg.seed, loss_kind=loss)
         p = predict(model, fold.x_test, use_sentiment=use_sent,
                     n_sent=fold.n_sent, gated=False)
-        ys.append(fold.y_test[:, 0]); ps.append(p); n_tot += len(p)
+        ys.append(fold.y_test[:, 0]); ps.append(p); prevs.append(fold.prev_test)
+        n_tot += len(p)
         q, _ = conviction_q_val(
             predict(model, fold.x_val, use_sentiment=use_sent,
                     n_sent=fold.n_sent, gated=False),
             fold.y_val[:, 0])
         qs.append(q)
     return {"y": np.concatenate(ys), "p": np.concatenate(ps),
-            "n_tot": n_tot, "extra": {"q_val": float(np.mean(qs)),
-                                       "n_test_total": n_tot,
-                                       "split": "wf"}}
+            "prev": np.concatenate(prevs), "n_tot": n_tot,
+            "extra": {"q_val": float(np.mean(qs)),
+                       "n_test_total": n_tot, "split": "wf"}}
 
 
 def main() -> None:
