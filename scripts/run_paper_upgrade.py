@@ -186,6 +186,8 @@ def fmt(v: float, d: int = 4) -> str:
 
 def _meanstd(vals: list[float]) -> str:
     a = np.asarray(vals, dtype=float)
+    if np.all(np.isnan(a)):
+        return "—"
     return f"{np.nanmean(a):.4f} ± {np.nanstd(a):.4f}"
 
 

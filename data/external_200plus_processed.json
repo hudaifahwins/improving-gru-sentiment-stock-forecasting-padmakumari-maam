@@ -1,0 +1,526 @@
+{
+  "source": "OpenAlex via scripts/fetch_external_200plus.py",
+  "total_records": 200,
+  "year_min": 2018,
+  "year_max": 2026,
+  "with_abstract": 200,
+  "open_access_urls": 112,
+  "abstract_coverage_pct": 100.0,
+  "oa_pct": 56.0,
+  "counts": {
+    "gru": {
+      "records_with": 25,
+      "pct": 12.5,
+      "occurrences": 48
+    },
+    "lstm": {
+      "records_with": 119,
+      "pct": 59.5,
+      "occurrences": 234
+    },
+    "return_target": {
+      "records_with": 31,
+      "pct": 15.5,
+      "occurrences": 72
+    },
+    "price_level": {
+      "records_with": 135,
+      "pct": 67.5,
+      "occurrences": 326
+    },
+    "multi_day": {
+      "records_with": 7,
+      "pct": 3.5,
+      "occurrences": 12
+    },
+    "leakage": {
+      "records_with": 2,
+      "pct": 1.0,
+      "occurrences": 2
+    },
+    "significance": {
+      "records_with": 38,
+      "pct": 19.0,
+      "occurrences": 47
+    },
+    "news_sentiment": {
+      "records_with": 62,
+      "pct": 31.0,
+      "occurrences": 209
+    }
+  },
+  "occurrences": {
+    "gru": 48,
+    "lstm": 234,
+    "return_target": 72,
+    "price_level": 326,
+    "multi_day": 12,
+    "leakage": 2,
+    "significance": 47,
+    "news_sentiment": 209
+  },
+  "notable": [
+    {
+      "openalex_id": "W2901852093",
+      "title": "Deep Learning for Stock Market Prediction Using Event Embedding and Technical Indicators",
+      "year": 2018,
+      "authors": [
+        "Pisut Oncharoen",
+        "Peerapon Vateekul"
+      ],
+      "matched_topic": "return_target",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": "https://doi.org/10.1109/icaicta.2018.8541310"
+    },
+    {
+      "openalex_id": "W2890056567",
+      "title": "Stock Market Embedding and Prediction: A Deep Learning Method",
+      "year": 2018,
+      "authors": [
+        "Yuzhou Chen",
+        "WU Jun-ji",
+        "Hui Bu"
+      ],
+      "matched_topic": "return_target",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": "https://doi.org/10.1109/icsssm.2018.8464968"
+    },
+    {
+      "openalex_id": "W2902982515",
+      "title": "Stock Return Prediction Using Artificial Neural Networks and Google Search Volumes",
+      "year": 2018,
+      "authors": [
+        "Cecilie Teisberg",
+        "Rakel Håkegård"
+      ],
+      "matched_topic": "return_target",
+      "is_oa": true,
+      "oa_url": "https://hdl.handle.net/11250/2576218",
+      "doi": ""
+    },
+    {
+      "openalex_id": "W2922302024",
+      "title": "Designing an Optimal Portfolio for Iran's Stock Market with Genetic Algorithm using Neural Network Prediction of Risk and Return Stocks",
+      "year": 2019,
+      "authors": [
+        "Masoud Fekri",
+        "Babak Barazandeh"
+      ],
+      "matched_topic": "return_target",
+      "is_oa": true,
+      "oa_url": "https://arxiv.org/pdf/1903.06632",
+      "doi": "https://doi.org/10.48550/arxiv.1903.06632"
+    },
+    {
+      "openalex_id": "W3135862768",
+      "title": "Analysing Stock Market Trend Prediction using Machine & Deep Learning Models: A Comprehensive Review",
+      "year": 2020,
+      "authors": [
+        "Doan Yen Nhi Le",
+        "Angelika Maag",
+        "Suntharalingam Senthilananthan"
+      ],
+      "matched_topic": "return_target",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": "https://doi.org/10.1109/citisia50690.2020.9371852"
+    },
+    {
+      "openalex_id": "W3121535229",
+      "title": "Artificial Neural Networks in Stock Return Prediction: Testing Model Specification in a Global Context",
+      "year": 2020,
+      "authors": [
+        "Naa Ayorkor Buxton-Tetteh"
+      ],
+      "matched_topic": "return_target",
+      "is_oa": true,
+      "oa_url": "https://open.uct.ac.za/bitstreams/d7c253d1-bc73-4fbb-b0c0-7b4c21cade0d/download",
+      "doi": ""
+    },
+    {
+      "openalex_id": "W3009443851",
+      "title": "Non-stationary neural network for stock return prediction.",
+      "year": 2020,
+      "authors": [
+        "Steven Y. K. Wong",
+        "Jennifer Chan",
+        "Lamiae Azizi",
+        "Richard Yi Da Xu"
+      ],
+      "matched_topic": "return_target",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": ""
+    },
+    {
+      "openalex_id": "W3197302096",
+      "title": "Stock Market Prediction and Investment using Deep Reinforcement Learning- a Continuous Training Pipeline",
+      "year": 2020,
+      "authors": [
+        "Amritha Sharma R",
+        "Debjyoti Guha",
+        "Hitesh Agarwal",
+        "Kothiya Meetkumar Harshadbhai"
+      ],
+      "matched_topic": "return_target",
+      "is_oa": true,
+      "oa_url": "https://doi.org/10.35940/ijeat.b2034.1210220",
+      "doi": "https://doi.org/10.35940/ijeat.b2034.1210220"
+    },
+    {
+      "openalex_id": "W3138331364",
+      "title": "Stock Market Value Prediction using Deep Learning",
+      "year": 2020,
+      "authors": [
+        "Seyda Kalyoncu",
+        "Akhtar Jamıl",
+        "Enes Karataş",
+        "Jawad Rasheed",
+        "Chawki Djeddi"
+      ],
+      "matched_topic": "return_target",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": ""
+    },
+    {
+      "openalex_id": "W3214241962",
+      "title": "Combined deep learning classifiers for stock market prediction: integrating stock price and news sentiments",
+      "year": 2021,
+      "authors": [
+        "B L Shilpa",
+        "B R Shambhavi"
+      ],
+      "matched_topic": "return_target",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": "https://doi.org/10.1108/k-06-2021-0457"
+    },
+    {
+      "openalex_id": "W3156510899",
+      "title": "Harvesting social media sentiment analysis to enhance stock market prediction using deep learning",
+      "year": 2021,
+      "authors": [
+        "Pooja V Mehta",
+        "Sharnil Pandya",
+        "Ketan V. Kotecha"
+      ],
+      "matched_topic": "return_target",
+      "is_oa": true,
+      "oa_url": "https://doi.org/10.7717/peerj-cs.476",
+      "doi": "https://doi.org/10.7717/peerj-cs.476"
+    },
+    {
+      "openalex_id": "W4200347527",
+      "title": "OPINION AND TECHNICAL INDICATOR BASED OPTIMIZED DEEP LEARNING FOR PREDICTION OF STOCK MARKET",
+      "year": 2021,
+      "authors": [
+        "Jaymit Bharatbhai Pandya",
+        "Udesang K. Jaliya"
+      ],
+      "matched_topic": "return_target",
+      "is_oa": true,
+      "oa_url": "http://www.ijcse.com/docs/INDJCSE21-12-06-166.pdf",
+      "doi": "https://doi.org/10.21817/indjcse/2021/v12i6/211206166"
+    },
+    {
+      "openalex_id": "W2902982515",
+      "title": "Stock Return Prediction Using Artificial Neural Networks and Google Search Volumes",
+      "year": 2018,
+      "authors": [
+        "Cecilie Teisberg",
+        "Rakel Håkegård"
+      ],
+      "matched_topic": "multi_day",
+      "is_oa": true,
+      "oa_url": "https://hdl.handle.net/11250/2576218",
+      "doi": ""
+    },
+    {
+      "openalex_id": "W4388575137",
+      "title": "Stock Market Prediction Using Deep Reinforcement Learning",
+      "year": 2023,
+      "authors": [
+        "Alamir Labib Awad",
+        "Saleh Mesbah Elkaffas",
+        "Mohammed Waleed Fakhr"
+      ],
+      "matched_topic": "multi_day",
+      "is_oa": true,
+      "oa_url": "https://www.mdpi.com/2571-5577/6/6/106/pdf?version=1699593144",
+      "doi": "https://doi.org/10.3390/asi6060106"
+    },
+    {
+      "openalex_id": "W4409047305",
+      "title": "Beyond Traditional Models: Revolutionizing Stock Market Prediction with a Deep Learning Framework",
+      "year": 2024,
+      "authors": [
+        "Bambam Kumar",
+        "G. Karthi",
+        "G. Vallathan",
+        "M. Raman Kumar"
+      ],
+      "matched_topic": "multi_day",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": "https://doi.org/10.1109/icdscnc62492.2024.10939371"
+    },
+    {
+      "openalex_id": "W4401063612",
+      "title": "Enhancing stock market prediction accuracy with recurrent deep learning models: A case study on the CAC40 index",
+      "year": 2024,
+      "authors": [
+        "Arash Tashakkori",
+        "Niloufar Erfanibehrouz",
+        "Shahin Mirshekari",
+        "Abolfazl Sodagartojgi",
+        "Vatsal Gupta"
+      ],
+      "matched_topic": "multi_day",
+      "is_oa": true,
+      "oa_url": "https://wjarr.com/sites/default/files/WJARR-2024-2156.pdf",
+      "doi": "https://doi.org/10.30574/wjarr.2024.23.1.2156"
+    },
+    {
+      "openalex_id": "W7236727866",
+      "title": "Advanced Stock Market Prediction Using Deep Learning Algorithms and Optimization Techniques",
+      "year": 2026,
+      "authors": [
+        "Nital Adikane",
+        "NIRMALRANI V"
+      ],
+      "matched_topic": "multi_day",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": "https://doi.org/10.1109/icecst70429.2026.11781519"
+    },
+    {
+      "openalex_id": "W7144209855",
+      "title": "Deep Learning for Stock Market Prediction: A Systematic Review",
+      "year": 2026,
+      "authors": [
+        "Dean Rimmer",
+        "Martin Wonders"
+      ],
+      "matched_topic": "multi_day",
+      "is_oa": true,
+      "oa_url": "https://www.researchsquare.com/article/rs-9267236/latest.pdf",
+      "doi": "https://doi.org/10.21203/rs.3.rs-9267236/v1"
+    },
+    {
+      "openalex_id": "W7237797617",
+      "title": "Leveraging Machine Learning, Deep Learning, and Ensemble Learning for Feature Selection in Stock Market Prediction",
+      "year": 2026,
+      "authors": [
+        "Ashwani Kharola",
+        "Harvinder Singh",
+        "Kaushal Kumar",
+        "Nitin Kumar",
+        "Ajay Kumar",
+        "Vivek John",
+        "Rana Gill",
+        "Sarpreet Singh",
+        "Abhijit Bhowmik",
+        "Yohannes Mengist"
+      ],
+      "matched_topic": "multi_day",
+      "is_oa": true,
+      "oa_url": "https://doi.org/10.1002/ail2.70058",
+      "doi": "https://doi.org/10.1002/ail2.70058"
+    },
+    {
+      "openalex_id": "W7217348646",
+      "title": "A Technical Analysis Based Prediction of Stock Market Trading Strategies Using Deep Learning and Machine Learning Algorithms",
+      "year": 2022,
+      "authors": [
+        "Nitin Nandkumar Sakhare",
+        "S. Sagar Imambi"
+      ],
+      "matched_topic": "leakage",
+      "is_oa": true,
+      "oa_url": "https://ijisae.org/index.php/IJISAE/article/download/2182/894",
+      "doi": ""
+    },
+    {
+      "openalex_id": "W7202161411",
+      "title": "A Hybrid Deep Learning Ensemble with Wavelet Feature Extraction for Stock Market Prediction",
+      "year": 2026,
+      "authors": [
+        "Priya Sidhu",
+        "Himanshu Aggarwal",
+        "Madan Lal"
+      ],
+      "matched_topic": "leakage",
+      "is_oa": true,
+      "oa_url": "https://www.mecs-press.org/ijisa/ijisa-v18-n4/IJISA-V18-N4-2.pdf",
+      "doi": "https://doi.org/10.5815/ijisa.2026.04.02"
+    },
+    {
+      "openalex_id": "W2901852093",
+      "title": "Deep Learning for Stock Market Prediction Using Event Embedding and Technical Indicators",
+      "year": 2018,
+      "authors": [
+        "Pisut Oncharoen",
+        "Peerapon Vateekul"
+      ],
+      "matched_topic": "news_sentiment",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": "https://doi.org/10.1109/icaicta.2018.8541310"
+    },
+    {
+      "openalex_id": "W2860919791",
+      "title": "Stock market prediction with deep learning using financial news",
+      "year": 2018,
+      "authors": [
+        "Hakan Gündüz",
+        "Yusuf Yaslan",
+        "Zehra Çataltepe"
+      ],
+      "matched_topic": "news_sentiment",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": "https://doi.org/10.1109/siu.2018.8404616"
+    },
+    {
+      "openalex_id": "W2992709687",
+      "title": "A Deep Learning Model for Dimensional ValenceArousal Intensity Prediction in Stock Market",
+      "year": 2019,
+      "authors": [
+        "Jheng-Long Wu",
+        "Chi-Sheng Yang",
+        "Kai-Hsuan Liu",
+        "Min-Tzu Huang"
+      ],
+      "matched_topic": "news_sentiment",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": "https://doi.org/10.1109/icawst.2019.8923244"
+    },
+    {
+      "openalex_id": "W4230316737",
+      "title": "Deep Learning for Stock Market Prediction Using Social Media and Technical Information",
+      "year": 2019,
+      "authors": [],
+      "matched_topic": "news_sentiment",
+      "is_oa": true,
+      "oa_url": "https://doi.org/10.18178/wcse.2019.06.014",
+      "doi": "https://doi.org/10.18178/wcse.2019.06.014"
+    },
+    {
+      "openalex_id": "W3008571904",
+      "title": "Deep Learning for the Prediction of Stock Market Trends",
+      "year": 2019,
+      "authors": [
+        "Arvand Fazeli",
+        "Sheridan K. Houghten"
+      ],
+      "matched_topic": "news_sentiment",
+      "is_oa": true,
+      "oa_url": "https://brocku.scholaris.ca/bitstreams/c8ed94b5-5964-4383-85b9-b811da35a8ca/download",
+      "doi": "https://doi.org/10.1109/bigdata47090.2019.9005523"
+    },
+    {
+      "openalex_id": "W4248743146",
+      "title": "Hybrid Deep Learning Based Stock Market Prediction with both Sentiment and Historic Trend Data",
+      "year": 2020,
+      "authors": [
+        "Guruprasad S",
+        "Sahilverma",
+        "Chandramouli H"
+      ],
+      "matched_topic": "news_sentiment",
+      "is_oa": true,
+      "oa_url": "https://doi.org/10.35940/ijitee.d1505.029420",
+      "doi": "https://doi.org/10.35940/ijitee.d1505.029420"
+    },
+    {
+      "openalex_id": "W3010063904",
+      "title": "Stock Market Prediction Using Ensemble of Graph Theory, Machine Learning and Deep Learning Models",
+      "year": 2020,
+      "authors": [
+        "Pratik Patil",
+        "Ching-Seh Mike Wu",
+        "Katerina Potika",
+        "Marjan Orang"
+      ],
+      "matched_topic": "news_sentiment",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": "https://doi.org/10.1145/3378936.3378972"
+    },
+    {
+      "openalex_id": "W3197302096",
+      "title": "Stock Market Prediction and Investment using Deep Reinforcement Learning- a Continuous Training Pipeline",
+      "year": 2020,
+      "authors": [
+        "Amritha Sharma R",
+        "Debjyoti Guha",
+        "Hitesh Agarwal",
+        "Kothiya Meetkumar Harshadbhai"
+      ],
+      "matched_topic": "news_sentiment",
+      "is_oa": true,
+      "oa_url": "https://doi.org/10.35940/ijeat.b2034.1210220",
+      "doi": "https://doi.org/10.35940/ijeat.b2034.1210220"
+    },
+    {
+      "openalex_id": "W3110233226",
+      "title": "Stock Market Prediction with Deep Learning Using Public Disclosure Platform Data",
+      "year": 2020,
+      "authors": [
+        "Busra Aslan",
+        "Rıza Cenk Erdur"
+      ],
+      "matched_topic": "news_sentiment",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": "https://doi.org/10.1109/asyu50717.2020.9259836"
+    },
+    {
+      "openalex_id": "W3198938451",
+      "title": "A Proposal for Designing a Deep Learning Model for Analysis and Prediction of Stock Market Movement for Portfolio Management",
+      "year": 2021,
+      "authors": [
+        "Nabanita Das"
+      ],
+      "matched_topic": "news_sentiment",
+      "is_oa": false,
+      "oa_url": "",
+      "doi": "https://doi.org/10.1201/9781003208365-8"
+    },
+    {
+      "openalex_id": "W3126088882",
+      "title": "An Empirical Research and Comprehensive Analysis of Stock Market Prediction using Machine Learning and Deep Learning techniques",
+      "year": 2021,
+      "authors": [
+        "Aryendra Singh",
+        "Priyanshi Gupta",
+        "Narina Thakur"
+      ],
+      "matched_topic": "news_sentiment",
+      "is_oa": true,
+      "oa_url": "https://iopscience.iop.org/article/10.1088/1757-899X/1022/1/012098/pdf",
+      "doi": "https://doi.org/10.1088/1757-899x/1022/1/012098"
+    },
+    {
+      "openalex_id": "W3186683441",
+      "title": "Analysis of Stock Market Prediction Models Using Deep Learning",
+      "year": 2021,
+      "authors": [
+        "Harmanjeet Singh"
+      ],
+      "matched_topic": "news_sentiment",
+      "is_oa": true,
+      "oa_url": "https://doi.org/10.21786/bbrc/14.9.17",
+      "doi": "https://doi.org/10.21786/bbrc/14.9.17"
+    }
+  ],
+  "caveats": [
+    "Keyword matching is abstract-level only.",
+    "Findings are labeled abstract-only unless OA full text was retrieved.",
+    "Unmentioned dimensions are recorded as not-stated-in-abstract."
+  ]
+}

@@ -143,6 +143,64 @@
       </div>
     </section>
 
+    <!-- Paper upgrade results -->
+    <section class="section section-alt" id="upgrade">
+      <div class="wrap">
+        <p class="kicker">Constructive upgrade suite</p>
+        <h2>Paper upgrade — verified dual-benchmark (seeds 42 / 123 / 2026)</h2>
+        <p class="muted">Non-overlapping windows, chronological 70/15/15, train-only scalers.
+        Mean ± std across seeds. Full tables in <code>results/paper_upgrade/report.md</code>.</p>
+
+        <div class="chart-card">
+          <h3>Samsung 005930.KS — h=3: the one robust win</h3>
+          <p class="muted small">Standard concat lagged-sentiment GRU vs baseline GRU (price+tech).</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Metric</th><th>Baseline GRU</th><th>Concat sentiment GRU</th><th>Δ / note</th></tr></thead>
+              <tbody>
+                <tr><td>MAE (price)</td><td>30,963 ± 2,152</td><td><strong>18,530 ± 1,438</strong></td><td>≈ −40%</td></tr>
+                <tr><td>nRMSE</td><td>0.2011 ± 0.0106</td><td><strong>0.1249 ± 0.0096</strong></td><td>paper benchmark 0.048 (still above)</td></tr>
+                <tr><td>DirAcc</td><td>0.5200 ± 0.0283</td><td><strong>0.5667 ± 0.0189</strong></td><td>excess +0.067 · 0/3 seeds ≤ base</td></tr>
+                <tr><td>DM vs baseline — p</td><td>—</td><td><strong>0.0142 ± 0.0141</strong></td><td>significant at 5%</td></tr>
+                <tr><td>Net return (5bps/side)</td><td>0.5046 ± 0.3391</td><td>0.7404 ± 0.3380</td><td>higher</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h3>AAPL — baseline remains best; VolGatedGRU + hysteresis: null/negative</h3>
+          <p class="muted small">No setup beats the baseline at AAPL. The negative-bias gated GRU and
+          hysteresis deadband do not deliver on this data.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Setting</th><th>DirAcc (h=3)</th><th>excess</th><th>MAE</th><th>verdict</th></tr></thead>
+              <tbody>
+                <tr><td>Baseline GRU (AAPL)</td><td>0.6405 ± 0.0092</td><td>−0.0261</td><td>5.74 ± 0.05</td><td>reference</td></tr>
+                <tr><td>Concat sentiment GRU (AAPL)</td><td>0.6013 ± 0.1202</td><td>−0.0654</td><td>7.51 ± 2.07</td><td>noise / worse</td></tr>
+                <tr><td>VolGatedGRU + hysteresis (AAPL)</td><td>0.6928 ± 0.0489</td><td>+0.0261 (1/3)</td><td>7.17 ± 1.65</td><td>not significant</td></tr>
+                <tr><td>VolGatedGRU + hysteresis (Samsung h5)</td><td>0.5444 ± 0.0416</td><td>+0.0111 (2/3)</td><td>53,935 ± 38,845</td><td>worse MAE</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="muted small">DM p-values are mostly non-significant; only Samsung h=3 concat is
+          significant vs baseline. Small non-overlapping samples bound statistical power.</p>
+        </div>
+
+        <div class="chart-card">
+          <h3>Data &amp; integrity caveats</h3>
+          <ul class="roadmap">
+            <li><code>sent_vol_z</code> / <code>sent_x_vol</code> use an <em>activity proxy</em>
+            (rolling count of non-zero tone days); raw news article counts were unavailable — GDELT
+            DOC Vol API is rate-limited (HTTP 429). No fabricated counts were substituted.</li>
+            <li>Sentiment remains the real cached GDELT tone, lagged 1 trading day.</li>
+            <li>Non-overlapping test windows are small (~tens of points); multi-day results reflect
+            trend persistence unless a significant DM statistic says otherwise.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <!-- Paper vs audit matrix -->
     <section class="section" id="paper-audit">
       <div class="wrap">

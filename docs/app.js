@@ -676,7 +676,7 @@
   /* ---------------------------------------------------------------- global live search */
   const searchInput = $("#search-metrics");
   const searchCount = $("#searchCount");
-  const SEARCHABLES = ".chart-card, .tl-step, .repro-card, .lit-card, .lit-paper, .lit-fact";
+  const SEARCHABLES = ".chart-card, .tl-step, .repro-card, .lit-card, .lit-paper, .lit-fact, #upgrade .chart-card";
 
   function applySearch() {
     const q = searchInput.value.trim().toLowerCase();

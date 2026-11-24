@@ -1,0 +1,77 @@
+{
+  "count": 12,
+  "items": [
+    {
+      "full_name": "nuglifeleoji/Factor-Research",
+      "status": 200,
+      "path": "data/external_resources/github_readmes/nuglifeleoji__Factor-Research.md",
+      "chars": 11081
+    },
+    {
+      "full_name": "simonjisu/DTML-pytorch",
+      "status": 200,
+      "path": "data/external_resources/github_readmes/simonjisu__DTML-pytorch.md",
+      "chars": 320
+    },
+    {
+      "full_name": "aisu-programming/Stock-Price-Prediction-6269-Flexium",
+      "status": 200,
+      "path": "data/external_resources/github_readmes/aisu-programming__Stock-Price-Prediction-6269-Flexium.md",
+      "chars": 414
+    },
+    {
+      "full_name": "ITheClixs/Prediction-System-for-Istanbul-Stock-Exchange",
+      "status": 200,
+      "path": "data/external_resources/github_readmes/ITheClixs__Prediction-System-for-Istanbul-Stock-Exchange.md",
+      "chars": 89218
+    },
+    {
+      "full_name": "spirituslab/ml-alpha",
+      "status": 200,
+      "path": "data/external_resources/github_readmes/spirituslab__ml-alpha.md",
+      "chars": 4897
+    },
+    {
+      "full_name": "zanuura/deep_learning_stock_prediction",
+      "status": 200,
+      "path": "data/external_resources/github_readmes/zanuura__deep_learning_stock_prediction.md",
+      "chars": 1526
+    },
+    {
+      "full_name": "harshitt13/Stock-Market-Prediction-Model",
+      "status": 200,
+      "path": "data/external_resources/github_readmes/harshitt13__Stock-Market-Prediction-Model.md",
+      "chars": 36976
+    },
+    {
+      "full_name": "42331game-star/mtp-stock-transformer",
+      "status": 200,
+      "path": "data/external_resources/github_readmes/42331game-star__mtp-stock-transformer.md",
+      "chars": 14722
+    },
+    {
+      "full_name": "BirdiD/Stock-trends-prediction-with-macroeconomic-indicators",
+      "status": 200,
+      "path": "data/external_resources/github_readmes/BirdiD__Stock-trends-prediction-with-macroeconomic-indicators.md",
+      "chars": 2244
+    },
+    {
+      "full_name": "pravo123/LSTM-GRU",
+      "status": 200,
+      "path": "data/external_resources/github_readmes/pravo123__LSTM-GRU.md",
+      "chars": 1154
+    },
+    {
+      "full_name": "sommojotydasgupta/Financial-Time-Series-Forecasting-Using-LSTM-and-GRU",
+      "status": 200,
+      "path": "data/external_resources/github_readmes/sommojotydasgupta__Financial-Time-Series-Forecasting-Using-LSTM-and-GRU.md",
+      "chars": 208
+    },
+    {
+      "full_name": "kaushiks-2804/FINANCIAL-TIME-SERIES-FORECASTING-FOR-STOCK-PRICES",
+      "status": 200,
+      "path": "data/external_resources/github_readmes/kaushiks-2804__FINANCIAL-TIME-SERIES-FORECASTING-FOR-STOCK-PRICES.md",
+      "chars": 1520
+    }
+  ]
+}

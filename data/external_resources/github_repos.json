@@ -1,0 +1,197 @@
+{
+  "count": 24,
+  "repos": [
+    {
+      "full_name": "nuglifeleoji/Factor-Research",
+      "stars": 423,
+      "url": "https://github.com/nuglifeleoji/Factor-Research",
+      "description": "Advanced Quantitative Factor Research: ML-powered stock return prediction with 72% performance improvement. Features comprehensive alpha factor library, systematic feature selection, and deep learning models (LSTM+ResNet achieving IC=0.06476).",
+      "updated_at": "2026-11-17T10:57:31Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "simonjisu/DTML-pytorch",
+      "stars": 35,
+      "url": "https://github.com/simonjisu/DTML-pytorch",
+      "description": "Implementation of Accurate Multivariate Stock Movement Prediction via Data-Axis Transformer with Multi-Level Contexts",
+      "updated_at": "2026-07-29T08:22:46Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "aisu-programming/Stock-Price-Prediction-6269-Flexium",
+      "stars": 32,
+      "url": "https://github.com/aisu-programming/Stock-Price-Prediction-6269-Flexium",
+      "description": "Stock price prediction using Informer || NTNU CSIE graduate course - Artificial Neural Network - Project 1 / 師大資工碩博下學期選修 - 類神經網路 - 專案作業一",
+      "updated_at": "2025-10-31T23:48:40Z",
+      "language": "Python"
+    },
+    {
+      "full_name": "ITheClixs/Prediction-System-for-Istanbul-Stock-Exchange",
+      "stars": 7,
+      "url": "https://github.com/ITheClixs/Prediction-System-for-Istanbul-Stock-Exchange",
+      "description": "CLI-based BIST-100 prediction system with Rust-powered feature engineering, quantitative signals, and ensemble ML models.",
+      "updated_at": "2026-08-30T16:52:41Z",
+      "language": "Python"
+    },
+    {
+      "full_name": "spirituslab/ml-alpha",
+      "stars": 7,
+      "url": "https://github.com/spirituslab/ml-alpha",
+      "description": "Cross-sectional Transformer and FFN for stock return prediction and alpha generation. Implements GKX (2020) NN5 replication and MSRR loss (Kelly et al. 2025) for direct portfolio Sharpe optimization. Avg SDF Sharpe 2.05, significant alpha (t=5.34) unexplained by FF5+Momentum.",
+      "updated_at": "2026-11-17T09:35:04Z",
+      "language": "Python"
+    },
+    {
+      "full_name": "zanuura/deep_learning_stock_prediction",
+      "stars": 6,
+      "url": "https://github.com/zanuura/deep_learning_stock_prediction",
+      "description": "Stock Prediction using LSTM and Transformers with Huge Stock Market Dataset from kaggle.",
+      "updated_at": "2026-11-18T12:59:07Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "harshitt13/Stock-Market-Prediction-Model",
+      "stars": 4,
+      "url": "https://github.com/harshitt13/Stock-Market-Prediction-Model",
+      "description": "The ultimate open-source quantitative forecasting engine. Features a PyTorch Time-Series Transformer, Bayesian architecture optimization, and dynamic Volatility-Aware (VIX) Meta-Learning.",
+      "updated_at": "2026-10-18T06:35:28Z",
+      "language": "Python"
+    },
+    {
+      "full_name": "42331game-star/mtp-stock-transformer",
+      "stars": 2,
+      "url": "https://github.com/42331game-star/mtp-stock-transformer",
+      "description": "Multi-Token Prediction Transformer that forecasts the T+1/3/5/10 stock return path from a 250-day window of 16 technical features. Ships a leakage-safe calendar split, an IC-vs-baseline skill report and a cost-aware walk-forward backtest. Research use only.",
+      "updated_at": "2026-11-17T09:34:33Z",
+      "language": "Python"
+    },
+    {
+      "full_name": "BirdiD/Stock-trends-prediction-with-macroeconomic-indicators",
+      "stars": 22,
+      "url": "https://github.com/BirdiD/Stock-trends-prediction-with-macroeconomic-indicators",
+      "description": "Stock markets are an essential component of the economy.  Their prediction naturally arouses afascination in the academic and financial world.  Indeed, financial time series, due to their widerange application fields, have seen numerous studies being published for their prediction. Some ofthese studies aim to establish whether there is a strong and predictive link between macroeconomicindicators and stock market trends and thus predict market returns. Stock market prediction howeverremains a challenging task due to uncertain noise.  To what extent can macroeconomic indicatorsbe strong predictors of stock price ? Can they be used for stock trends modeling ? To answer thesequestions, we will focus on several time series forecasting models.  We will on the one hand usestatistical time series models, more specifically the most commonly used time series approachesfor stock prediction :  the Autoregressive Integrated Moving Average (ARIMA), the GeneralizedAutoregressive Conditional Heteroscedasticity (GARCH) and the Vector Autoregressive (VAR)approach.  On the other hand, we will be using two deep learning models :  the Long-Short TermMemory (LSTM) and the Gated Recurrent Unit (GRU) for our prediction task. In the final section ofthis paper, we look directly at companies to detect trends",
+      "updated_at": "2025-11-14T18:47:05Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "pravo123/LSTM-GRU",
+      "stars": 1,
+      "url": "https://github.com/pravo123/LSTM-GRU",
+      "description": " Deep learning model combining LSTM and GRU architectures for financial time series forecasting.",
+      "updated_at": "2025-11-21T05:01:39Z",
+      "language": "Python"
+    },
+    {
+      "full_name": "sommojotydasgupta/Financial-Time-Series-Forecasting-Using-LSTM-and-GRU",
+      "stars": 1,
+      "url": "https://github.com/sommojotydasgupta/Financial-Time-Series-Forecasting-Using-LSTM-and-GRU",
+      "description": "Comparative analysis of LSTM and GRU neural networks for 7-day financial time-series forecasting using S&P 500, Tesla, Amazon, and Bitcoin datasets.",
+      "updated_at": "2026-06-06T19:55:22Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "kaushiks-2804/FINANCIAL-TIME-SERIES-FORECASTING-FOR-STOCK-PRICES",
+      "stars": 1,
+      "url": "https://github.com/kaushiks-2804/FINANCIAL-TIME-SERIES-FORECASTING-FOR-STOCK-PRICES",
+      "description": "This project focuses on forecasting stock prices using historical data and advanced deep learning models like LSTM and GRU. By applying feature engineering, exploratory data analysis, and model optimization with Python libraries, it achieves accurate predictions to support informed investment decisions.",
+      "updated_at": "2026-01-05T06:02:25Z",
+      "language": "Python"
+    },
+    {
+      "full_name": "26azmath/Forecasting-the-S-P-500-Index-Using-Recurrent-Neural-Networks",
+      "stars": 1,
+      "url": "https://github.com/26azmath/Forecasting-the-S-P-500-Index-Using-Recurrent-Neural-Networks",
+      "description": "Deep learning time-series analysis of financial market data using RNN, LSTM, CNN, GRU, and Bi-GRU models to study temporal patterns and forecasting behavior.",
+      "updated_at": "2025-12-31T07:31:40Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "ShamKumarM/Stock_trend",
+      "stars": 1,
+      "url": "https://github.com/ShamKumarM/Stock_trend",
+      "description": "Built an interactive financial forecasting platform combining time-series deep learning (LSTM/GRU) with NLP-driven sentiment analysis of real-time market news.",
+      "updated_at": "2026-10-04T08:49:58Z",
+      "language": "Python"
+    },
+    {
+      "full_name": "FemiJames070/Stock_Price_Predictions_-RNN-LSTM-_GOOGL",
+      "stars": 1,
+      "url": "https://github.com/FemiJames070/Stock_Price_Predictions_-RNN-LSTM-_GOOGL",
+      "description": "Time-series forecasting repository utilizing TensorFlow and Keras to predict GOOGL stock differentials. This project compares the architectural efficiency of standard RNNs against gated networks (LSTM/GRU) in highly volatile financial markets.",
+      "updated_at": "2026-03-31T22:16:48Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "AmareshMuddebihal/Predicting-Stock-Prices-A-Deep-Learning-Approach",
+      "stars": 1,
+      "url": "https://github.com/AmareshMuddebihal/Predicting-Stock-Prices-A-Deep-Learning-Approach",
+      "description": "Explore LSTM and GRU models for stock price forecasting. Compare their performance in predicting market trends. Analyze deep learning techniques for financial time series data.",
+      "updated_at": "2026-01-03T01:14:56Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "asafsafi18/Predicting-Next-Day-Closing-Stock-Price-Direction-using-Machine-Learning-Methods",
+      "stars": 8,
+      "url": "https://github.com/asafsafi18/Predicting-Next-Day-Closing-Stock-Price-Direction-using-Machine-Learning-Methods",
+      "description": "Stock price prediction is a priority goal of every investor or trader, so it enables them to reduce risks and increase profits by analyzing past records. This paper focuses on the best independent variables and indicators to predict next-day closing stock price direction using machine learning methods. Different machine learning techniques include Logistic Regression, Gaussian Naive Bayes, Support Vector Classifier (SVC) using RBF kernel, Decision Tree, Random Forest, XGBoost are applied to foresee the stock price of Apple. The models performance would be compared using two metrics, Accuracy, and AUC (Area under the receiver operating characteristic curve). Experiment results suggest that the Random Forest, and XGBoost classifiers are more fitting for Predicting the Next Day Closing Stock Price Trend.",
+      "updated_at": "2026-07-27T19:32:08Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "chemicoPy/ML-Forex-Market-Prediction",
+      "stars": 5,
+      "url": "https://github.com/chemicoPy/ML-Forex-Market-Prediction",
+      "description": "ML/Deep learning approach in predicting the direction of the next candle close for the next 1-minute, 5-minute candle and 15-minute – via Binance API real-time & historical data. The main idea of this project is using Machine Learning, Deep Learning intelligence for Time Series Forecast – which is on Stock Prediction",
+      "updated_at": "2026-03-17T06:56:47Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "cristianleoo/Scrap-Metal-Directional-Price-Prediction",
+      "stars": 4,
+      "url": "https://github.com/cristianleoo/Scrap-Metal-Directional-Price-Prediction",
+      "description": "This project focuses on analyzing financial news sentiment and utilizing machine learning models to predict stock prices based on the sentiment analysis. It integrates data from various sources, including financial news articles, stock prices, economic indicators, and weather data.",
+      "updated_at": "2026-06-22T20:21:06Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "rahulmkarthik/event-driven-ml-stock-prediction",
+      "stars": 3,
+      "url": "https://github.com/rahulmkarthik/event-driven-ml-stock-prediction",
+      "description": "A machine learning mini-project analyzing how public events—specifically earnings announcements—impact short-term stock price direction. This project demonstrates event study methodology, feature engineering from financial time series, and the application of classification models to real-world market behavior.",
+      "updated_at": "2026-06-03T16:18:39Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "Venkateshpaitwar/StockMarket-Direction-Prediction",
+      "stars": 2,
+      "url": "https://github.com/Venkateshpaitwar/StockMarket-Direction-Prediction",
+      "description": "Machine learning model to predict S&P 500 market direction using Random Forest with time-series backtesting and feature engineering.",
+      "updated_at": "2026-03-30T16:36:49Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "hamzahafeezshaikh0-ui/psx-ml-direction",
+      "stars": 2,
+      "url": "https://github.com/hamzahafeezshaikh0-ui/psx-ml-direction",
+      "description": "Evaluating Machine Learning for Next-Day Direction Prediction in the Pakistan Stock Exchange",
+      "updated_at": "2026-11-23T17:23:33Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "aylazai/ML-Stock-Crypto-Prediction",
+      "stars": 2,
+      "url": "https://github.com/aylazai/ML-Stock-Crypto-Prediction",
+      "description": "This project is a Python script that uses machine learning logistic regression to predict stock and crypto prices (or rather returns). The model is based on a classification model that takes the prior N days' asset directions and predicts the return. The direction of the asset determines whether it should be bought or sold.",
+      "updated_at": "2024-03-16T12:39:07Z",
+      "language": "Jupyter Notebook"
+    },
+    {
+      "full_name": "hardika191/Stock-Price-Prediction",
+      "stars": 2,
+      "url": "https://github.com/hardika191/Stock-Price-Prediction",
+      "description": "This project addresses the problem of predicting direction of movement of stock and stock  price index for Indian stock markets. The study compares four prediction models,  Gradient Boost Regression, Support Vector Machine (SVM), random forest regression  and Reinforcement learning (Bagging Model) with two approaches for input to these  models. The first approach for input data involves computation of ten technical  parameters using stock trading data (open, high, low & close prices) while the second  approach focuses on representing these technical parameters as trend deterministic data.  Accuracy of each of the prediction models for each of the two input approaches is  evaluated. Evaluation is carried out on specific years when stock prices rise or fall.  Accuracy of each of the 4 machine learning algorithms is calculated and printed with the  correlation between stock opening price and oil price.",
+      "updated_at": "2023-11-08T23:55:57Z",
+      "language": "Python"
+    }
+  ]
+}

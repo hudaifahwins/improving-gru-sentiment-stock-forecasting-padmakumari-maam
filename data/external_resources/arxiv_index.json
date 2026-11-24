@@ -1,0 +1,1414 @@
+{
+  "count": 45,
+  "source": "arXiv API Atom",
+  "queries": [
+    "all:\"stock forecasting\" AND all:\"deep learning\"",
+    "all:\"financial time series\" AND all:\"volatility\" AND all:\"neural network\"",
+    "all:\"stock market\" AND all:\"direction prediction\"",
+    "all:\"sentiment analysis\" AND all:\"stock prediction\"",
+    "all:\"conformal prediction\" AND all:\"time series\"",
+    "all:\"portfolio\" AND all:\"turnover\" AND all:\"transaction cost\" AND all:\"deep learning\""
+  ],
+  "papers": [
+    {
+      "arxiv_id": "1909.09563v1",
+      "title": "Gradient Boost with Convolution Neural Network for Stock Forecast",
+      "summary": "Market economy closely connects aspects to all walks of life. The stock forecast is one of task among studies on the market economy. However, information on markets economy contains a lot of noise and uncertainties, which lead economy forecasting to become a challenging task. Ensemble learning and deep learning are the most methods to solve the stock forecast task. In this paper, we present a model combining the advantages of two methods to forecast the change of stock price. The proposed method combines CNN and GBoost. The experimental results on six market indexes show that the proposed method has better performance against current popular methods.",
+      "published": "2019-09-19T13:58:49Z",
+      "authors": [
+        "Jialin Liu",
+        "Chih-Min Lin",
+        "Fei Chao"
+      ],
+      "url": "http://arxiv.org/abs/1909.09563v1",
+      "pdf": "http://arxiv.org/pdf/1909.09563v1.pdf",
+      "categories": [
+        "cs.LG",
+        "cs.CE",
+        "q-fin.ST"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/1909.09563v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/1909.09563v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"stock forecasting\" AND all:\"deep learning\""
+    },
+    {
+      "arxiv_id": "2402.06689v1",
+      "title": "A Study on Stock Forecasting Using Deep Learning and Statistical Models",
+      "summary": "Predicting a fast and accurate model for stock price forecasting is been a challenging task and this is an active area of research where it is yet to be found which is the best way to forecast the stock price. Machine learning, deep learning and statistical analysis techniques are used here to get the accurate result so the investors can see the future trend and maximize the return of investment in stock trading. This paper will review many deep learning algorithms for stock price forecasting. We use a record of s&p 500 index data for training and testing. The survey motive is to check various deep learning and statistical model techniques for stock price forecasting that are Moving Averages, ARIMA which are statistical techniques and LSTM, RNN, CNN, and FULL CNN which are deep learning models. It will discuss various models, including the Auto regression integration moving average model, the Recurrent neural network model, the long short-term model which is the type of RNN used for long dependency for data, the convolutional neural network model, and the full convolutional neural network model, in terms of error calculation or percentage of accuracy that how much it is accurate which measures by the function like Root mean square error, mean absolute error, mean squared error. The model can be used to predict the stock price by checking the low MAE value as lower the MAE value the difference between the predicting and the actual value will be less and this model will predict the price more accurately than other models.",
+      "published": "2024-02-08T16:45:01Z",
+      "authors": [
+        "Himanshu Gupta",
+        "Aditya Jaiswal"
+      ],
+      "url": "http://arxiv.org/abs/2402.06689v1",
+      "pdf": "http://arxiv.org/pdf/2402.06689v1.pdf",
+      "categories": [
+        "q-fin.ST",
+        "cs.LG"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2402.06689v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2402.06689v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"stock forecasting\" AND all:\"deep learning\""
+    },
+    {
+      "arxiv_id": "2502.04737v1",
+      "title": "Learning Universal Multi-level Market Irrationality Factors to Improve Stock Return Forecasting",
+      "summary": "Recent years have witnessed the perfect encounter of deep learning and quantitative trading has achieved great success in stock investment. Numerous deep learning-based models have been developed for forecasting stock returns, leveraging the powerful representation capabilities of neural networks to identify patterns and factors influencing stock prices. These models can effectively capture general patterns in the market, such as stock price trends, volume-price relationships, and time variations. However, the impact of special irrationality factors -- such as market sentiment, speculative behavior, market manipulation, and psychological biases -- have not been fully considered in existing deep stock forecasting models due to their relative abstraction as well as lack of explicit labels and data description. To fill this gap, we propose UMI, a Universal multi-level Market Irrationality factor model to enhance stock return forecasting. The UMI model learns factors that can reflect irrational behaviors in market from both individual stock and overall market levels. For the stock-level, UMI construct an estimated rational price for each stock, which is cointegrated with the stock's actual price. The discrepancy between the actual and the rational prices serves as a factor to indicate stock-level irrational events. Additionally, we define market-level irrational behaviors as anomalous synchronous fluctuations of stocks within a market. Using two self-supervised representation learning tasks, i.e., sub-market comparative learning and market synchronism prediction, the UMI model incorporates market-level irrationalities into a market representation vector, which is then used as the market-level irrationality factor.",
+      "published": "2025-02-07T08:10:24Z",
+      "authors": [
+        "Chen Yang",
+        "Jingyuan Wang",
+        "Xiaohan Jiang",
+        "Junjie Wu"
+      ],
+      "url": "http://arxiv.org/abs/2502.04737v1",
+      "pdf": "http://arxiv.org/pdf/2502.04737v1.pdf",
+      "categories": [
+        "cs.LG"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2502.04737v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2502.04737v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"stock forecasting\" AND all:\"deep learning\""
+    },
+    {
+      "arxiv_id": "2609.25617v1",
+      "title": "Hierarchical Multi-Task Learning with Liquidity-Aware Signals for Stock Forecasting",
+      "summary": "Stock price forecasting is a long-standing challenge in computational finance, driven by the inherent randomness of markets and complex temporal patterns. While recent deep-learning models have raised forecasting accuracy by jointly modeling inter-stock and temporal price dynamics, they conflate inter-stock relationships with intra-stock temporal dependencies and focus solely on the univariate objective of price movement. To address these limitations, we propose LiMT, a Hierarchical Multi-Task Learning framework that integrates liquidity-aware signals for stock price forecasting. LiMT employs a Market Regime Encoder (MRE) module that first extracts contemporaneous cross-stock dependencies, then models each stock's temporal dynamics, yielding a unified latent state. Building on this latent state, we introduce a Liquidity-Driven Learning (LDL) module, a mixture-of-experts architecture that features cross-task gating mechanisms to jointly predict price movement, volatility, and trading volume. We further design an Adaptive Portfolio Optimization (APO) mechanism that converts multi-task forecasts into executable portfolio weights under transaction-cost and liquidity constraints. Extensive experiments on the CSI300 and CSI500 benchmarks show that LiMT performs best among strong neural and tree-based baselines across the reported metrics. In realistic CSI300 backtests, APO improves annualized return from 3.99% to 10.01% and Sharpe ratio from 1.22 to 1.86 over equal weighting, showing that the multi-task forecasts translate into deployable portfolio gains.",
+      "published": "2026-09-22T03:23:59Z",
+      "authors": [
+        "Hengyi Yang",
+        "Sida Lin",
+        "Yiyan Qi",
+        "Yankai Chen",
+        "Haohan Zhang",
+        "Xianhua Peng",
+        "Jian Guo"
+      ],
+      "url": "http://arxiv.org/abs/2609.25617v1",
+      "pdf": "http://arxiv.org/pdf/2609.25617v1.pdf",
+      "categories": [
+        "cs.CE",
+        "q-fin.CP"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2609.25617v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2609.25617v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"stock forecasting\" AND all:\"deep learning\""
+    },
+    {
+      "arxiv_id": "2309.06559v1",
+      "title": "Media Moments and Corporate Connections: A Deep Learning Approach to Stock Movement Classification",
+      "summary": "The financial industry poses great challenges with risk modeling and profit generation. These entities are intricately tied to the sophisticated prediction of stock movements. A stock forecaster must untangle the randomness and ever-changing behaviors of the stock market. Stock movements are influenced by a myriad of factors, including company history, performance, and economic-industry connections. However, there are other factors that aren't traditionally included, such as social media and correlations between stocks. Social platforms such as Reddit, Facebook, and X (Twitter) create opportunities for niche communities to share their sentiment on financial assets. By aggregating these opinions from social media in various mediums such as posts, interviews, and news updates, we propose a more holistic approach to include these \"media moments\" within stock market movement prediction. We introduce a method that combines financial data, social media, and correlated stock relationships via a graph neural network in a hierarchical temporal fashion. Through numerous trials on current S&P 500 index data, with results showing an improvement in cumulative returns by 28%, we provide empirical evidence of our tool's applicability for use in investment decisions.",
+      "published": "2023-09-08T20:13:34Z",
+      "authors": [
+        "Luke Sanborn",
+        "Matthew Sahagun"
+      ],
+      "url": "http://arxiv.org/abs/2309.06559v1",
+      "pdf": "http://arxiv.org/pdf/2309.06559v1.pdf",
+      "categories": [
+        "q-fin.ST",
+        "cs.SI",
+        "q-fin.CP"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2309.06559v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2309.06559v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"stock forecasting\" AND all:\"deep learning\""
+    },
+    {
+      "arxiv_id": "2511.19330v1",
+      "title": "Targeted Manipulation: Slope-Based Attacks on Financial Time-Series Data",
+      "summary": "A common method of attacking deep learning models is through adversarial attacks, which occur when an attacker specifically modifies the input of a model to produce an incorrect result. Adversarial attacks have been deeply investigated in the image domain; however, there is less research in the time-series domain and very little for forecasting financial data. To address these concerns, this study aims to build upon previous research on adversarial attacks for time-series data by introducing two new slope-based methods aimed to alter the trends of the predicted stock forecast generated by an N-HiTS model. Compared to the normal N-HiTS predictions, the two new slope-based methods, the General Slope Attack and Least-Squares Slope Attack, can manipulate N-HiTS predictions by doubling the slope. These new slope attacks can bypass standard security mechanisms, such as a discriminator that filters real and perturbed inputs, reducing a 4-layered CNN's specificity to 28% and accuracy to 57%. Furthermore, the slope based methods were incorporated into a GAN architecture as a means of generating realistic synthetic data, while simultaneously fooling the model. Finally, this paper also proposes a sample malware designed to inject an adversarial attack in the model inference library, proving that ML-security research should not only focus on making the model safe, but also securing the entire pipeline.",
+      "published": "2025-11-24T17:26:20Z",
+      "authors": [
+        "Dominik Luszczynski"
+      ],
+      "url": "http://arxiv.org/abs/2511.19330v1",
+      "pdf": "http://arxiv.org/pdf/2511.19330v1.pdf",
+      "categories": [
+        "cs.LG"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2511.19330v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2511.19330v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"stock forecasting\" AND all:\"deep learning\""
+    },
+    {
+      "arxiv_id": "2410.09850v1",
+      "title": "Can GANs Learn the Stylized Facts of Financial Time Series?",
+      "summary": "In the financial sector, a sophisticated financial time series simulator is essential for evaluating financial products and investment strategies. Traditional back-testing methods have mainly relied on historical data-driven approaches or mathematical model-driven approaches, such as various stochastic processes. However, in the current era of AI, data-driven approaches, where models learn the intrinsic characteristics of data directly, have emerged as promising techniques. Generative Adversarial Networks (GANs) have surfaced as promising generative models, capturing data distributions through adversarial learning. Financial time series, characterized 'stylized facts' such as random walks, mean-reverting patterns, unexpected jumps, and time-varying volatility, present significant challenges for deep neural networks to learn their intrinsic characteristics. This study examines the ability of GANs to learn diverse and complex temporal patterns (i.e., stylized facts) of both univariate and multivariate financial time series. Our extensive experiments revealed that GANs can capture various stylized facts of financial time series, but their performance varies significantly depending on the choice of generator architecture. This suggests that naively applying GANs might not effectively capture the intricate characteristics inherent in financial time series, highlighting the importance of carefully considering and validating the modeling choices.",
+      "published": "2024-10-13T14:20:56Z",
+      "authors": [
+        "Sohyeon Kwon",
+        "Yongjae Lee"
+      ],
+      "url": "http://arxiv.org/abs/2410.09850v1",
+      "pdf": "http://arxiv.org/pdf/2410.09850v1.pdf",
+      "categories": [
+        "q-fin.CP"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2410.09850v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2410.09850v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"financial time series\" AND all:\"volatility\" AND all:\"neural network\""
+    },
+    {
+      "arxiv_id": "2309.02072v6",
+      "title": "Global Neural Networks and The Data Scaling Effect in Financial Time Series Forecasting",
+      "summary": "Neural networks have revolutionized many empirical fields, yet their application to financial time series forecasting remains controversial. In this study, we demonstrate that the conventional practice of estimating models locally in data-scarce environments may underlie the mixed empirical performance observed in prior work. By focusing on volatility forecasting, we employ a dataset comprising over 10,000 global stocks and implement a global estimation strategy that pools information across cross-sections. Our econometric analysis reveals that forecasting accuracy improves markedly as the training dataset becomes larger and more heterogeneous. Notably, even with as little as 12 months of data, globally trained networks deliver robust predictions for individual stocks and portfolios that are not even in the training dataset. Furthermore, our interpretation of the model dynamics shows that these networks not only capture key stylized facts of volatility but also exhibit resilience to outliers and rapid adaptation to market regime changes. These findings underscore the importance of leveraging extensive and diverse datasets in financial forecasting and advocate for a shift from traditional local training approaches to integrated global estimation methods.",
+      "published": "2023-09-05T09:18:45Z",
+      "authors": [
+        "Chen Liu",
+        "Minh-Ngoc Tran",
+        "Chao Wang",
+        "Richard Gerlach",
+        "Robert Kohn"
+      ],
+      "url": "http://arxiv.org/abs/2309.02072v6",
+      "pdf": "http://arxiv.org/pdf/2309.02072v6.pdf",
+      "categories": [
+        "econ.EM",
+        "cs.AI",
+        "q-fin.CP"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2309.02072v6",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2309.02072v6",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"financial time series\" AND all:\"volatility\" AND all:\"neural network\""
+    },
+    {
+      "arxiv_id": "2107.06008v1",
+      "title": "Wasserstein GAN: Deep Generation applied on Bitcoins financial time series",
+      "summary": "Modeling financial time series is challenging due to their high volatility and unexpected happenings on the market. Most financial models and algorithms trying to fill the lack of historical financial time series struggle to perform and are highly vulnerable to overfitting. As an alternative, we introduce in this paper a deep neural network called the WGAN-GP, a data-driven model that focuses on sample generation. The WGAN-GP consists of a generator and discriminator function which utilize an LSTM architecture. The WGAN-GP is supposed to learn the underlying structure of the input data, which in our case, is the Bitcoin. Bitcoin is unique in its behavior; the prices fluctuate what makes guessing the price trend hardly impossible. Through adversarial training, the WGAN-GP should learn the underlying structure of the bitcoin and generate very similar samples of the bitcoin distribution. The generated synthetic time series are visually indistinguishable from the real data. But the numerical results show that the generated data were close to the real data distribution but distinguishable. The model mainly shows a stable learning behavior. However, the model has space for optimization, which could be achieved by adjusting the hyperparameters.",
+      "published": "2021-07-13T11:59:05Z",
+      "authors": [
+        "Rikli Samuel",
+        "Bigler Daniel Nico",
+        "Pfenninger Moritz",
+        "Osterrieder Joerg"
+      ],
+      "url": "http://arxiv.org/abs/2107.06008v1",
+      "pdf": "http://arxiv.org/pdf/2107.06008v1.pdf",
+      "categories": [
+        "stat.ML",
+        "cs.LG"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2107.06008v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2107.06008v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"financial time series\" AND all:\"volatility\" AND all:\"neural network\""
+    },
+    {
+      "arxiv_id": "1907.06673v2",
+      "title": "Quant GANs: Deep Generation of Financial Time Series",
+      "summary": "Modeling financial time series by stochastic processes is a challenging task and a central area of research in financial mathematics. As an alternative, we introduce Quant GANs, a data-driven model which is inspired by the recent success of generative adversarial networks (GANs). Quant GANs consist of a generator and discriminator function, which utilize temporal convolutional networks (TCNs) and thereby achieve to capture long-range dependencies such as the presence of volatility clusters. The generator function is explicitly constructed such that the induced stochastic process allows a transition to its risk-neutral distribution. Our numerical results highlight that distributional properties for small and large lags are in an excellent agreement and dependence properties such as volatility clusters, leverage effects, and serial autocorrelations can be generated by the generator function of Quant GANs, demonstrably in high fidelity.",
+      "published": "2019-07-15T18:08:43Z",
+      "authors": [
+        "Magnus Wiese",
+        "Robert Knobloch",
+        "Ralf Korn",
+        "Peter Kretschmer"
+      ],
+      "url": "http://arxiv.org/abs/1907.06673v2",
+      "pdf": "http://arxiv.org/pdf/1907.06673v2.pdf",
+      "categories": [
+        "q-fin.MF",
+        "cs.LG",
+        "q-fin.CP",
+        "stat.ML"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/1907.06673v2",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/1907.06673v2",
+          "type": "application/pdf",
+          "title": "pdf"
+        },
+        {
+          "href": "https://doi.org/10.1080/14697688.2020.1730426",
+          "type": null,
+          "title": "doi"
+        }
+      ],
+      "query": "all:\"financial time series\" AND all:\"volatility\" AND all:\"neural network\""
+    },
+    {
+      "arxiv_id": "2504.09380v2",
+      "title": "Unified GARCH-Recurrent Neural Network in Financial Volatility Forecasting",
+      "summary": "In this study, we develop a unified volatility modeling framework that embeds GARCH dynamics directly within recurrent neural networks. We propose two interpretable hybrid architectures, GARCH-GRU and GARCH-LSTM, that integrate the GARCH(1,1) volatility update into the multiplicative gating structure of GRU and LSTM cells. This unified design preserves economically meaningful GARCH parameters while enabling the networks to learn nonlinear temporal dependencies in financial time series. Comprehensive out-of-sample evaluations across major U.S. equity indices show that both models consistently outperform classical GARCH specifications, pipeline-style hybrids, and neural baselines such as the Transformer across multiple metrics (MSE, MAE, SMAPE, and out-of-sample R\\textsuperscript{2}). Within this family, the GARCH-GRU achieves the strongest accuracy-efficiency tradeoff, training nearly three times faster than GARCH-LSTM while maintaining comparable or superior forecasting accuracy under normal market conditions and delivering stable and economically plausible parameter estimates. The advantages persist during extreme market turbulence. In the COVID-19 stress period, both architectures retain superior forecasting accuracy and deliver well-calibrated 99 percent Value-at-Risk forecasts, achieving lower violation ratios and competitive Pinball losses relative to all benchmarks. Overall, the findings underscore the effectiveness of embedding GARCH dynamics within recurrent neural architectures, yielding models that are accurate, efficient, interpretable, and robust for real-world risk-aware volatility forecasting.",
+      "published": "2025-04-13T00:04:15Z",
+      "authors": [
+        "Jingyi Wei",
+        "Steve Yang",
+        "Zhenyu Cui"
+      ],
+      "url": "http://arxiv.org/abs/2504.09380v2",
+      "pdf": "http://arxiv.org/pdf/2504.09380v2.pdf",
+      "categories": [
+        "q-fin.ST",
+        "q-fin.RM"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2504.09380v2",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2504.09380v2",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"financial time series\" AND all:\"volatility\" AND all:\"neural network\""
+    },
+    {
+      "arxiv_id": "2603.02620v2",
+      "title": "Same Error, Different Function: The Optimizer as an Implicit Prior in Financial Time Series",
+      "summary": "Neural networks applied to financial time series operate in a regime of underspecification, where predictors achieve comparable out-of-sample error. Using large-scale volatility forecasting for S&P 500 stocks--twelve architecture-optimizer configurations, thirteen seeds each, evaluated on 564,795 held-out observations--we show that comparable test loss conceals measurably different predictors. In eleven of twelve comparisons, models trained from identical initialization and identical data order diverge $1.3$ to $7.8$ times further than repeated runs of either optimizer alone, ruling out initialization noise as the explanation. On a common scale, predictions differ by 5--17\\% of the typical forecast error while the models' error magnitudes differ by less than 0.7\\% of it. The divergence reshapes nonlinear response profiles, temporal dependence, and ultimately decisions: volatility-ranked portfolios trace a Sharpe-turnover frontier with up to 58\\% turnover dispersion at comparable gross Sharpe ratios. In underspecified settings, optimization is a consequential source of inductive bias, and model evaluation must extend beyond scalar loss to functional and decision-level behavior.",
+      "published": "2026-03-03T05:47:19Z",
+      "authors": [
+        "Federico Vittorio Cortesi",
+        "Giuseppe Iannone",
+        "Giulia Crippa",
+        "Tomaso Poggio",
+        "Pierfrancesco Beneventano"
+      ],
+      "url": "http://arxiv.org/abs/2603.02620v2",
+      "pdf": "http://arxiv.org/pdf/2603.02620v2.pdf",
+      "categories": [
+        "cs.LG",
+        "q-fin.CP"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2603.02620v2",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2603.02620v2",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"financial time series\" AND all:\"volatility\" AND all:\"neural network\""
+    },
+    {
+      "arxiv_id": "2204.05806v1",
+      "title": "Variational Heteroscedastic Volatility Model",
+      "summary": "We propose Variational Heteroscedastic Volatility Model (VHVM) -- an end-to-end neural network architecture capable of modelling heteroscedastic behaviour in multivariate financial time series. VHVM leverages recent advances in several areas of deep learning, namely sequential modelling and representation learning, to model complex temporal dynamics between different asset returns. At its core, VHVM consists of a variational autoencoder to capture relationships between assets, and a recurrent neural network to model the time-evolution of these dependencies. The outputs of VHVM are time-varying conditional volatilities in the form of covariance matrices. We demonstrate the effectiveness of VHVM against existing methods such as Generalised AutoRegressive Conditional Heteroscedasticity (GARCH) and Stochastic Volatility (SV) models on a wide range of multivariate foreign currency (FX) datasets.",
+      "published": "2022-04-11T15:29:46Z",
+      "authors": [
+        "Zexuan Yin",
+        "Paolo Barucca"
+      ],
+      "url": "http://arxiv.org/abs/2204.05806v1",
+      "pdf": "http://arxiv.org/pdf/2204.05806v1.pdf",
+      "categories": [
+        "q-fin.ST",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2204.05806v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2204.05806v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"financial time series\" AND all:\"volatility\" AND all:\"neural network\""
+    },
+    {
+      "arxiv_id": "2512.12250v1",
+      "title": "Stochastic Volatility Modelling with LSTM Networks: A Hybrid Approach for S&P 500 Index Volatility Forecasting",
+      "summary": "Accurate volatility forecasting is essential in banking, investment, and risk management, because expectations about future market movements directly influence current decisions. This study proposes a hybrid modelling framework that integrates a Stochastic Volatility model with a Long Short Term Memory neural network. The SV model improves statistical precision and captures latent volatility dynamics, especially in response to unforeseen events, while the LSTM network enhances the model's ability to detect complex nonlinear patterns in financial time series. The forecasting is conducted using daily data from the S and P 500 index, covering the period from January 1 1998 to December 31 2024. A rolling window approach is employed to train the model and generate one step ahead volatility forecasts. The performance of the hybrid SV-LSTM model is evaluated through both statistical testing and investment simulations. The results show that the hybrid approach outperforms both the standalone SV and LSTM models and contributes to the development of volatility modelling techniques, providing a foundation for improving risk assessment and strategic investment planning in the context of the S and P 500.",
+      "published": "2025-12-13T09:21:43Z",
+      "authors": [
+        "Anna Perekhodko",
+        "Robert Ślepaczuk"
+      ],
+      "url": "http://arxiv.org/abs/2512.12250v1",
+      "pdf": "http://arxiv.org/pdf/2512.12250v1.pdf",
+      "categories": [
+        "q-fin.TR",
+        "cs.AI",
+        "cs.LG",
+        "cs.NE",
+        "q-fin.PM"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2512.12250v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2512.12250v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"financial time series\" AND all:\"volatility\" AND all:\"neural network\""
+    },
+    {
+      "arxiv_id": "2605.04690v1",
+      "title": "Learning Time-Inhomogeneous Markov Dynamics in Financial Time Series via Neural Parameterization",
+      "summary": "Modeling the dynamics of non-stationary stochastic systems requires balancing the representational power of deep learning with the mathematical transparency of classical models. While classical Markov transition operators provide explicit, theoretically grounded rules for system evolution, their empirical estimation collapses due to severe data sparsity when applied to high-resolution, high-noise environments. We explore this statistical barrier using financial time series as a canonical, real-world testbed. To overcome the degeneracy of empirical counting, we introduce a framework that utilizes neural networks strictly as parameterization engines to generate explicit, time-varying Markov transition matrices. By constraining the neural network to output its predictions as a formal stochastic operator, we maintain complete structural interpretability. We demonstrate that these learned operators successfully capture complex regime shifts: the state-conditioned model achieves mean row heterogeneity $\\barρ = 0.0073$ while the state-free ablation collapses to exactly zero, and operator row entropy correlates with realized variance at $r = -0.62$ ($p \\approx 10^{-251}$), revealing that high-volatility regimes homogenize transition dynamics rather than diversify them. Furthermore, rather than enforcing the Chapman-Kolmogorov equations as a rigid structural requirement, we repurpose them as a localized diagnostic tool to pinpoint specific temporal windows where first-order memory assumptions break down. Ultimately, this framework demonstrates how neural networks can be constrained to make rigorous, classical operator analysis viable for complex real-world time series.",
+      "published": "2026-05-06T09:39:04Z",
+      "authors": [
+        "Jan Rovirosa",
+        "Jesse Schmolze"
+      ],
+      "url": "http://arxiv.org/abs/2605.04690v1",
+      "pdf": "http://arxiv.org/pdf/2605.04690v1.pdf",
+      "categories": [
+        "cs.LG",
+        "q-fin.MF"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2605.04690v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2605.04690v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"financial time series\" AND all:\"volatility\" AND all:\"neural network\""
+    },
+    {
+      "arxiv_id": "2201.08218v1",
+      "title": "Long Short-Term Memory Neural Network for Financial Time Series",
+      "summary": "Performance forecasting is an age-old problem in economics and finance. Recently, developments in machine learning and neural networks have given rise to non-linear time series models that provide modern and promising alternatives to traditional methods of analysis. In this paper, we present an ensemble of independent and parallel long short-term memory (LSTM) neural networks for the prediction of stock price movement. LSTMs have been shown to be especially suited for time series data due to their ability to incorporate past information, while neural network ensembles have been found to reduce variability in results and improve generalization. A binary classification problem based on the median of returns is used, and the ensemble's forecast depends on a threshold value, which is the minimum number of LSTMs required to agree upon the result. The model is applied to the constituents of the smaller, less efficient Stockholm OMX30 instead of other major market indices such as the DJIA and S&P500 commonly found in literature. With a straightforward trading strategy, comparisons with a randomly chosen portfolio and a portfolio containing all the stocks in the index show that the portfolio resulting from the LSTM ensemble provides better average daily returns and higher cumulative returns over time. Moreover, the LSTM portfolio also exhibits less volatility, leading to higher risk-return ratios.",
+      "published": "2022-01-20T15:17:26Z",
+      "authors": [
+        "Carmina Fjellström"
+      ],
+      "url": "http://arxiv.org/abs/2201.08218v1",
+      "pdf": "http://arxiv.org/pdf/2201.08218v1.pdf",
+      "categories": [
+        "q-fin.ST",
+        "cs.LG"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2201.08218v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2201.08218v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"financial time series\" AND all:\"volatility\" AND all:\"neural network\""
+    },
+    {
+      "arxiv_id": "1608.07193v1",
+      "title": "Quantile Dependence between Stock Markets and its Application in Volatility Forecasting",
+      "summary": "This paper examines quantile dependence between international stock markets and evaluates its use for improving volatility forecasting. First, we analyze quantile dependence and directional predictability between the US stock market and stock markets in the UK, Germany, France and Japan. We use the cross-quantilogram, which is a correlation statistic of quantile hit processes. The detailed dependence between stock markets depends on specific quantile ranges and this dependence is generally asymmetric; the negative spillover effect is stronger than the positive spillover effect and there exists strong directional predictability from the US market to the UK, Germany, France and Japan markets. Second, we consider a simple quantile-augmented volatility model that accommodates the quantile dependence and directional predictability between the US market and these other markets. The quantile-augmented volatility model provides superior in-sample and out-of-sample volatility forecasts.",
+      "published": "2016-08-25T15:21:02Z",
+      "authors": [
+        "Heejoon Han"
+      ],
+      "url": "http://arxiv.org/abs/1608.07193v1",
+      "pdf": "http://arxiv.org/pdf/1608.07193v1.pdf",
+      "categories": [
+        "q-fin.ST",
+        "stat.AP"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/1608.07193v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/1608.07193v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"stock market\" AND all:\"direction prediction\""
+    },
+    {
+      "arxiv_id": "2310.03775v2",
+      "title": "Hidden Markov Models for Stock Market Prediction",
+      "summary": "The stock market presents a challenging environment for accurately predicting future stock prices due to its intricate and ever-changing nature. However, the utilization of advanced methodologies can significantly enhance the precision of stock price predictions. One such method is Hidden Markov Models (HMMs). HMMs are statistical models that can be used to model the behavior of a partially observable system, making them suitable for modeling stock prices based on historical data. Accurate stock price predictions can help traders make better investment decisions, leading to increased profits. In this article, we trained and tested a Hidden Markov Model for the purpose of predicting a stock closing price based on its opening price and the preceding day's prices. The model's performance has been evaluated using two indicators: Mean Average Prediction Error (MAPE), which specifies the average accuracy of our model, and Directional Prediction Accuracy (DPA), a newly introduced indicator that accounts for the number of fractional change predictions that are correct in sign.",
+      "published": "2023-10-05T08:14:24Z",
+      "authors": [
+        "Luigi Catello",
+        "Ludovica Ruggiero",
+        "Lucia Schiavone",
+        "Mario Valentino"
+      ],
+      "url": "http://arxiv.org/abs/2310.03775v2",
+      "pdf": "http://arxiv.org/pdf/2310.03775v2.pdf",
+      "categories": [
+        "eess.SY"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2310.03775v2",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2310.03775v2",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"stock market\" AND all:\"direction prediction\""
+    },
+    {
+      "arxiv_id": "2107.00931v1",
+      "title": "A Novel Deep Reinforcement Learning Based Stock Direction Prediction using Knowledge Graph and Community Aware Sentiments",
+      "summary": "Stock market prediction has been an important topic for investors, researchers, and analysts. Because it is affected by too many factors, stock market prediction is a difficult task to handle. In this study, we propose a novel method that is based on deep reinforcement learning methodologies for the direction prediction of stocks using sentiments of community and knowledge graph. For this purpose, we firstly construct a social knowledge graph of users by analyzing relations between connections. After that, time series analysis of related stock and sentiment analysis is blended with deep reinforcement methodology. Turkish version of Bidirectional Encoder Representations from Transformers (BerTurk) is employed to analyze the sentiments of the users while deep Q-learning methodology is used for the deep reinforcement learning side of the proposed model to construct the deep Q network. In order to demonstrate the effectiveness of the proposed model, Garanti Bank (GARAN), Akbank (AKBNK), Türkiye İş Bankası (ISCTR) stocks in Istanbul Stock Exchange are used as a case study. Experiment results show that the proposed novel model achieves remarkable results for stock market prediction task.",
+      "published": "2021-07-02T09:39:41Z",
+      "authors": [
+        "Anil Berk Altuner",
+        "Zeynep Hilal Kilimci"
+      ],
+      "url": "http://arxiv.org/abs/2107.00931v1",
+      "pdf": "http://arxiv.org/pdf/2107.00931v1.pdf",
+      "categories": [
+        "cs.AI",
+        "cs.CE",
+        "cs.LG",
+        "cs.SI"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2107.00931v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2107.00931v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"stock market\" AND all:\"direction prediction\""
+    },
+    {
+      "arxiv_id": "1309.7119v3",
+      "title": "Stock price direction prediction by directly using prices data: an empirical study on the KOSPI and HSI",
+      "summary": "The prediction of a stock market direction may serve as an early recommendation system for short-term investors and as an early financial distress warning system for long-term shareholders. Many stock prediction studies focus on using macroeconomic indicators, such as CPI and GDP, to train the prediction model. However, daily data of the macroeconomic indicators are almost impossible to obtain. Thus, those methods are difficult to be employed in practice. In this paper, we propose a method that directly uses prices data to predict market index direction and stock price direction. An extensive empirical study of the proposed method is presented on the Korean Composite Stock Price Index (KOSPI) and Hang Seng Index (HSI), as well as the individual constituents included in the indices. The experimental results show notably high hit ratios in predicting the movements of the individual constituents in the KOSPI and HIS.",
+      "published": "2013-09-27T05:35:50Z",
+      "authors": [
+        "Yanshan Wang"
+      ],
+      "url": "http://arxiv.org/abs/1309.7119v3",
+      "pdf": "http://arxiv.org/pdf/1309.7119v3.pdf",
+      "categories": [
+        "cs.CE",
+        "cs.LG",
+        "q-fin.ST"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/1309.7119v3",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/1309.7119v3",
+          "type": "application/pdf",
+          "title": "pdf"
+        },
+        {
+          "href": "https://doi.org/10.1504/IJBIDM.2014.065091",
+          "type": null,
+          "title": "doi"
+        }
+      ],
+      "query": "all:\"stock market\" AND all:\"direction prediction\""
+    },
+    {
+      "arxiv_id": "2112.03946v1",
+      "title": "Generative Adversarial Network (GAN) and Enhanced Root Mean Square Error (ERMSE): Deep Learning for Stock Price Movement Prediction",
+      "summary": "The prediction of stock price movement direction is significant in financial circles and academic. Stock price contains complex, incomplete, and fuzzy information which makes it an extremely difficult task to predict its development trend. Predicting and analysing financial data is a nonlinear, time-dependent problem. With rapid development in machine learning and deep learning, this task can be performed more effectively by a purposely designed network. This paper aims to improve prediction accuracy and minimizing forecasting error loss through deep learning architecture by using Generative Adversarial Networks. It was proposed a generic model consisting of Phase-space Reconstruction (PSR) method for reconstructing price series and Generative Adversarial Network (GAN) which is a combination of two neural networks which are Long Short-Term Memory (LSTM) as Generative model and Convolutional Neural Network (CNN) as Discriminative model for adversarial training to forecast the stock market. LSTM will generate new instances based on historical basic indicators information and then CNN will estimate whether the data is predicted by LSTM or is real. It was found that the Generative Adversarial Network (GAN) has performed well on the enhanced root mean square error to LSTM, as it was 4.35% more accurate in predicting the direction and reduced processing time and RMSE by 78 secs and 0.029, respectively. This study provides a better result in the accuracy of the stock index. It seems that the proposed system concentrates on minimizing the root mean square error and processing time and improving the direction prediction accuracy, and provides a better result in the accuracy of the stock index.",
+      "published": "2021-11-30T18:38:59Z",
+      "authors": [
+        "Ashish Kumar",
+        "Abeer Alsadoon",
+        "P. W. C. Prasad",
+        "Salma Abdullah",
+        "Tarik A. Rashid",
+        "Duong Thu Hang Pham",
+        "Tran Quoc Vinh Nguyen"
+      ],
+      "url": "http://arxiv.org/abs/2112.03946v1",
+      "pdf": "http://arxiv.org/pdf/2112.03946v1.pdf",
+      "categories": [
+        "q-fin.ST",
+        "cs.LG",
+        "cs.NE"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2112.03946v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2112.03946v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        },
+        {
+          "href": "https://doi.org/10.1007/s11042-021-11670-w",
+          "type": null,
+          "title": "doi"
+        }
+      ],
+      "query": "all:\"stock market\" AND all:\"direction prediction\""
+    },
+    {
+      "arxiv_id": "2012.05906v1",
+      "title": "A Sentiment Analysis Approach to the Prediction of Market Volatility",
+      "summary": "Prediction and quantification of future volatility and returns play an important role in financial modelling, both in portfolio optimization and risk management. Natural language processing today allows to process news and social media comments to detect signals of investors' confidence. We have explored the relationship between sentiment extracted from financial news and tweets and FTSE100 movements. We investigated the strength of the correlation between sentiment measures on a given day and market volatility and returns observed the next day. The findings suggest that there is evidence of correlation between sentiment and stock market movements: the sentiment captured from news headlines could be used as a signal to predict market returns; the same does not apply for volatility. Also, in a surprising finding, for the sentiment found in Twitter comments we obtained a correlation coefficient of -0.7, and p-value below 0.05, which indicates a strong negative correlation between positive sentiment captured from the tweets on a given day and the volatility observed the next day. We developed an accurate classifier for the prediction of market volatility in response to the arrival of new information by deploying topic modelling, based on Latent Dirichlet Allocation, to extract feature vectors from a collection of tweets and financial news. The obtained features were used as additional input to the classifier. Thanks to the combination of sentiment and topic modelling our classifier achieved a directional prediction accuracy for volatility of 63%.",
+      "published": "2020-12-10T01:15:48Z",
+      "authors": [
+        "Justina Deveikyte",
+        "Helyette Geman",
+        "Carlo Piccari",
+        "Alessandro Provetti"
+      ],
+      "url": "http://arxiv.org/abs/2012.05906v1",
+      "pdf": "http://arxiv.org/pdf/2012.05906v1.pdf",
+      "categories": [
+        "q-fin.ST",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2012.05906v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2012.05906v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"stock market\" AND all:\"direction prediction\""
+    },
+    {
+      "arxiv_id": "1905.07581v1",
+      "title": "Convolutional Feature Extraction and Neural Arithmetic Logic Units for Stock Prediction",
+      "summary": "Stock prediction is a topic undergoing intense study for many years. Finance experts and mathematicians have been working on a way to predict the future stock price so as to decide to buy the stock or sell it to make profit. Stock experts or economists, usually analyze on the previous stock values using technical indicators, sentiment analysis etc to predict the future stock price. In recent years, many researches have extensively used machine learning for predicting the stock behaviour. In this paper we propose data driven deep learning approach to predict the future stock value with the previous price with the feature extraction property of convolutional neural network and to use Neural Arithmetic Logic Units with it.",
+      "published": "2019-05-18T13:01:46Z",
+      "authors": [
+        "Shangeth Rajaa",
+        "Jajati Keshari Sahoo"
+      ],
+      "url": "http://arxiv.org/abs/1905.07581v1",
+      "pdf": "http://arxiv.org/pdf/1905.07581v1.pdf",
+      "categories": [
+        "cs.LG",
+        "q-fin.ST",
+        "stat.ML"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/1905.07581v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/1905.07581v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        },
+        {
+          "href": "https://doi.org/10.1007/978-981-13-9939-8_31",
+          "type": null,
+          "title": "doi"
+        }
+      ],
+      "query": "all:\"sentiment analysis\" AND all:\"stock prediction\""
+    },
+    {
+      "arxiv_id": "2505.07871v1",
+      "title": "Evaluating Financial Sentiment Analysis with Annotators Instruction Assisted Prompting: Enhancing Contextual Interpretation and Stock Prediction Accuracy",
+      "summary": "Financial sentiment analysis (FSA) presents unique challenges to LLMs that surpass those in typical sentiment analysis due to the nuanced language used in financial contexts. The prowess of these models is often undermined by the inherent subjectivity of sentiment classifications in existing benchmark datasets like Financial Phrasebank. These datasets typically feature undefined sentiment classes that reflect the highly individualized perspectives of annotators, leading to significant variability in annotations. This variability results in an unfair expectation for LLMs during benchmarking, where they are tasked to conjecture the subjective viewpoints of human annotators without sufficient context. In this paper, we introduce the Annotators' Instruction Assisted Prompt, a novel evaluation prompt designed to redefine the task definition of FSA for LLMs. By integrating detailed task instructions originally intended for human annotators into the LLMs' prompt framework, AIAP aims to standardize the understanding of sentiment across both human and machine interpretations, providing a fair and context-rich foundation for sentiment analysis. We utilize a new dataset, WSBS, derived from the WallStreetBets subreddit to demonstrate how AIAP significantly enhances LLM performance by aligning machine operations with the refined task definitions. Experimental results demonstrate that AIAP enhances LLM performance significantly, with improvements up to 9.08. This context-aware approach not only yields incremental gains in performance but also introduces an innovative sentiment-indexing method utilizing model confidence scores. This method enhances stock price prediction models and extracts more value from the financial sentiment analysis, underscoring the significance of WSB as a critical source of financial text. Our research offers insights into both improving FSA through better evaluation methods.",
+      "published": "2025-05-09T19:44:04Z",
+      "authors": [
+        "A M Muntasir Rahman",
+        "Ajim Uddin",
+        "Guiling \"Grace\" Wang"
+      ],
+      "url": "http://arxiv.org/abs/2505.07871v1",
+      "pdf": "http://arxiv.org/pdf/2505.07871v1.pdf",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2505.07871v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2505.07871v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"sentiment analysis\" AND all:\"stock prediction\""
+    },
+    {
+      "arxiv_id": "2602.00086v3",
+      "title": "Impact of LLMs news Sentiment Analysis on Stock Price Movement Prediction",
+      "summary": "This paper addresses stock price movement prediction by leveraging LLM-based news sentiment analysis. Earlier works have largely focused on proposing and assessing sentiment analysis models and stock movement prediction methods, however, separately. Although promising results have been achieved, a clear and in-depth understanding of the benefit of the news sentiment to this task, as well as a comprehensive assessment of different architecture types in this context, is still lacking. Herein, we conduct an evaluation study that compares 3 different LLMs, namely, DeBERTa, RoBERTa and FinBERT, for sentiment-driven stock prediction. Our results suggest that DeBERTa outperforms the other two models with an accuracy of 75% and that an ensemble model that combines the three models can increase the accuracy to about 80%. Also, we see that sentiment news features can benefit (slightly) some stock market prediction models, i.e., LSTM-, PatchTST- and tPatchGNN-based classifiers and PatchTST- and TimesNet-based regression tasks models.",
+      "published": "2026-01-22T23:33:02Z",
+      "authors": [
+        "Walid Siala",
+        "Ahmed Khanfir",
+        "Mike Papadakis"
+      ],
+      "url": "http://arxiv.org/abs/2602.00086v3",
+      "pdf": "http://arxiv.org/pdf/2602.00086v3.pdf",
+      "categories": [
+        "q-fin.ST",
+        "cs.AI",
+        "cs.CE"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2602.00086v3",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2602.00086v3",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"sentiment analysis\" AND all:\"stock prediction\""
+    },
+    {
+      "arxiv_id": "2305.14368v1",
+      "title": "Support for Stock Trend Prediction Using Transformers and Sentiment Analysis",
+      "summary": "Stock trend analysis has been an influential time-series prediction topic due to its lucrative and inherently chaotic nature. Many models looking to accurately predict the trend of stocks have been based on Recurrent Neural Networks (RNNs). However, due to the limitations of RNNs, such as gradient vanish and long-term dependencies being lost as sequence length increases, in this paper we develop a Transformer based model that uses technical stock data and sentiment analysis to conduct accurate stock trend prediction over long time windows. This paper also introduces a novel dataset containing daily technical stock data and top news headline data spanning almost three years. Stock prediction based solely on technical data can suffer from lag caused by the inability of stock indicators to effectively factor in breaking market news. The use of sentiment analysis on top headlines can help account for unforeseen shifts in market conditions caused by news coverage. We measure the performance of our model against RNNs over sequence lengths spanning 5 business days to 30 business days to mimic different length trading strategies. This reveals an improvement in directional accuracy over RNNs as sequence length is increased, with the largest improvement being close to 18.63% at 30 business days.",
+      "published": "2023-05-18T03:26:39Z",
+      "authors": [
+        "Harsimrat Kaeley",
+        "Ye Qiao",
+        "Nader Bagherzadeh"
+      ],
+      "url": "http://arxiv.org/abs/2305.14368v1",
+      "pdf": "http://arxiv.org/pdf/2305.14368v1.pdf",
+      "categories": [
+        "q-fin.ST",
+        "cs.LG"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2305.14368v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2305.14368v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"sentiment analysis\" AND all:\"stock prediction\""
+    },
+    {
+      "arxiv_id": "1811.02886v1",
+      "title": "Using Stock Prices as Ground Truth in Sentiment Analysis to Generate Profitable Trading Signals",
+      "summary": "The increasing availability of \"big\" (large volume) social media data has motivated a great deal of research in applying sentiment analysis to predict the movement of prices within financial markets. Previous work in this field investigates how the true sentiment of text (i.e. positive or negative opinions) can be used for financial predictions, based on the assumption that sentiments expressed online are representative of the true market sentiment. Here we consider the converse idea, that using the stock price as the ground-truth in the system may be a better indication of sentiment. Tweets are labelled as Buy or Sell dependent on whether the stock price discussed rose or fell over the following hour, and from this, stock-specific dictionaries are built for individual companies. A Bayesian classifier is used to generate stock predictions, which are input to an automated trading algorithm. Placing 468 trades over a 1 month period yields a return rate of 5.18%, which annualises to approximately 83% per annum. This approach performs significantly better than random chance and outperforms two baseline sentiment analysis methods tested.",
+      "published": "2018-11-07T13:55:01Z",
+      "authors": [
+        "Ellie Birbeck",
+        "Dave Cliff"
+      ],
+      "url": "http://arxiv.org/abs/1811.02886v1",
+      "pdf": "http://arxiv.org/pdf/1811.02886v1.pdf",
+      "categories": [
+        "cs.CE",
+        "q-fin.ST"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/1811.02886v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/1811.02886v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"sentiment analysis\" AND all:\"stock prediction\""
+    },
+    {
+      "arxiv_id": "2404.02053v2",
+      "title": "BERTopic-Driven Stock Market Predictions: Unraveling Sentiment Insights",
+      "summary": "This paper explores the intersection of Natural Language Processing (NLP) and financial analysis, focusing on the impact of sentiment analysis in stock price prediction. We employ BERTopic, an advanced NLP technique, to analyze the sentiment of topics derived from stock market comments. Our methodology integrates this sentiment analysis with various deep learning models, renowned for their effectiveness in time series and stock prediction tasks. Through comprehensive experiments, we demonstrate that incorporating topic sentiment notably enhances the performance of these models. The results indicate that topics in stock market comments provide implicit, valuable insights into stock market volatility and price trends. This study contributes to the field by showcasing the potential of NLP in enriching financial analysis and opens up avenues for further research into real-time sentiment analysis and the exploration of emotional and contextual aspects of market sentiment. The integration of advanced NLP techniques like BERTopic with traditional financial analysis methods marks a step forward in developing more sophisticated tools for understanding and predicting market behaviors.",
+      "published": "2024-04-02T15:50:10Z",
+      "authors": [
+        "Enmin Zhu",
+        "Jerome Yen"
+      ],
+      "url": "http://arxiv.org/abs/2404.02053v2",
+      "pdf": "http://arxiv.org/pdf/2404.02053v2.pdf",
+      "categories": [
+        "cs.CL",
+        "cs.CE",
+        "q-fin.ST"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2404.02053v2",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2404.02053v2",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"sentiment analysis\" AND all:\"stock prediction\""
+    },
+    {
+      "arxiv_id": "1607.01958v1",
+      "title": "Stock trend prediction using news sentiment analysis",
+      "summary": "Efficient Market Hypothesis is the popular theory about stock prediction. With its failure much research has been carried in the area of prediction of stocks. This project is about taking non quantifiable data such as financial news articles about a company and predicting its future stock trend with news sentiment classification. Assuming that news articles have impact on stock market, this is an attempt to study relationship between news and stock trend. To show this, we created three different classification models which depict polarity of news articles being positive or negative. Observations show that RF and SVM perform well in all types of testing. Naïve Bayes gives good result but not compared to the other two. Experiments are conducted to evaluate various aspects of the proposed model and encouraging results are obtained in all of the experiments. The accuracy of the prediction model is more than 80% and in comparison with news random labeling with 50% of accuracy; the model has increased the accuracy by 30%.",
+      "published": "2016-07-07T10:48:34Z",
+      "authors": [
+        "Joshi Kalyani",
+        "Prof. H. N. Bharathi",
+        "Prof. Rao Jyothi"
+      ],
+      "url": "http://arxiv.org/abs/1607.01958v1",
+      "pdf": "http://arxiv.org/pdf/1607.01958v1.pdf",
+      "categories": [
+        "cs.CL",
+        "cs.IR",
+        "cs.LG"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/1607.01958v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/1607.01958v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"sentiment analysis\" AND all:\"stock prediction\""
+    },
+    {
+      "arxiv_id": "2007.12620v1",
+      "title": "A Novel Ensemble Deep Learning Model for Stock Prediction Based on Stock Prices and News",
+      "summary": "In recent years, machine learning and deep learning have become popular methods for financial data analysis, including financial textual data, numerical data, and graphical data. This paper proposes to use sentiment analysis to extract useful information from multiple textual data sources and a blending ensemble deep learning model to predict future stock movement. The blending ensemble model contains two levels. The first level contains two Recurrent Neural Networks (RNNs), one Long-Short Term Memory network (LSTM) and one Gated Recurrent Units network (GRU), followed by a fully connected neural network as the second level model. The RNNs, LSTM, and GRU models can effectively capture the time-series events in the input data, and the fully connected neural network is used to ensemble several individual prediction results to further improve the prediction accuracy. The purpose of this work is to explain our design philosophy and show that ensemble deep learning technologies can truly predict future stock price trends more effectively and can better assist investors in making the right investment decision than other traditional methods.",
+      "published": "2020-07-23T15:25:37Z",
+      "authors": [
+        "Yang Li",
+        "Yi Pan"
+      ],
+      "url": "http://arxiv.org/abs/2007.12620v1",
+      "pdf": "http://arxiv.org/pdf/2007.12620v1.pdf",
+      "categories": [
+        "q-fin.ST",
+        "cs.LG"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2007.12620v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2007.12620v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"sentiment analysis\" AND all:\"stock prediction\""
+    },
+    {
+      "arxiv_id": "2510.01203v1",
+      "title": "Mamba Outpaces Reformer in Stock Prediction with Sentiments from Top Ten LLMs",
+      "summary": "The stock market is extremely difficult to predict in the short term due to high market volatility, changes caused by news, and the non-linear nature of the financial time series. This research proposes a novel framework for improving minute-level prediction accuracy using semantic sentiment scores from top ten different large language models (LLMs) combined with minute interval intraday stock price data. We systematically constructed a time-aligned dataset of AAPL news articles and 1-minute Apple Inc. (AAPL) stock prices for the dates of April 4 to May 2, 2025. The sentiment analysis was achieved using the DeepSeek-V3, GPT variants, LLaMA, Claude, Gemini, Qwen, and Mistral models through their APIs. Each article obtained sentiment scores from all ten LLMs, which were scaled to a [0, 1] range and combined with prices and technical indicators like RSI, ROC, and Bollinger Band Width. Two state-of-the-art such as Reformer and Mamba were trained separately on the dataset using the sentiment scores produced by each LLM as input. Hyper parameters were optimized by means of Optuna and were evaluated through a 3-day evaluation period. Reformer had mean squared error (MSE) or the evaluation metrics, and it should be noted that Mamba performed not only faster but also better than Reformer for every LLM across the 10 LLMs tested. Mamba performed best with LLaMA 3.3--70B, with the lowest error of 0.137. While Reformer could capture broader trends within the data, the model appeared to over smooth sudden changes by the LLMs. This study highlights the potential of integrating LLM-based semantic analysis paired with efficient temporal modeling to enhance real-time financial forecasting.",
+      "published": "2025-09-14T16:36:24Z",
+      "authors": [
+        "Lokesh Antony Kadiyala",
+        "Amir Mirzaeinia"
+      ],
+      "url": "http://arxiv.org/abs/2510.01203v1",
+      "pdf": "http://arxiv.org/pdf/2510.01203v1.pdf",
+      "categories": [
+        "q-fin.ST",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2510.01203v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2510.01203v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"sentiment analysis\" AND all:\"stock prediction\""
+    },
+    {
+      "arxiv_id": "2506.20810v1",
+      "title": "FINN-GL: Generalized Mixed-Precision Extensions for FPGA-Accelerated LSTMs",
+      "summary": "Recurrent neural networks (RNNs), particularly LSTMs, are effective for time-series tasks like sentiment analysis and short-term stock prediction. However, their computational complexity poses challenges for real-time deployment in resource constrained environments. While FPGAs offer a promising platform for energy-efficient AI acceleration, existing tools mainly target feed-forward networks, and LSTM acceleration typically requires full custom implementation. In this paper, we address this gap by leveraging the open-source and extensible FINN framework to enable the generalized deployment of LSTMs on FPGAs. Specifically, we leverage the Scan operator from the Open Neural Network Exchange (ONNX) specification to model the recurrent nature of LSTM computations, enabling support for mixed quantisation within them and functional verification of LSTM-based models. Furthermore, we introduce custom transformations within the FINN compiler to map the quantised ONNX computation graph to hardware blocks from the HLS kernel library of the FINN compiler and Vitis HLS. We validate the proposed tool-flow by training a quantised ConvLSTM model for a mid-price stock prediction task using the widely used dataset and generating a corresponding hardware IP of the model using our flow, targeting the XCZU7EV device. We show that the generated quantised ConvLSTM accelerator through our flow achieves a balance between performance (latency) and resource consumption, while matching (or bettering) inference accuracy of state-of-the-art models with reduced precision. We believe that the generalisable nature of the proposed flow will pave the way for resource-efficient RNN accelerator designs on FPGAs.",
+      "published": "2025-06-25T20:07:46Z",
+      "authors": [
+        "Shashwat Khandelwal",
+        "Jakoba Petri-Koenig",
+        "Thomas B. Preußer",
+        "Michaela Blott",
+        "Shreejith Shanker"
+      ],
+      "url": "http://arxiv.org/abs/2506.20810v1",
+      "pdf": "http://arxiv.org/pdf/2506.20810v1.pdf",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.AR",
+        "eess.SP"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2506.20810v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2506.20810v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"sentiment analysis\" AND all:\"stock prediction\""
+    },
+    {
+      "arxiv_id": "2010.09107v15",
+      "title": "Conformal prediction for time series",
+      "summary": "We develop a general framework for constructing distribution-free prediction intervals for time series. Theoretically, we establish explicit bounds on conditional and marginal coverage gaps of estimated prediction intervals, which asymptotically converge to zero under additional assumptions. We obtain similar bounds on the size of set differences between oracle and estimated prediction intervals. Methodologically, we introduce a computationally efficient algorithm called \\texttt{EnbPI} that wraps around ensemble predictors, which is closely related to conformal prediction (CP) but does not require data exchangeability. \\texttt{EnbPI} avoids data-splitting and is computationally efficient by avoiding retraining and thus scalable to sequentially producing prediction intervals. We perform extensive simulation and real-data analyses to demonstrate its effectiveness compared with existing methods. We also discuss the extension of \\texttt{EnbPI} on various other applications.",
+      "published": "2020-10-18T21:05:32Z",
+      "authors": [
+        "Chen Xu",
+        "Yao Xie"
+      ],
+      "url": "http://arxiv.org/abs/2010.09107v15",
+      "pdf": "http://arxiv.org/pdf/2010.09107v15.pdf",
+      "categories": [
+        "stat.ME",
+        "stat.AP",
+        "stat.ML"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2010.09107v15",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2010.09107v15",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"conformal prediction\" AND all:\"time series\""
+    },
+    {
+      "arxiv_id": "2107.07511v6",
+      "title": "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification",
+      "summary": "Black-box machine learning models are now routinely used in high-risk settings, like medical diagnostics, which demand uncertainty quantification to avoid consequential model failures. Conformal prediction is a user-friendly paradigm for creating statistically rigorous uncertainty sets/intervals for the predictions of such models. Critically, the sets are valid in a distribution-free sense: they possess explicit, non-asymptotic guarantees even without distributional assumptions or model assumptions. One can use conformal prediction with any pre-trained model, such as a neural network, to produce sets that are guaranteed to contain the ground truth with a user-specified probability, such as 90%. It is easy-to-understand, easy-to-use, and general, applying naturally to problems arising in the fields of computer vision, natural language processing, deep reinforcement learning, and so on. This hands-on introduction is aimed to provide the reader a working understanding of conformal prediction and related distribution-free uncertainty quantification techniques with one self-contained document. We lead the reader through practical theory for and examples of conformal prediction and describe its extensions to complex machine learning tasks involving structured outputs, distribution shift, time-series, outliers, models that abstain, and more. Throughout, there are many explanatory illustrations, examples, and code samples in Python. With each code sample comes a Jupyter notebook implementing the method on a real-data example; the notebooks can be accessed and easily run using our codebase.",
+      "published": "2021-07-15T17:59:50Z",
+      "authors": [
+        "Anastasios N. Angelopoulos",
+        "Stephen Bates"
+      ],
+      "url": "http://arxiv.org/abs/2107.07511v6",
+      "pdf": "http://arxiv.org/pdf/2107.07511v6.pdf",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "math.ST",
+        "stat.ME",
+        "stat.ML"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2107.07511v6",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2107.07511v6",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"conformal prediction\" AND all:\"time series\""
+    },
+    {
+      "arxiv_id": "2610.02357v1",
+      "title": "Conformal Prediction for Time Series with Deep Sequence Models",
+      "summary": "Recent advances in deep learning for time series prediction have amplified the need for reliable uncertainty quantification. Conformal prediction has gained attention as a distribution-free framework for constructing prediction intervals with coverage guarantees. However, its coverage guarantees rely on data exchangeability, an assumption generally violated in time series. Active research has focused on developing conformal prediction methods for time series that overcome this limitation. While deep sequence models, such as recurrent neural networks and Transformers, have often been used in conformal prediction for time series, limited work has systematically studied how deep sequence models can be utilized in conformal prediction for time series. In this work, we systematically investigate the use of deep sequence models in conformal prediction for time series through three approaches: conditional quantile regression, conditional quantile function estimation, and localized conformal prediction. We provide a theoretical analysis establishing asymptotic conditional coverage guarantees for all three approaches under suitable assumptions. Through comprehensive experiments on real-world datasets, we demonstrate the effectiveness of leveraging deep sequence models into conformal prediction for time series.",
+      "published": "2026-10-01T18:34:49Z",
+      "authors": [
+        "Junghwan Lee",
+        "Jonghyeok Lee",
+        "Yao Xie"
+      ],
+      "url": "http://arxiv.org/abs/2610.02357v1",
+      "pdf": "http://arxiv.org/pdf/2610.02357v1.pdf",
+      "categories": [
+        "stat.ML",
+        "cs.LG"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2610.02357v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2610.02357v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"conformal prediction\" AND all:\"time series\""
+    },
+    {
+      "arxiv_id": "2303.12783v2",
+      "title": "Conformal Prediction for Time Series with Modern Hopfield Networks",
+      "summary": "To quantify uncertainty, conformal prediction methods are gaining continuously more interest and have already been successfully applied to various domains. However, they are difficult to apply to time series as the autocorrelative structure of time series violates basic assumptions required by conformal prediction. We propose HopCPT, a novel conformal prediction approach for time series that not only copes with temporal structures but leverages them. We show that our approach is theoretically well justified for time series where temporal dependencies are present. In experiments, we demonstrate that our new approach outperforms state-of-the-art conformal prediction methods on multiple real-world time series datasets from four different domains.",
+      "published": "2023-03-22T17:52:54Z",
+      "authors": [
+        "Andreas Auer",
+        "Martin Gauch",
+        "Daniel Klotz",
+        "Sepp Hochreiter"
+      ],
+      "url": "http://arxiv.org/abs/2303.12783v2",
+      "pdf": "http://arxiv.org/pdf/2303.12783v2.pdf",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "stat.ML"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2303.12783v2",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2303.12783v2",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"conformal prediction\" AND all:\"time series\""
+    },
+    {
+      "arxiv_id": "2502.05709v3",
+      "title": "Flow-based Conformal Prediction for Multi-dimensional Time Series",
+      "summary": "Time series prediction underpins a broad range of downstream tasks across many scientific domains. Recent advances and increasing adoption of black-box machine learning models for time series prediction highlight the critical need for uncertainty quantification. While conformal prediction has gained attention as a reliable uncertainty quantification method, conformal prediction for time series faces two key challenges: (1) \\textbf{leveraging correlations in observations and non-conformity scores to overcome the exchangeability assumption}, and (2) \\textbf{constructing prediction sets for multi-dimensional outcomes}. To address these challenges, we propose a novel conformal prediction method for time series using flow with classifier-free guidance. We provide coverage guarantees by establishing exact non-asymptotic marginal coverage and a finite-sample bound on conditional coverage for the proposed method. Evaluations on real-world time series datasets demonstrate that our method constructs significantly smaller prediction sets than existing conformal prediction methods, maintaining target coverage.",
+      "published": "2025-02-08T22:04:05Z",
+      "authors": [
+        "Junghwan Lee",
+        "Chen Xu",
+        "Yao Xie"
+      ],
+      "url": "http://arxiv.org/abs/2502.05709v3",
+      "pdf": "http://arxiv.org/pdf/2502.05709v3.pdf",
+      "categories": [
+        "cs.LG",
+        "stat.ML"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2502.05709v3",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2502.05709v3",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"conformal prediction\" AND all:\"time series\""
+    },
+    {
+      "arxiv_id": "2509.02844v4",
+      "title": "Conformal Prediction for Time-series Forecasting with Change Points",
+      "summary": "Conformal prediction has been explored as a general and efficient way to provide uncertainty quantification for time series. However, current methods struggle to handle time series data with change points - sudden shifts in the underlying data-generating process. In this paper, we propose a novel Conformal Prediction for Time-series with Change points (CPTC) algorithm, addressing this gap by integrating a model to predict the underlying state with online conformal prediction to model uncertainties in non-stationary time series. We prove CPTC's validity and improved adaptivity in the time series setting under minimum assumptions, and demonstrate CPTC's practical effectiveness on 6 synthetic and real-world datasets, showing improved validity and adaptivity compared to state-of-the-art baselines.",
+      "published": "2025-09-02T21:26:53Z",
+      "authors": [
+        "Sophia Sun",
+        "Rose Yu"
+      ],
+      "url": "http://arxiv.org/abs/2509.02844v4",
+      "pdf": "http://arxiv.org/pdf/2509.02844v4.pdf",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2509.02844v4",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2509.02844v4",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"conformal prediction\" AND all:\"time series\""
+    },
+    {
+      "arxiv_id": "2212.03281v4",
+      "title": "Copula Conformal Prediction for Multi-step Time Series Forecasting",
+      "summary": "Accurate uncertainty measurement is a key step to building robust and reliable machine learning systems. Conformal prediction is a distribution-free uncertainty quantification algorithm popular for its ease of implementation, statistical coverage guarantees, and versatility for underlying forecasters. However, existing conformal prediction algorithms for time series are limited to single-step prediction without considering the temporal dependency. In this paper, we propose a Copula Conformal Prediction algorithm for multivariate, multi-step Time Series forecasting, CopulaCPTS. We prove that CopulaCPTS has finite sample validity guarantee. On several synthetic and real-world multivariate time series datasets, we show that CopulaCPTS produces more calibrated and sharp confidence intervals for multi-step prediction tasks than existing techniques.",
+      "published": "2022-12-06T19:32:06Z",
+      "authors": [
+        "Sophia Sun",
+        "Rose Yu"
+      ],
+      "url": "http://arxiv.org/abs/2212.03281v4",
+      "pdf": "http://arxiv.org/pdf/2212.03281v4.pdf",
+      "categories": [
+        "cs.LG",
+        "stat.AP"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2212.03281v4",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2212.03281v4",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"conformal prediction\" AND all:\"time series\""
+    },
+    {
+      "arxiv_id": "2407.06390v2",
+      "title": "JANET: Joint Adaptive predictioN-region Estimation for Time-series",
+      "summary": "Conformal prediction provides machine learning models with prediction sets that offer theoretical guarantees, but the underlying assumption of exchangeability limits its applicability to time series data. Furthermore, existing approaches struggle to handle multi-step ahead prediction tasks, where uncertainty estimates across multiple future time points are crucial. We propose JANET (Joint Adaptive predictioN-region Estimation for Time-series), a novel framework for constructing conformal prediction regions that are valid for both univariate and multivariate time series. JANET generalises the inductive conformal framework and efficiently produces joint prediction regions with controlled K-familywise error rates, enabling flexible adaptation to specific application needs. Our empirical evaluation demonstrates JANET's superior performance in multi-step prediction tasks across diverse time series datasets, highlighting its potential for reliable and interpretable uncertainty quantification in sequential data.",
+      "published": "2024-07-08T21:03:15Z",
+      "authors": [
+        "Eshant English",
+        "Eliot Wong-Toi",
+        "Matteo Fontana",
+        "Stephan Mandt",
+        "Padhraic Smyth",
+        "Christoph Lippert"
+      ],
+      "url": "http://arxiv.org/abs/2407.06390v2",
+      "pdf": "http://arxiv.org/pdf/2407.06390v2.pdf",
+      "categories": [
+        "stat.ML",
+        "cs.LG",
+        "stat.ME"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2407.06390v2",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2407.06390v2",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"conformal prediction\" AND all:\"time series\""
+    },
+    {
+      "arxiv_id": "2502.09443v2",
+      "title": "Relational Conformal Prediction for Correlated Time Series",
+      "summary": "We address the problem of uncertainty quantification in time series forecasting by exploiting observations at correlated sequences. Relational deep learning methods leveraging graph representations are among the most effective tools for obtaining point estimates from spatiotemporal data and correlated time series. However, the problem of exploiting relational structures to estimate the uncertainty of such predictions has been largely overlooked in the same context. To this end, we propose a novel distribution-free approach based on the conformal prediction framework and quantile regression. Despite the recent applications of conformal prediction to sequential data, existing methods operate independently on each target time series and do not account for relationships among them when constructing the prediction interval. We fill this void by introducing a novel conformal prediction method based on graph deep learning operators. Our approach, named Conformal Relational Prediction (CoRel), does not require the relational structure (graph) to be known a priori and can be applied on top of any pre-trained predictor. Additionally, CoRel includes an adaptive component to handle non-exchangeable data and changes in the input time series. Our approach provides accurate coverage and achieves state-of-the-art uncertainty quantification in relevant benchmarks.",
+      "published": "2025-02-13T16:12:17Z",
+      "authors": [
+        "Andrea Cini",
+        "Alexander Jenkins",
+        "Danilo Mandic",
+        "Cesare Alippi",
+        "Filippo Maria Bianchi"
+      ],
+      "url": "http://arxiv.org/abs/2502.09443v2",
+      "pdf": "http://arxiv.org/pdf/2502.09443v2.pdf",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2502.09443v2",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2502.09443v2",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"conformal prediction\" AND all:\"time series\""
+    },
+    {
+      "arxiv_id": "2406.05332v1",
+      "title": "Transformer Conformal Prediction for Time Series",
+      "summary": "We present a conformal prediction method for time series using the Transformer architecture to capture long-memory and long-range dependencies. Specifically, we use the Transformer decoder as a conditional quantile estimator to predict the quantiles of prediction residuals, which are used to estimate the prediction interval. We hypothesize that the Transformer decoder benefits the estimation of the prediction interval by learning temporal dependencies across past prediction residuals. Our comprehensive experiments using simulated and real data empirically demonstrate the superiority of the proposed method compared to the existing state-of-the-art conformal prediction methods.",
+      "published": "2024-06-08T03:17:48Z",
+      "authors": [
+        "Junghwan Lee",
+        "Chen Xu",
+        "Yao Xie"
+      ],
+      "url": "http://arxiv.org/abs/2406.05332v1",
+      "pdf": "http://arxiv.org/pdf/2406.05332v1.pdf",
+      "categories": [
+        "cs.LG"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2406.05332v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2406.05332v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"conformal prediction\" AND all:\"time series\""
+    },
+    {
+      "arxiv_id": "2407.21791v1",
+      "title": "Deep Learning for Options Trading: An End-To-End Approach",
+      "summary": "We introduce a novel approach to options trading strategies using a highly scalable and data-driven machine learning algorithm. In contrast to traditional approaches that often require specifications of underlying market dynamics or assumptions on an option pricing model, our models depart fundamentally from the need for these prerequisites, directly learning non-trivial mappings from market data to optimal trading signals. Backtesting on more than a decade of option contracts for equities listed on the S&P 100, we demonstrate that deep learning models trained according to our end-to-end approach exhibit significant improvements in risk-adjusted performance over existing rules-based trading strategies. We find that incorporating turnover regularization into the models leads to further performance enhancements at prohibitively high levels of transaction costs.",
+      "published": "2024-07-31T17:59:09Z",
+      "authors": [
+        "Wee Ling Tan",
+        "Stephen Roberts",
+        "Stefan Zohren"
+      ],
+      "url": "http://arxiv.org/abs/2407.21791v1",
+      "pdf": "http://arxiv.org/pdf/2407.21791v1.pdf",
+      "categories": [
+        "q-fin.PM",
+        "cs.LG",
+        "q-fin.CP",
+        "q-fin.TR"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2407.21791v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2407.21791v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        },
+        {
+          "href": "https://doi.org/10.1145/3677052.3698624",
+          "type": null,
+          "title": "doi"
+        }
+      ],
+      "query": "all:\"portfolio\" AND all:\"turnover\" AND all:\"transaction cost\" AND all:\"deep learning\""
+    },
+    {
+      "arxiv_id": "1904.04912v3",
+      "title": "Enhancing Time Series Momentum Strategies Using Deep Neural Networks",
+      "summary": "While time series momentum is a well-studied phenomenon in finance, common strategies require the explicit definition of both a trend estimator and a position sizing rule. In this paper, we introduce Deep Momentum Networks -- a hybrid approach which injects deep learning based trading rules into the volatility scaling framework of time series momentum. The model also simultaneously learns both trend estimation and position sizing in a data-driven manner, with networks directly trained by optimising the Sharpe ratio of the signal. Backtesting on a portfolio of 88 continuous futures contracts, we demonstrate that the Sharpe-optimised LSTM improved traditional methods by more than two times in the absence of transactions costs, and continue outperforming when considering transaction costs up to 2-3 basis points. To account for more illiquid assets, we also propose a turnover regularisation term which trains the network to factor in costs at run-time.",
+      "published": "2019-04-09T21:06:55Z",
+      "authors": [
+        "Bryan Lim",
+        "Stefan Zohren",
+        "Stephen Roberts"
+      ],
+      "url": "http://arxiv.org/abs/1904.04912v3",
+      "pdf": "http://arxiv.org/pdf/1904.04912v3.pdf",
+      "categories": [
+        "stat.ML",
+        "cs.LG",
+        "q-fin.TR"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/1904.04912v3",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/1904.04912v3",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"portfolio\" AND all:\"turnover\" AND all:\"transaction cost\" AND all:\"deep learning\""
+    },
+    {
+      "arxiv_id": "2307.05522v1",
+      "title": "Deep Inception Networks: A General End-to-End Framework for Multi-asset Quantitative Strategies",
+      "summary": "We introduce Deep Inception Networks (DINs), a family of Deep Learning models that provide a general framework for end-to-end systematic trading strategies. DINs extract time series (TS) and cross sectional (CS) features directly from daily price returns. This removes the need for handcrafted features, and allows the model to learn from TS and CS information simultaneously. DINs benefit from a fully data-driven approach to feature extraction, whilst avoiding overfitting. Extending prior work on Deep Momentum Networks, DIN models directly output position sizes that optimise Sharpe ratio, but for the entire portfolio instead of individual assets. We propose a novel loss term to balance turnover regularisation against increased systemic risk from high correlation to the overall market. Using futures data, we show that DIN models outperform traditional TS and CS benchmarks, are robust to a range of transaction costs and perform consistently across random seeds. To balance the general nature of DIN models, we provide examples of how attention and Variable Selection Networks can aid the interpretability of investment decisions. These model-specific methods are particularly useful when the dimensionality of the input is high and variable importance fluctuates dynamically over time. Finally, we compare the performance of DIN models on other asset classes, and show how the space of potential features can be customised.",
+      "published": "2023-07-07T15:07:07Z",
+      "authors": [
+        "Tom Liu",
+        "Stephen Roberts",
+        "Stefan Zohren"
+      ],
+      "url": "http://arxiv.org/abs/2307.05522v1",
+      "pdf": "http://arxiv.org/pdf/2307.05522v1.pdf",
+      "categories": [
+        "q-fin.TR"
+      ],
+      "links": [
+        {
+          "href": "https://arxiv.org/abs/2307.05522v1",
+          "type": "text/html",
+          "title": null
+        },
+        {
+          "href": "https://arxiv.org/pdf/2307.05522v1",
+          "type": "application/pdf",
+          "title": "pdf"
+        }
+      ],
+      "query": "all:\"portfolio\" AND all:\"turnover\" AND all:\"transaction cost\" AND all:\"deep learning\""
+    }
+  ]
+}
