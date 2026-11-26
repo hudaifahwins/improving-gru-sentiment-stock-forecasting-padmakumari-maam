@@ -25,6 +25,7 @@ Built from OpenAlex, anchored to Padmakumari et al. (2026): its **18 references*
 
 - Pipeline: `scripts/fetch_literature_md.py` → `scripts/enrich_seed_abstracts.py` (Crossref → Semantic Scholar backfill) → `scripts/extract_corpus_findings.py` (12 batch notes, every paper accounted) → `scripts/build_synthesis_pack.py`.
 - Master synthesis: **`docs/literature_synthesis.md`** — grounded themes (LSTM 44.2% vs GRU 13.0%; GDELT mentioned by 0 papers; price-level targets 48.3%; 0/575 non-overlapping multi-day evaluation; significance tests 3.5%; Korea 0.3%), pitfalls mapped to the faculty paper and our leak-free audit, and 8 prioritized experiments.
+- Method-driven expansion (2026-11-26): **1,423 papers** (2015–2026, all with abstracts, 993 open access) fetched by `scripts/fetch_relevant_papers.py` from gap-targeted queries; audited by `scripts/analyze_relevant_corpus.py`. Memo: **`docs/literature_expansion_2026-11-26.md`** — returns 21.9% vs price-level 55.4%, GDELT 10, Korea 25, but non-overlapping evaluation (2 verified) and train-only scaling (2 verified) remain near-absent.
 - Interactive: dashboard **#literature** section (searchable via the global bar).
 
 Quick runs:
@@ -45,6 +46,10 @@ python -m src.experiment --mode sentiment-ablation --data data/prices.csv --sent
 - [x] Dead-zone / vol-standardized / ridge diagnostics
 - [x] Horizon (1/3/5d), causal-feature, and model-family hypothesis battery
 - [x] 575-paper literature corpus + synthesis (fetch → enrich → extract → batch notes → synthesis; dashboard #literature)
+- [x] 1,423-paper method-driven expansion + gap audit (`docs/literature_expansion_2026-11-26.md`)
+- [x] Decisive 84-cell non-overlapping multi-day test, 43–50 windows/cell — null, 0/84 Holm-positive (`docs/decisive_multiday_findings.md`)
+- [x] Paired sentiment ablation (AAPL + Samsung, 30 cells) — no robust gain, sign flips by market
+- [x] Process/audit-trail doc, figures and results pack (`docs/methodology_and_process.md`, `docs/RESULTS_PACK.md`)
 - [ ] Sentiment source quality & coverage review (tone ≠ labelled news sentiment)
 - [ ] Volume features; volatility-scaled dead-zone eps
 - [ ] Return / directional-target variants (next step under discussion — see below)

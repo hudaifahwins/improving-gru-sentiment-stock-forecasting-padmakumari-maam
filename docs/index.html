@@ -55,6 +55,30 @@
     </section>
 
     <!-- Live search -->
+    <section class="section" id="final-results" aria-label="Final multi-market results">
+      <div class="wrap">
+        <p class="kicker">Final results · 26 November 2026</p>
+        <h2>84 disjoint cells, five markets — no robust directional edge</h2>
+        <p class="muted">Expanding walk-forward, 43–50 non-overlapping windows per cell,
+direct h-day targets, train-only scaling, 3 GRU seeds averaged, 5 bps/side,
+Diebold–Mariano vs the historical mean, Holm across all 84 cells.</p>
+        <div class="facts-grid" style="margin-top:20px">
+          <div class="fact"><span class="fact-num" data-count="0">0</span><span class="fact-label">cells with positive excess surviving Holm (of 84)</span></div>
+          <div class="fact"><span class="fact-num" data-count="2">0</span><span class="fact-label">significant cells — both negative</span></div>
+          <div class="fact"><span class="fact-num" data-count="0.446" data-decimals="3">0.000</span><span class="fact-label">GRU mean DirAcc (base rates 0.60/0.64/0.54)</span></div>
+          <div class="fact"><span class="fact-num" data-count="0.16" data-decimals="2">0.00</span><span class="fact-label">sentiment Δ DirAcc, Korea h=1 (Holm 0.08)</span></div>
+          <div class="fact"><span class="fact-num" data-count="-0.085" data-decimals="3">0.000</span><span class="fact-label">sentiment Δ DirAcc, US h=1 (Holm 0.013)</span></div>
+          <div class="fact"><span class="fact-num" data-count="0.032" data-decimals="3">0.000</span><span class="fact-label">mean GRU seed spread</span></div>
+        </div>
+        <div class="gallery">
+          <figure><img src="assets/fig_excess_diracc.png" alt="Excess directional accuracy by model and horizon, five markets"><figcaption>Excess directional accuracy vs the majority base rate. Every learned arm is at or below the historical mean; GRU is worst at h=1 and h=3.</figcaption></figure>
+          <figure><img src="assets/fig_sentiment_delta.png" alt="Paired effect of adding news sentiment to the GRU"><figcaption>Paired sentiment effect: Korea +14 to +16 pp (not Holm-significant), US −5 to −8 pp (Holm-significant). The sign flips by market.</figcaption></figure>
+          <figure><img src="assets/fig_net_vs_turnover.png" alt="Net return after 5 bps per side versus turnover"><figcaption>Net return vs turnover after 5 bps/side. Ridge pays roughly twice GRU's turnover; positive net cells mostly capture market drift.</figcaption></figure>
+        </div>
+        <p class="muted small" style="margin-top:16px">Full write-up: <code>docs/RESULTS_PACK.md</code> · protocol and audit trail: <code>docs/methodology_and_process.md</code> · Q1 dossier: <code>docs/PIF_Q1_submission.md</code></p>
+      </div>
+    </section>
+
     <section class="section search-section" aria-label="Live search">
       <div class="wrap">
         <div class="searchbar">

@@ -34,6 +34,8 @@ and code live elsewhere; this file tracks the reasoning.
 
 - 2026-11-23: repo scaffold + baseline code (GRU/LSTM, persistence) + experiment harness (walk-forward, sentiment ablation)
 - 2026-11-23: real-data baseline check on AAPL (below)
+- 2026-11-26: 1,423-paper method-driven literature expansion + gap audit (below)
+- 2026-11-26: decisive 84-cell non-overlapping multi-day test (null; below)
 
 ## Real-data baseline check (2026-11-23, AAPL via yfinance)
 
@@ -114,6 +116,72 @@ Strict conclusions:
 - h=1 GRU ≈ momentum ≈ chance (AAPL 0.4832 vs 0.4841; Samsung 0.4224 vs 0.4837 — GRU below momentum on Samsung).
 - Non-overlapping evaluation lowers multi-day DirAcc but h=3/5 still exceeds momentum (~0.50) and h=1; treated as diagnostic only (small disjoint test samples, trend autocorrelation).
 - Ridge = GRU (0.4224 Samsung, 0.4832 AAPL); feature additions remain within seed noise (strongest: Samsung sentiment 0.492 ± 0.021 overlapping price 0.422 ± 0.001 — not conclusive at n=3).
+
+## Method-driven literature expansion (2026-11-26)
+
+Fetched 1,423 papers (2015–2026, all with abstracts, 993 OA) via
+`scripts/fetch_relevant_papers.py` — gap-targeted queries rather than citation
+lineage. Audit: `scripts/analyze_relevant_corpus.py`; memo:
+`docs/literature_expansion_2026-11-26.md`.
+
+Grounded counts over the 1,423 abstracts (vs the 575 lineage corpus): returns
+21.9% (14.3%), price-level 55.4% (48.3%), GRU 26.9% (13.0%), transformer 20.2%
+(11.0%), significance 9.0% (3.5%), GDELT 10 (0), Korea 25 (2), FinBERT 138,
+LLM sentiment 92, leakage 44. Still near-absent: non-overlapping evaluation
+(3 hits, 2 genuine) and train-only scaling (3 hits, 2 genuine); only 6 abstracts
+mention significance + walk-forward + costs together.
+
+Closest protocols: KSE-100 multi-horizon evaluation (2026, 13 non-overlapping
+folds, 5+2 bps, DM), regime-gated attention under leakage control (2026,
+no learned model beats historical mean), leakage-free index protocol with
+train-only scaling (2026, MAKE), and GPT-sentiment look-ahead bias (2023).
+Korea comparators: LLM news tone → next-day Korean returns (2026) and Korean ML
+return forecasting 1987–2018 (2023).
+
+Caveats: abstract-level keyword presence only; rare-signal counts hand-checked;
+query plan is weighted toward GRU/sentiment, so cross-corpus deltas are not
+field-wide trends. The arXiv supplement run left
+`literature_corpus/arxiv_2026-11-26/` empty (no records).
+
+## Decisive multi-day test (2026-11-26)
+
+`scripts/run_decisive_multiday.py` (+ `assemble_decisive.py`): 5 markets (AAPL,
+MSFT, 005930.KS, ^NSEI, 000001.SS), h=1/3/5, **43–50 disjoint walk-forward
+windows per cell** (expanded from 24 to sharpen power), direct h-day targets,
+train-only scaling, 3 GRU seeds, 5 bps/side, DM vs historical mean, Holm across
+84 cells. Findings: `docs/decisive_multiday_findings.md`; process:
+`docs/methodology_and_process.md`.
+
+- **0/84** cells with positive excess DirAcc survive Holm. The only two
+  significant cells are *negative*: AAPL GRU h1 −0.204 (Holm 0.030) and ^NSEI
+  momentum h5 −0.227 (Holm <0.001).
+- GRU mean excess h1 −0.212, h3 −0.221, h5 −0.022; mean DirAcc 0.446 vs
+  majority bases 0.60/0.64/0.54. Best cell overall: AAPL Ridge h5 +0.114,
+  n=44, Holm 1.00.
+- Ridge h5 mean +0.005 (2/15 positive overall); momentum negative at every
+  horizon; mean seed spread 0.032.
+- The earlier E1–E8 AAPL h3 0.8067 (n=50) did not replicate under this protocol;
+  treat it as a base-rate/small-n artifact.
+
+## Sentiment ablation (2026-11-26)
+
+`scripts/run_sentiment_ablation.py` (+ `assemble_sentiment.py`): paired design
+on the two GDELT-covered tickers, 39–50 disjoint windows, 30 cells, 12 paired
+comparisons, Holm within each family.
+
+- Tone has no unconditional content: Pearson |r| ≤ 0.043 (p ≥ 0.143); Spearman |ρ| ≤ 0.048 (p ≥ 0.097)
+  (overlapping windows, so effectively weaker).
+- Adding tone to the GRU: Korea +0.160/+0.143/+0.154 DirAcc (DM p ≈ 0.01) but
+  Holm 0.080/0.149/0.087; US −0.085/−0.049/−0.049 with Holm 0.013/0.014/0.044.
+  Mean Δ +0.046 is a mix of opposite signs by market.
+- 1/30 cells has a positive excess surviving Holm (AAPL h1 price-only GRU
+  +0.106, Holm 0.003), but see period sensitivity below.
+- **Period sensitivity:** the same AAPL h1 GRU is +0.106 (Holm 0.003) over the
+  2024–2026 sentiment window and −0.204 (Holm 0.030) over the longer 2023–2026
+  window. A walk-forward result describes a window, not a model.
+
+Limits: n≈43–50/cell (minimum detectable excess ≈ 10 pp at 80% power), test-set
+majority base is an oracle, one fixed GRU config, no intraday data.
 
 ## Proposed next step (to bring to Dr. Padmakumari P.)
 
