@@ -14,15 +14,15 @@ and code live elsewhere; this file tracks the reasoning.
 - Scaling: MinMaxScaler (applied to the whole dataset). Windows: time steps of 30 (monthly).
 - Split: chronological 70/15/15 (train/val/test); Adam, MSE loss, early stopping on validation loss, dropout on recurrent layers; batch size 64, 100 epochs (validation split also stated as 0.1 elsewhere).
 - Models: GRU vs. MLS-LSTM (3 stacked LSTM layers, Keras/TensorFlow). GRU hidden size/layers are *not* reported.
-- Metrics: R² (reported as % "accuracy"), MAPE, normalized RMSE (nRMSE = RMSE/(ymax − ymin)), adjusted R².
-- Test results: GRU R²=0.948 (94.8%), MAPE=1.136%, nRMSE=0.048; MLS-LSTM R²=0.919 (91.9%), MAPE=1.380%, nRMSE=0.059.
-- Sentiment: LSTM classifier (embedding → LSTM → dense + softmax; positive/neutral/negative), Kaggle news/tweet dataset (10,687 records; test accuracy 83.4%); daily scores aggregated into a numerical sentiment signal.
-- Fusion: conflict-aware — agreeing price + sentiment signals → high-confidence prediction; conflicting signals → uncertainty flagged, not biased.
+- Metrics: R^2 (reported as % "accuracy"), MAPE, normalized RMSE (nRMSE = RMSE/(ymax - ymin)), adjusted R^2.
+- Test results: GRU R^2=0.948 (94.8%), MAPE=1.136%, nRMSE=0.048; MLS-LSTM R^2=0.919 (91.9%), MAPE=1.380%, nRMSE=0.059.
+- Sentiment: LSTM classifier (embedding -> LSTM -> dense + softmax; positive/neutral/negative), Kaggle news/tweet dataset (10,687 records; test accuracy 83.4%); daily scores aggregated into a numerical sentiment signal.
+- Fusion: conflict-aware - agreeing price + sentiment signals -> high-confidence prediction; conflicting signals -> uncertainty flagged, not biased.
 
 **Alignment with our code.**
 - Matches: lookback 30 (`--lookback`), chronological 70/15/15, forward-fill imputation, MinMaxScaler, Adam + MSE, early stopping on val loss, close-price-only features, GRU/LSTM stacks.
-- Improvements over the paper: scaler fitted on the training split only (paper scales the whole dataset — mild leakage); persistence baseline; expanding/rolling walk-forward with per-fold fitting; directional accuracy + MAE; deterministic seeds.
-- Gaps to discuss with Dr. P.: (1) GRU hidden size/layers unreported (we use 50/1); (2) internal inconsistencies: dataset period (2016–2021 in §4/§5.1 vs. 2019–2024 in §5) and validation split (0.1 vs. 15%); (3) we now compute nRMSE in `compute_metrics` — the return-experiment report already prints it, so head-to-head comparison with the paper's numbers is possible (Samsung nRMSE 0.038 vs. paper 0.048); (4) the paper fuses sentiment post-hoc via a categorical signal rule, while our `--mode sentiment-ablation` concatenates daily numeric sentiment as a model feature — a different mechanism worth validating together.
+- Improvements over the paper: scaler fitted on the training split only (paper scales the whole dataset - mild leakage); persistence baseline; expanding/rolling walk-forward with per-fold fitting; directional accuracy + MAE; deterministic seeds.
+- Gaps to discuss with Dr. P.: (1) GRU hidden size/layers unreported (we use 50/1); (2) internal inconsistencies: dataset period (2016-2021 in section 4/section 5.1 vs. 2019-2024 in section 5) and validation split (0.1 vs. 15%); (3) we now compute nRMSE in `compute_metrics` - the return-experiment report already prints it, so head-to-head comparison with the paper's numbers is possible (Samsung nRMSE 0.038 vs. paper 0.048); (4) the paper fuses sentiment post-hoc via a categorical signal rule, while our `--mode sentiment-ablation` concatenates daily numeric sentiment as a model feature - a different mechanism worth validating together.
 
 ## Open questions
 
@@ -33,9 +33,12 @@ and code live elsewhere; this file tracks the reasoning.
 ## Timeline
 
 - 2026-11-23: repo scaffold + baseline code (GRU/LSTM, persistence) + experiment harness (walk-forward, sentiment ablation)
-- 2026-11-23: real-data baseline check on AAPL (below)
+- 2026-11-23: real-data baseline check on AAPL (below); stress test + return/directional experiment; PDF/PPTX production; real GDELT ingestion, diagnostics, hypothesis battery, strict verification; showcase site + Pages CI + dashboard; 575-paper literature corpus; 168-run leak-free batch E1-E8
+- 2026-11-24: VolGatedGRU + hysteresis and the paper-upgrade suite; external 200+ corpus harvest; firm-level EDGAR 8-K sentiment, consensus/conviction filters; Holm/BH baseline rigor audit; VolGated factorization diagnostics
 - 2026-11-26: 1,423-paper method-driven literature expansion + gap audit (below)
 - 2026-11-26: decisive 84-cell non-overlapping multi-day test (null; below)
+
+Full commit-level history: `git log --oneline` (48 commits, 2026-11-23 to 2026-11-26, single author). This timeline names workstreams, not every commit; the abandoned/null directions (crazy_research, perspective_ablation, real_research_v2 drafts, opensource_benchmark) are recorded in `results/` and the benchmark exclusion is in `docs/methodology_and_process.md` section 6.
 
 ## Real-data baseline check (2026-11-23, AAPL via yfinance)
 
@@ -48,23 +51,23 @@ and code live elsewhere; this file tracks the reasoning.
 | persistence (y_hat=y_{t-1}) | 3.09 | 4.38 | 1.10% | 0.987 | 0.000 |
 | GRU | 13.86 | 17.64 | 4.57% | 0.793 | 0.504 |
 
-(GRU early-stopped at epoch 7; persistence DirAcc is ~0 by construction — it predicts zero change.)
+(GRU early-stopped at epoch 7; persistence DirAcc is ~0 by construction - it predicts zero change.)
 
-**Walk-forward (expanding, 3 folds, mean ± std).**
+**Walk-forward (expanding, 3 folds, mean +/- std).**
 
 | model | RMSE | MAPE | DirAcc |
 |---|---|---|---|
-| persistence | 3.04 ± 0.93 | 1.34% ± 0.14% | 0.002 ± 0.001 |
-| GRU | 15.20 ± 7.69 | 6.50% ± 3.34% | 0.492 ± 0.030 |
+| persistence | 3.04 +/- 0.93 | 1.34% +/- 0.14% | 0.002 +/- 0.001 |
+| GRU | 15.20 +/- 7.69 | 6.50% +/- 3.34% | 0.492 +/- 0.030 |
 
-**One question for Dr. Padmakumari P.** Given the plain price-level GRU loses to persistence on RMSE/MAPE (a common artefact of trending assets), should the project target *direction/profitability-aware* evaluation (e.g., sign/return-based targets, volatility-adjusted or log-return targets) rather than raw price levels — and if so, what baseline comparison would you expect for the GRU to be considered a meaningful improvement?
+**One question for Dr. Padmakumari P.** Given the plain price-level GRU loses to persistence on RMSE/MAPE (a common artefact of trending assets), should the project target *direction/profitability-aware* evaluation (e.g., sign/return-based targets, volatility-adjusted or log-return targets) rather than raw price levels - and if so, what baseline comparison would you expect for the GRU to be considered a meaningful improvement?
 
 ## Latest verified additions (2026-11-23)
 
-- **Dead-zone directional accuracy** (`|r| > 0.005`): AAPL mse/log DirAcc 0.489±0.003 → strict 0.461±0.002 (deadzone share 0.35); hybrid/log 0.496±0.021 → strict 0.498±0.042; logvol 0.482±0.005. Samsung mse/log 0.4214±0.0000 → strict 0.4161; hybrid 0.436±0.011; logvol 0.4214. Ridge baseline (same split): AAPL 0.4841, Samsung 0.4510. All near chance; no directional superiority claim.
-- **Real sentiment ablation (GDELT “Average Tone”, lagged 1 day)**: AAPL Δ DirAcc −0.0022±0.0154 (≈ zero, within noise); Samsung Δ DirAcc 0.0000±0.0000. Tone adds no measurable directional signal on these stocks/periods.
-- **Ingestion caveats**: GDELT DOC API is rate-limited (HTTP 429) and intermittently unavailable; retries with sleep succeeded after 2–4 attempts. Tone is an aggregate news-tone proxy, not labelled sentiment — coverage/quality still to be reviewed.
-- Files: `data/sentiment_AAPL.csv` (1222 rows), `data/sentiment_005930.KS.csv` (1187 rows) — gitignored.
+- **Dead-zone directional accuracy** (`|r| > 0.005`): AAPL mse/log DirAcc 0.489+/-0.003 -> strict 0.461+/-0.002 (deadzone share 0.35); hybrid/log 0.496+/-0.021 -> strict 0.498+/-0.042; logvol 0.482+/-0.005. Samsung mse/log 0.4214+/-0.0000 -> strict 0.4161; hybrid 0.436+/-0.011; logvol 0.4214. Ridge baseline (same split): AAPL 0.4841, Samsung 0.4510. All near chance; no directional superiority claim.
+- **Real sentiment ablation (GDELT "Average Tone", lagged 1 day)**: AAPL Delta DirAcc -0.0022+/-0.0154 (~ zero, within noise); Samsung Delta DirAcc 0.0000+/-0.0000. Tone adds no measurable directional signal on these stocks/periods.
+- **Ingestion caveats**: GDELT DOC API is rate-limited (HTTP 429) and intermittently unavailable; retries with sleep succeeded after 2-4 attempts. Tone is an aggregate news-tone proxy, not labelled sentiment - coverage/quality still to be reviewed.
+- Files: `data/sentiment_AAPL.csv` (1222 rows), `data/sentiment_005930.KS.csv` (1187 rows) - gitignored.
 
 ## Hypothesis battery (2026-11-23, real data, seeds 42/43/44)
 
@@ -73,54 +76,60 @@ transforms, GRU (mse) vs Ridge vs HistGradientBoostingRegressor on identical spl
 
 | Tick | Setup | DirAcc (eps=0) | DirAcc strict (0.005) | GRU price MAE |
 |---|---|---|---|---|
-| AAPL | price, h1 | 0.4832 ± 0.0089 | 0.4741 ± 0.0076 | 3.103 |
-| AAPL | price+tech, h1 | 0.4680 ± 0.0109 | 0.4459 ± 0.0133 | 3.525 |
-| AAPL | price+tech+sentiment, h1 | 0.5067 ± 0.0303 | 0.5061 ± 0.0494 | 10.842 |
-| AAPL | price, h3 | 0.7762 ± 0.0118 | 0.8351 ± 0.0114 | 4.273 |
-| AAPL | price, h5 | 0.7839 ± 0.0265 | 0.8120 ± 0.0286 | 6.910 |
-| Samsung | price, h1 | 0.4224 ± 0.0014 | 0.4207 ± 0.0066 | 6775 |
-| Samsung | price+tech, h1 | 0.4481 ± 0.0099 | 0.4531 ± 0.0173 | 8250 |
-| Samsung | price+tech+sentiment, h1 | 0.4920 ± 0.0213 | 0.5103 ± 0.0238 | 29470 |
-| Samsung | price, h3 | 0.6538 ± 0.0061 | 0.6730 ± 0.0052 | 47450 |
-| Samsung | price, h5 | 0.6785 ± 0.0028 | 0.6842 ± 0.0025 | 103778 |
-| AAPL | ridge baseline (h1, price) | 0.4832 ± 0.0089 | — | — |
-| AAPL | gbr baseline (h1, price) | 0.4832 ± 0.0089 | — | — |
-| Samsung | ridge baseline (h1, price) | 0.4224 ± 0.0014 | — | — |
-| Samsung | gbr baseline (h1, price) | 0.4224 ± 0.0014 | — | — |
+| AAPL | price, h1 | 0.4832 +/- 0.0089 | 0.4741 +/- 0.0076 | 3.103 |
+| AAPL | price+tech, h1 | 0.4680 +/- 0.0109 | 0.4459 +/- 0.0133 | 3.525 |
+| AAPL | price+tech+sentiment, h1 | 0.5067 +/- 0.0303 | 0.5061 +/- 0.0494 | 10.842 |
+| AAPL | price, h3 | 0.7762 +/- 0.0118 | 0.8351 +/- 0.0114 | 4.273 |
+| AAPL | price, h5 | 0.7839 +/- 0.0265 | 0.8120 +/- 0.0286 | 6.910 |
+| Samsung | price, h1 | 0.4224 +/- 0.0014 | 0.4207 +/- 0.0066 | 6775 |
+| Samsung | price+tech, h1 | 0.4481 +/- 0.0099 | 0.4531 +/- 0.0173 | 8250 |
+| Samsung | price+tech+sentiment, h1 | 0.4920 +/- 0.0213 | 0.5103 +/- 0.0238 | 29470 |
+| Samsung | price, h3 | 0.6538 +/- 0.0061 | 0.6730 +/- 0.0052 | 47450 |
+| Samsung | price, h5 | 0.6785 +/- 0.0028 | 0.6842 +/- 0.0025 | 103778 |
+| AAPL | ridge baseline (h1, price) | 0.4841 +/- 0.0000 | 0.4933 +/- 0.0000 | - |
+| AAPL | gbr baseline (h1, price) | 0.4755 +/- 0.0000 | 0.4489 +/- 0.0000 | - |
+| Samsung | ridge baseline (h1, price) | 0.4510 +/- 0.0000 | 0.4650 +/- 0.0000 | - |
+| Samsung | gbr baseline (h1, price) | 0.4214 +/- 0.0024 | 0.4196 +/- 0.0029 | - |
+
+(Baseline values from `results/diagnostics_multi_seed.md` and
+`results/hypothesis_battery.md`; an earlier version of this table copied the GRU
+row into the baseline rows. The GRU does not beat either baseline: Samsung
+Ridge 0.4510 and momentum 0.4837 sit above the GRU's 0.4224.)
 
 Honest reading:
-- Multi-day (h=3/5) DirAcc is much higher — but targets overlap (P_{t+h} vs P_t),
+- Multi-day (h=3/5) DirAcc is much higher - but targets overlap (P_{t+h} vs P_t),
   so these are NOT independent predictions; do not read them as tradeable signal.
 - Causal tech features did not help at h=1 (AAPL worse, Samsung similar).
 - Real sentiment transforms give noisy, statistically inconclusive deltas on both
-  tickers (overlapping ± intervals with the price baseline).
-- Ridge/GBR ≈ GRU on identical splits (no family beat another).
+  tickers (overlapping +/- intervals with the price baseline).
+- The GRU does not beat any baseline family: Ridge and GBR are at or above it on
+  identical splits, and momentum beats it on Samsung.
 - Volume features not included (loader drops OHLCV); volatility-scaled dead-zone
   eps not yet run. Both are open limitations.
 
-## Strict verification (fresh runs, commit 22e85ed+, seeds 42/43/44)
+## Strict verification (fresh runs, commit 55cadea+, seeds 42/43/44)
 
 Full table in `results/strict_verification.md` (non-overlap = stride=horizon, disjoint windows).
 Key results:
 
 | Tick | Config | DirAcc (overlap) | DirAcc (non-overlap) | momentum DirAcc |
 |---|---|---|---|---|
-| AAPL | h1 price | 0.4832 ± 0.0089 | 0.4832 ± 0.0089 | 0.4841 ± 0.0000 |
-| AAPL | h3 price | 0.7762 ± 0.0118 | 0.6494 ± 0.0347 | 0.5086 ± 0.0000 |
-| AAPL | h5 price | 0.7839 ± 0.0265 | 0.7333 ± 0.0526 | 0.5000 ± 0.0000 |
-| Samsung | h1 price | 0.4224 ± 0.0014 | 0.4224 ± 0.0014 | 0.4837 ± 0.0000 |
-| Samsung | h3 price | 0.6538 ± 0.0061 | 0.6254 ± 0.0083 | 0.5044 ± 0.0000 |
-| Samsung | h5 price | 0.6785 ± 0.0028 | 0.6422 ± 0.0302 | 0.5000 ± 0.0000 |
+| AAPL | h1 price | 0.4832 +/- 0.0089 | 0.4832 +/- 0.0089 | 0.4841 +/- 0.0000 |
+| AAPL | h3 price | 0.7762 +/- 0.0118 | 0.6494 +/- 0.0347 | 0.5086 +/- 0.0000 |
+| AAPL | h5 price | 0.7839 +/- 0.0265 | 0.7333 +/- 0.0526 | 0.5000 +/- 0.0000 |
+| Samsung | h1 price | 0.4224 +/- 0.0014 | 0.4224 +/- 0.0014 | 0.4837 +/- 0.0000 |
+| Samsung | h3 price | 0.6538 +/- 0.0061 | 0.6254 +/- 0.0083 | 0.5044 +/- 0.0000 |
+| Samsung | h5 price | 0.6785 +/- 0.0028 | 0.6422 +/- 0.0302 | 0.5000 +/- 0.0000 |
 
 Strict conclusions:
-- h=1 GRU ≈ momentum ≈ chance (AAPL 0.4832 vs 0.4841; Samsung 0.4224 vs 0.4837 — GRU below momentum on Samsung).
+- h=1 GRU ~ momentum ~ chance (AAPL 0.4832 vs 0.4841; Samsung 0.4224 vs 0.4837 - GRU below momentum on Samsung).
 - Non-overlapping evaluation lowers multi-day DirAcc but h=3/5 still exceeds momentum (~0.50) and h=1; treated as diagnostic only (small disjoint test samples, trend autocorrelation).
-- Ridge = GRU (0.4224 Samsung, 0.4832 AAPL); feature additions remain within seed noise (strongest: Samsung sentiment 0.492 ± 0.021 overlapping price 0.422 ± 0.001 — not conclusive at n=3).
+- Ridge vs GRU: AAPL 0.4841 vs 0.4832 (tie), Samsung 0.4510 vs 0.4224 (Ridge above); feature additions remain within seed noise (strongest: Samsung sentiment 0.492 +/- 0.021 overlapping price 0.422 +/- 0.001 - not conclusive at n=3).
 
 ## Method-driven literature expansion (2026-11-26)
 
-Fetched 1,423 papers (2015–2026, all with abstracts, 993 OA) via
-`scripts/fetch_relevant_papers.py` — gap-targeted queries rather than citation
+Fetched 1,423 papers (2015-2026, all with abstracts, 993 OA) via
+`scripts/fetch_relevant_papers.py` - gap-targeted queries rather than citation
 lineage. Audit: `scripts/analyze_relevant_corpus.py`; memo:
 `docs/literature_expansion_2026-11-26.md`.
 
@@ -135,8 +144,8 @@ Closest protocols: KSE-100 multi-horizon evaluation (2026, 13 non-overlapping
 folds, 5+2 bps, DM), regime-gated attention under leakage control (2026,
 no learned model beats historical mean), leakage-free index protocol with
 train-only scaling (2026, MAKE), and GPT-sentiment look-ahead bias (2023).
-Korea comparators: LLM news tone → next-day Korean returns (2026) and Korean ML
-return forecasting 1987–2018 (2023).
+Korea comparators: LLM news tone -> next-day Korean returns (2026) and Korean ML
+return forecasting 1987-2018 (2023).
 
 Caveats: abstract-level keyword presence only; rare-signal counts hand-checked;
 query plan is weighted toward GRU/sentiment, so cross-corpus deltas are not
@@ -146,41 +155,42 @@ field-wide trends. The arXiv supplement run left
 ## Decisive multi-day test (2026-11-26)
 
 `scripts/run_decisive_multiday.py` (+ `assemble_decisive.py`): 5 markets (AAPL,
-MSFT, 005930.KS, ^NSEI, 000001.SS), h=1/3/5, **43–50 disjoint walk-forward
-windows per cell** (expanded from 24 to sharpen power), direct h-day targets,
-train-only scaling, 3 GRU seeds, 5 bps/side, DM vs historical mean, Holm across
+MSFT, 005930.KS, ^NSEI, 000001.SS), h=1/3/5, **43-50 disjoint walk-forward
+windows per cell**, direct h-day targets, train-only scaling, 3 GRU seeds,
+5 bps/side, DM vs historical mean, Holm across
 84 cells. Findings: `docs/decisive_multiday_findings.md`; process:
 `docs/methodology_and_process.md`.
 
 - **0/84** cells with positive excess DirAcc survive Holm. The only two
-  significant cells are *negative*: AAPL GRU h1 −0.204 (Holm 0.030) and ^NSEI
-  momentum h5 −0.227 (Holm <0.001).
-- GRU mean excess h1 −0.212, h3 −0.221, h5 −0.022; mean DirAcc 0.446 vs
+  significant cells are *negative*: AAPL GRU h1 -0.204 (Holm 0.030) and ^NSEI
+  momentum h5 -0.227 (Holm <0.001).
+- GRU mean excess h1 -0.212, h3 -0.221, h5 -0.022; mean DirAcc 0.446 vs
   majority bases 0.60/0.64/0.54. Best cell overall: AAPL Ridge h5 +0.114,
   n=44, Holm 1.00.
 - Ridge h5 mean +0.005 (2/15 positive overall); momentum negative at every
   horizon; mean seed spread 0.032.
-- The earlier E1–E8 AAPL h3 0.8067 (n=50) did not replicate under this protocol;
+- The earlier E1-E8 AAPL h3 0.8067 (n=50) did not replicate under this protocol;
   treat it as a base-rate/small-n artifact.
 
 ## Sentiment ablation (2026-11-26)
 
 `scripts/run_sentiment_ablation.py` (+ `assemble_sentiment.py`): paired design
-on the two GDELT-covered tickers, 39–50 disjoint windows, 30 cells, 12 paired
+on the two GDELT-covered tickers, 39-50 disjoint windows, 30 cells, 12 paired
 comparisons, Holm within each family.
 
-- Tone has no unconditional content: Pearson |r| ≤ 0.043 (p ≥ 0.143); Spearman |ρ| ≤ 0.048 (p ≥ 0.097)
+- Tone has no unconditional content: Pearson |r| <= 0.043 (p >= 0.143); Spearman |rho| <= 0.048 (p >= 0.097)
   (overlapping windows, so effectively weaker).
-- Adding tone to the GRU: Korea +0.160/+0.143/+0.154 DirAcc (DM p ≈ 0.01) but
-  Holm 0.080/0.149/0.087; US −0.085/−0.049/−0.049 with Holm 0.013/0.014/0.044.
-  Mean Δ +0.046 is a mix of opposite signs by market.
+- Adding tone to the GRU: Korea +0.160/+0.143/+0.154 DirAcc (DM p ~ 0.01) but
+  Holm 0.080/0.149/0.087; US -0.085/-0.049/-0.049 with Holm 0.013/0.014/0.044.
+  Mean Delta +0.046 is a mix of opposite signs by market.
 - 1/30 cells has a positive excess surviving Holm (AAPL h1 price-only GRU
   +0.106, Holm 0.003), but see period sensitivity below.
 - **Period sensitivity:** the same AAPL h1 GRU is +0.106 (Holm 0.003) over the
-  2024–2026 sentiment window and −0.204 (Holm 0.030) over the longer 2023–2026
+  2024-2026 sentiment window and -0.204 (Holm 0.030) over the longer 2023-2026
   window. A walk-forward result describes a window, not a model.
 
-Limits: n≈43–50/cell (minimum detectable excess ≈ 10 pp at 80% power), test-set
+Limits: n~43-50/cell (minimum detectable excess ~ 20-21 pp at 80% power,
+two-sided alpha=0.05; only large effects are testable), test-set
 majority base is an oracle, one fixed GRU config, no intraday data.
 
 ## Proposed next step (to bring to Dr. Padmakumari P.)

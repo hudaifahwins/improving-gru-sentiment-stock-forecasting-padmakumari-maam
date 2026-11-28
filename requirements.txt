@@ -1,10 +1,14 @@
 # Core
 numpy>=1.26
 pandas>=2.1
+scipy>=1.11
 scikit-learn>=1.4
 
 # Deep learning
 torch>=2.2
+
+# Market data
+yfinance>=1.8.0
 
 # Utilities
 matplotlib>=3.8

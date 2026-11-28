@@ -2,7 +2,7 @@
 
 Purpose: a reviewer or replicator should be able to answer every item below
 from the manuscript alone. Each item states what to check, why it changes the
-conclusion, and — where we tested it — what our own run showed.
+conclusion, and - where we tested it - what our own run showed.
 
 Status key: **[must]** blocks a directional or profitability claim;
 **[should]** blocks a comparison across papers; **[nice]** improves
@@ -13,18 +13,18 @@ reproducibility.
 ## A. Data and alignment
 
 **A1 [must] State the price series and adjustment.** Adjusted close vs raw
-close changes both returns and R². Say which, and the vendor.
+close changes both returns and R^2. Say which, and the vendor.
 *Our run:* Yahoo Finance, `auto_adjust=True`.
 
 **A2 [must] Prove sentiment is lagged.** News after the close of day *t* must
 not enter the features of day *t*. Publish the merge rule (e.g. `shift(1)` on
 the tone series) and the timestamp convention.
-*Our run:* GDELT tone for *t−1* used at *t*; inner join on trading dates.
+*Our run:* GDELT tone for *t-1* used at *t*; inner join on trading dates.
 
 **A3 [must] Report the intersection of price and text coverage.** Sentiment
 coverage is usually shorter than price coverage; the evaluated period silently
 shrinks. State both windows.
-*Our run:* prices 2019-11 → 2026-11, sentiment 2021-11 → 2026-11; the shorter
+*Our run:* prices 2019-11 -> 2026-11, sentiment 2021-11 -> 2026-11; the shorter
 window preserved one "significant" cell that the longer window reverses
 (see E3).
 
@@ -49,7 +49,7 @@ period.** If yes, the reported score is optimistic.
 ## C. Targets and horizons
 
 **C1 [must] Name the target and its horizon.** "Price" vs "return" vs "sign" are
-different tasks; a price-level R² of 0.95 is compatible with chance direction.
+different tasks; a price-level R^2 of 0.95 is compatible with chance direction.
 
 **C2 [must] Match training target to reported horizon.** Training on a 1-day
 return and reporting an *h*-day score is a mismatch, not a multi-horizon model.
@@ -75,23 +75,23 @@ accuracy is far below them.
 
 **E2 [must] Use at least persistence and historical-mean benchmarks.** A GRU
 that loses to the historical mean has no predictive content to explain.
-*Our run:* 2 of 84 cells beat the mean after correction — both negatively
+*Our run:* 2 of 84 cells beat the mean after correction - both negatively
 significant.
 
 **E3 [must] Report window sensitivity.** Show the same specification over at
 least two evaluation windows or sub-periods.
-*Our run:* AAPL h=1 GRU = **+0.106 (Holm 0.003)** on 2024–2026 and **−0.204
-(Holm 0.030)** on 2023–2026. One walk-forward number is a window, not a model.
+*Our run:* AAPL h=1 GRU = **+0.106 (Holm 0.003)** on 2024-2026 and **-0.204
+(Holm 0.030)** on 2023-2026. One walk-forward number is a window, not a model.
 
 **E4 [must] Correct for multiple testing** across the cells you report (Holm or
 BH), and say which family was corrected.
 
-**E5 [must] Use a serial-correlation-robust test** (DM with HAC / Newey–West),
+**E5 [must] Use a serial-correlation-robust test** (DM with HAC / Newey-West),
 not a *t*-test on daily errors.
 
-**E6 [should] Average ≥ 3 seeds** and report the seed spread. A single-seed
+**E6 [should] Average >= 3 seeds** and report the seed spread. A single-seed
 difference smaller than the spread is noise.
-*Our run:* mean GRU seed spread 0.032 — larger than most reported "gains".
+*Our run:* mean GRU seed spread 0.032 - larger than most reported "gains".
 
 **E7 [should] For paired claims (with vs without sentiment), use a paired test**
 (DM on paired errors, McNemar on direction calls), not two independent scores.
@@ -113,15 +113,15 @@ earns the mean return; compare with buy-and-hold and with the historical mean.
 
 **G1 [must] Report the unconditional association** between the sentiment signal
 and the future return (correlation / IC), with an overlap-aware caveat.
-*Our run:* Pearson |r| ≤ 0.043 (p ≥ 0.143), Spearman |ρ| ≤ 0.048 (p ≥ 0.097) — no unconditional content.
+*Our run:* Pearson |r| <= 0.043 (p >= 0.143), Spearman |rho| <= 0.048 (p >= 0.097) - no unconditional content.
 
 **G2 [must] Ablate sentiment against an identical price-only model**, same
 origins, same seeds, same target.
 
 **G3 [should] Report the sentiment effect per market.** Pooling can hide a sign
 flip.
-*Our run:* Korea +0.14 to +0.16 (Holm 0.08–0.15), US −0.05 to −0.09
-(Holm 0.013–0.044).
+*Our run:* Korea +0.14 to +0.16 (Holm 0.08-0.15), US -0.05 to -0.09
+(Holm 0.013-0.044).
 
 **G4 [should] Describe the text pipeline** (source, language, lexicon/model,
 aggregation window). "Sentiment" is not a specification.
@@ -139,14 +139,30 @@ correction can be recomputed.
 
 ## Score sheet
 
-Count the **[must]** items satisfied: A1–A3 (3), B1–B3 (3), C1–C2 (2),
-D1–D2 (2), E1–E5 (5), F1–F2 (2), G1–G2 (2) = **19 must-items**.
+Count the **[must]** items satisfied: A1-A3 (3), B1-B3 (3), C1-C2 (2),
+D1-D2 (2), E1-E5 (5), F1-F2 (2), G1-G2 (2) = **19 must-items**.
 
 | Must-items satisfied | Reading |
 |---|---|
 | 19/19 | Claims are auditable; directional/profitability statements are testable |
-| 13–18 | Fix the missing items before claiming skill |
+| 13-18 | Fix the missing items before claiming skill |
 | < 13 | Treat reported accuracy as descriptive only |
 
-Our own paper: 19/19, plus all **[should]** items. The checklist exists so the
-next paper can be checked in minutes rather than replicated in months.
+Our own paper: the self-audit of 2026-11-28 (item-by-item against this
+checklist, by a second reader) scored the four main deliverables:
+
+| Deliverable | Before remediation | After remediation |
+|---|---|---|
+| RESULTS_PACK.md | 13/19 | 19/19 |
+| decisive_multiday_findings.md | 13/19 | 19/19 (A2 merge-rule sentence added in the second pass) |
+| PIF_Q1_submission.md | 12/19 (strict) | 17/19 + the named gaps closed in the second pass (G1 caveat, D2 table pointer, E7 paired test, G4 aggregation window, H1/H3) |
+| Data_Workflow_Novelty.pdf | 16/19 | 19/19 |
+
+The shared [must] gap was B3 (purge rule), now stated with its code reference
+in all four documents, together with the data-source, coverage, merge-rule,
+stride, seed, cost, turnover and correction-family statements each document
+was missing. The PIF total still needs a final re-score before it is quoted:
+the second-pass edits are not yet re-checked item by item, and A4
+(missing-data handling) is open in every markdown deliverable. So "19/19" is
+not claimed here. The checklist exists so the next paper can be checked in
+minutes rather than replicated in months.

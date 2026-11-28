@@ -1,4 +1,4 @@
-# Methodology and Process — how every number in this project was produced
+# Methodology and Process - how every number in this project was produced
 
 *Last updated: 2026-11-26. This document is the audit trail for the PIF dossier
 (`docs/PIF_Q1_submission.md`). Every headline number is traceable to a script, a
@@ -11,7 +11,7 @@ command and an output file listed here.*
 The anchor paper is Padmakumari, P. et al. (2026), *Precision Investing:
 Combining GRU and Sentiment Analysis*, **Computational Economics**,
 DOI `10.1007/s10614-026-11393-w`. It reports GRU price forecasting with
-R² = 0.948, MAPE = 1.136 %, nRMSE = 0.048.
+R^2 = 0.948, MAPE = 1.136 %, nRMSE = 0.048.
 
 This project does **not** propose a new architecture. It builds the missing
 **evaluation layer**: if a GRU-plus-sentiment pipeline is claimed to be
@@ -36,24 +36,25 @@ Two evidence streams:
 
 - Source: Yahoo Finance via `yfinance` (`auto_adjust=True`, so splits and
   dividends are adjusted), 7 years requested, cached to
-  `data/cache/{TICKER}.csv` on first use.
+  `data/cache/{TICKER}.csv` on first use (the `^` in `^NSEI` is stored as the
+  prefix `idx_`, so that cache file is `data/cache/idx_NSEI.csv`).
 - Universe (5 markets, 3 continents): `AAPL`, `MSFT` (US),
   `005930.KS` (Samsung, Korea), `^NSEI` (Nifty 50, India),
   `000001.SS` (Shanghai Composite, China).
-- Cached span: 2019-11 → 2026-11, ≈ 1 700 trading days per series.
+- Cached span: 2019-11 -> 2026-11, ~ 1 700 trading days per series.
 - Cleaning: parse dates, sort, drop duplicate dates, keep `close` and `volume`.
 
 ### 2.2 News sentiment (GDELT)
 
-- Source: GDELT DOC 2.1 `TimelineTone` (public API, no key), via
-  `src/sentiment_gdelt.py`.
+- Source: GDELT DOC 2.0 API `TimelineTone` mode (public API, no key; rate
+  limited to roughly one request per 5 seconds), via `src/sentiment_gdelt.py`.
 - Query terms: `AAPL`, `"Samsung Electronics"`.
-- **Leakage control:** the tone for day *t−1* is the value used at day *t*
+- **Leakage control:** the tone for day *t-1* is the value used at day *t*
   (`shift(1)` applied at ingestion), so a decision made at the close of day *t*
   cannot see news published after that close.
 - Merge: `scripts/build_price_sentiment_csv.py` inner-joins prices and tone on
-  trading dates → `data/prices_sentiment_{AAPL,005930.KS}.csv`
-  (1 212 and 1 178 rows, 2021-11 → 2026-11). Inner join means no future row can
+  trading dates -> `data/prices_sentiment_{AAPL,005930.KS}.csv`
+  (1 212 and 1 178 rows, 2021-11 -> 2026-11). Inner join means no future row can
   align with a past one.
 - Only these two tickers have sentiment coverage; the ablation is therefore a
   two-market paired study, not a five-market one. This is stated as a
@@ -65,7 +66,7 @@ Six causal price features per day, computed only from data up to that day:
 
 1. `log(close)`
 2. daily log return
-3. 5-day momentum (`log P_t − log P_{t−5}`)
+3. 5-day momentum (`log P_t - log P_{t-5}`)
 4. 20-day momentum
 5. 10-day rolling volatility of returns
 6. log-volume change
@@ -79,7 +80,7 @@ Standardisation uses the **mean and standard deviation of the origin's history
 only** (`feat[:origin]`), recomputed at every walk-forward origin. The test
 window is transformed with those training statistics. This removes the most
 common silent leak in GRU pipelines (fitting the scaler on the full sample).
-Only 3 of 1 423 audited papers report doing this (see §5).
+Only 3 of 1 423 audited papers report doing this (see section 5).
 
 ---
 
@@ -97,7 +98,7 @@ model:
    overlapping-window inflation that makes daily-horizon accuracy look far more
    precise than it is.
 3. **Direct multi-horizon target.** Target is the `h`-day log return
-   `log(P_{t+h}/P_t)` with `h ∈ {1, 3, 5}`. The model is *not* asked for a
+   `log(P_{t+h}/P_t)` with `h in {1, 3, 5}`. The model is *not* asked for a
    1-step return that is then compounded `h` times; that mismatch (train 1-day,
    report h-day) is one of the audited failure modes.
 4. **Seed discipline.** GRU is trained with 3 seeds (42, 123, 2026); the
@@ -110,17 +111,17 @@ model:
    strategy cannot hide behind gross returns.
 6. **Class-imbalance honesty.** Directional accuracy is compared with the
    *majority-class base rate of the same test windows*, not with 50 %.
-   `excess = DirAcc − majority_base` is the quantity that matters.
+   `excess = DirAcc - majority_base` is the quantity that matters.
 7. **Benchmarks.** Historical mean (expanding), majority class, persistence
-   (predict zero), causal momentum (`log P_t/P_{t−h}`), Ridge on flattened
+   (predict zero), causal momentum (`log P_t/P_{t-h}`), Ridge on flattened
    features, GRU. Every model sees the same origins, target and scaler rule.
-8. **Statistics.** Diebold–Mariano with Newey–West HAC variance on squared
+8. **Statistics.** Diebold-Mariano with Newey-West HAC variance on squared
    errors vs the historical-mean forecast; Holm step-down correction across all
    cells in a family; McNemar exact test for paired direction calls in the
    sentiment ablation.
 9. **Two test families, corrected separately.** (A) each arm vs historical mean
-   — "does the model beat the mean?". (B) sentiment arm vs its price-only twin
-   — "does sentiment add?".
+   - "does the model beat the mean?". (B) sentiment arm vs its price-only twin
+   - "does sentiment add?".
 
 ### Model hyper-parameters (held fixed, not tuned per cell)
 
@@ -129,7 +130,7 @@ model:
 | Lookback window | 30 trading days |
 | GRU | 1 layer, hidden 32, Adam lr 1e-3, MSE loss |
 | Epochs | 15, early stop patience 8 on a 15 % tail validation split inside training data |
-| Ridge | α = 1.0 |
+| Ridge | alpha = 1.0 |
 | Seeds | 42, 123, 2026 |
 | Cost | 5 bps/side = 0.0005 |
 | Threads | `torch.set_num_threads(1)` per process |
@@ -146,7 +147,7 @@ survives, not whether an optimally tuned variant can be found.
 # Literature audit (1 423 abstracts, keyword/theme signals)
 python3 scripts/analyze_relevant_corpus.py
 
-# Decisive multi-market evaluation — 5 tickers x h in {1,3,5}
+# Decisive multi-market evaluation - 5 tickers x h in {1,3,5}
 # (run per ticker so parts execute in parallel; Holm is recomputed on the
 #  merged set by the assembler, because correction must span all cells)
 for t in AAPL MSFT 005930.KS '^NSEI' 000001.SS; do
@@ -184,8 +185,9 @@ tables are copied into the tracked docs so the submission is self-contained.
 Corpus: 1 423 papers collected 2026-11-26 into
 `literature_corpus/relevant_2026-11-26/` (manifest + abstracts; 993 open
 access). `scripts/analyze_relevant_corpus.py` tags each abstract with
-theme/signal regexes and writes `ANALYSIS.json`, `ANALYSIS_TABLE.md` and
-`docs/literature_expansion_2026-11-26.md`.
+theme/signal regexes and writes `ANALYSIS.json` and `ANALYSIS_TABLE.md` inside
+the corpus directory. The memo `docs/literature_expansion_2026-11-26.md` is
+hand-written on top of those outputs and is not produced by the script.
 
 Headline counts (all re-verified against `ANALYSIS.json`):
 
@@ -195,11 +197,11 @@ Headline counts (all re-verified against `ANALYSIS.json`):
 | Forecasts returns | 312 | 21.9 % |
 | GRU used | 383 | 26.9 % |
 | Reports a significance test | 128 | 9.0 % |
-| Uses GDELT as the text source | 10 | — |
+| Uses GDELT as the text source | 10 | - |
 | Non-overlapping evaluation windows | 3 (2 genuine after reading) | 0.2 % |
 | Train-only scaler fitting | 3 (2 genuine) | 0.2 % |
-| Korean market | 25 | — |
-| India | 112 | — |
+| Korean market | 25 | - |
+| India | 112 | - |
 
 Method caveat: the tagging is regex-based on abstracts, so it is a *lower
 bound* on each practice and can produce false positives (hence the manual read
@@ -215,8 +217,8 @@ What was actually run and checked (not assumed):
 - `python3 -m py_compile` on every script added in this cycle.
 - Every headline count re-read from `ANALYSIS.json` and from
   `results/*/summary.json`; percentages recomputed from raw counts.
-- Literature corpus counts cross-checked against the manifest line count
-  (1 423).
+- Literature corpus counts cross-checked against `_manifest.json`'s own
+  `retained` count and its abstract total (1 423 with abstracts).
 - The earlier `run_opensource_benchmark.py` artifact was found to be invalid
   (8 cells, single seed, n = 6, identical GRU arms, 1-step target scaled by h)
   and is **excluded** from every claim.
@@ -228,9 +230,10 @@ What was actually run and checked (not assumed):
 
 1. **Sample.** 5 price series, 2 with sentiment; ~1 100 usable days each. This
    is enough to reject a large effect, not enough to certify a small one.
-2. **Power.** `n ≈ 43–50` per cell after non-overlapping sampling. Minimum
-   detectable excess directional accuracy at 80 % power is roughly 10
-   percentage points; effects below that remain untested.
+2. **Power.** `n ~ 43-50` per cell after non-overlapping sampling. The
+   minimum detectable excess directional accuracy at 80 % power (two-sided,
+   alpha = 0.05, p = 0.5) is roughly 20-21 percentage points, so only large
+   effects are testable here; smaller real effects remain untested.
 3. **Model class.** One GRU configuration, fixed a priori. A tuned or
    transformer-based model could differ; that is a follow-up, not a refutation.
 4. **Sentiment source.** GDELT tone, not FinBERT embeddings. The anchor paper's
@@ -243,17 +246,17 @@ What was actually run and checked (not assumed):
 
 ---
 
-## 8. Claim → evidence map
+## 8. Claim -> evidence map
 
 | Claim in the PIF | Evidence |
 |---|---|
-| "55 % of the field forecasts price level" | `ANALYSIS.json → signals.target_price_level = 789/1423` |
-| "≤ 3 of 1 423 papers use non-overlapping windows" | `ANALYSIS.json → signals.non_overlapping = 3`, manual read → 2 |
-| "0/84 cells beat the historical mean after Holm" | `results/decisive_multiday/summary.json` (50-origin run, §9) |
+| "55 % of the field forecasts price level" | `ANALYSIS.json -> signals.target_price_level = 789/1423` |
+| "<= 3 of 1 423 papers use non-overlapping windows" | `ANALYSIS.json -> signals.non_overlapping = 3`, manual read -> 2 |
+| "0/84 cells beat the historical mean after Holm" | `results/decisive_multiday/summary.json` (50-origin run, section 9) |
 | "2 significant cells, both negative" | same file, `cells[].p_holm < 0.05` |
-| Sentiment gain/loss figures | `results/sentiment_ablation/summary.json → paired[]` |
+| Sentiment gain/loss figures | `results/sentiment_ablation/summary.json -> paired[]` |
 | "Sentiment has no unconditional content" | same file, `sentiment_ic[]` |
-| Impact factors | JCR 2025 values listed in `docs/PIF_Q1_submission.md §H` |
+| Impact factors | Journal metrics listed in `docs/PIF_Q1_submission.md section I` (unverified against primary sources; see section I) |
 
 ---
 
@@ -263,15 +266,15 @@ Full tables: `docs/decisive_multiday_findings.md`. Figures:
 `docs/assets/fig_excess_diracc.png`, `fig_net_vs_turnover.png`,
 `fig_sentiment_delta.png`.
 
-### 9.1 Decisive price-only test (84 cells, 43–50 disjoint windows each)
+### 9.1 Decisive price-only test (84 cells, 43-50 disjoint windows each)
 
 | Quantity | Result |
 |---|---|
 | Cells with positive excess surviving Holm | **0 / 84** |
-| Cells significant after Holm | **2 / 84, both negative** (AAPL GRU h=1 −0.204, Holm 0.030; ^NSEI momentum h=5 −0.227, Holm <0.001) |
-| GRU mean excess, h=1 / 3 / 5 | −0.212 / −0.221 / −0.022 |
-| Ridge mean excess, h=1 / 3 / 5 | −0.090 / −0.153 / +0.005 |
-| Momentum mean excess, h=1 / 3 / 5 | −0.099 / −0.144 / −0.055 |
+| Cells significant after Holm | **2 / 84, both negative** (AAPL GRU h=1 -0.204, Holm 0.030; ^NSEI momentum h=5 -0.227, Holm <0.001) |
+| GRU mean excess, h=1 / 3 / 5 | -0.212 / -0.221 / -0.022 |
+| Ridge mean excess, h=1 / 3 / 5 | -0.090 / -0.153 / +0.005 |
+| Momentum mean excess, h=1 / 3 / 5 | -0.099 / -0.144 / -0.055 |
 | GRU mean DirAcc vs majority base | 0.446 vs 0.60 / 0.64 / 0.54 |
 | Best cell (any model) | AAPL Ridge h=5, +0.114, n=44, Holm 1.00 |
 | Mean GRU seed spread | 0.032 |
@@ -281,18 +284,18 @@ Full tables: `docs/decisive_multiday_findings.md`. Figures:
 
 | Quantity | Result |
 |---|---|
-| Tone vs next h-day return | Pearson \|r\| ≤ 0.043 (p ≥ 0.143); Spearman \|ρ\| ≤ 0.048 (p ≥ 0.097); overlapping, so effectively weaker |
+| Tone vs next h-day return | Pearson \|r\| <= 0.043 (p >= 0.143); Spearman \|rho\| <= 0.048 (p >= 0.097); overlapping, so effectively weaker |
 | Positive excess surviving Holm | 1 / 30 (AAPL h=1 price-only GRU +0.106, Holm 0.003) |
-| GRU+sent − GRU price, Korea (h=1/3/5) | +0.160 / +0.143 / +0.154; Holm 0.080 / 0.149 / 0.087 |
-| GRU+sent − GRU price, US (h=1/3/5) | −0.085 / −0.049 / −0.049; Holm 0.013 / 0.014 / 0.044 |
-| Ridge+sent − Ridge price | −0.10 to +0.11, no cell significant after Holm |
+| GRU+sent - GRU price, Korea (h=1/3/5) | +0.160 / +0.143 / +0.154; Holm 0.080 / 0.149 / 0.087 |
+| GRU+sent - GRU price, US (h=1/3/5) | -0.085 / -0.049 / -0.049; Holm 0.013 / 0.014 / 0.044 |
+| Ridge+sent - Ridge price | -0.10 to +0.11, no cell significant after Holm |
 
 ### 9.3 Period sensitivity
 
 The same specification (AAPL h=1, price-only GRU, seeds 42/123/2026) gives
 **+0.106 excess (Holm 0.003)** over the sentiment subsample's window
-(≈2024-05 → 2026-11) and **−0.204 (Holm 0.030)** over the longer window
-(≈2023-05 → 2026-11). Reported because it is the clearest illustration that a
+(~2024-05 -> 2026-11) and **-0.204 (Holm 0.030)** over the longer window
+(~2023-05 -> 2026-11). Reported because it is the clearest illustration that a
 walk-forward result is a statement about a window, not about a model.
 
 ---
@@ -310,4 +313,4 @@ The contribution is not "GRU fails". It is:
    in minutes.
 
 That is a publishable, honest, and genuinely additive extension of the anchor
-paper — and it is the version of the work that survives replication.
+paper - and it is the version of the work that survives replication.
